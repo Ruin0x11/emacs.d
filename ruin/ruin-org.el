@@ -5,6 +5,8 @@
 (require 'org-bullets)
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 
+(setq org-startup-indented t) 
+
 (setq org-directory "~/Dropbox/org")
 (setq org-default-notes-file "~/Dropbox/org/tracked/refile.org")
 
@@ -12,13 +14,13 @@
 
 (setq org-capture-templates 
       '(("t" "todo" entry (file "~/Dropbox/org/tracked/refile.org")
-         "* TODO %?\n%U\n%a\n"
+         "* TODO %?\n%U\n%a\n\n"
          ;:clock-in t :clock-resume t
          )
-        ("n" "note" entry (file "~/git/org/refile.org")
+        ("n" "note" entry (file "~/Dropbox/org/tracked/refile.org")
                "* %? :NOTE:\n%U\n%a\n")
         ("d" "diary" entry (file "~/Dropbox/org/diary.org")
-         "* %U\n   %?\n" :prepend t)
+         "* %U\n%?\n" :prepend t)
         ("y" "yume" entry (file "~/Dropbox/org/yume.org")
          "* %U - %? %^g\n\n" :prepend t)
         ))
