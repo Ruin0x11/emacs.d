@@ -1,3 +1,5 @@
+;;; ruin-theme.el --- theming and appearance setup
+
 ;; Let's see what we're running on
 (setq on-console (null window-system))
 
@@ -42,12 +44,19 @@
 (which-function-mode)
 
 ;; Install themes
-(package-require 'ample-theme)
+;; (package-require 'ample-theme)
+;; (package-require 'spacemacs-theme)
+;; (package-require 'zenburn-theme)
+(package-require 'solarized-theme)
+(package-require 'monokai-theme)
 
-(load-theme 'ample t)
+;; (load-theme 'ample t)
+;; (load-theme 'spacemacs-dark t)
+;; (load-theme 'solarized-dark t)
+(load-theme 'monokai t)
 
 ;; Calculate default font size
-(setq default-frame-font-size 10)
+(setq default-frame-font-size 9)
 (setq presentation-frame-font-size
       (truncate (* 1.25 default-frame-font-size)))
 
@@ -63,6 +72,7 @@
   (font-desc "Menlo for Powerline" default-frame-font-size))
 (defun presentation-frame-font ()
   (font-desc "Menlo for Powerline" presentation-frame-font-size))
-(set-frame-font (default-frame-font))
+;; (set-frame-font (default-frame-font))
+(add-to-list 'default-frame-alist '(font . "Menlo\ for\ Powerline-9"))
 
 (provide 'ruin-theme)

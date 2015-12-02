@@ -32,22 +32,27 @@
 (defmacro Xlaunch (&rest x)
   (list 'if (eq window-system 'x) (cons 'progn x)))
 
-;; Define subpackages by platform
-
+;; modularize separate features
 (setq ruin-pkg
-      '(ruin-evil
+      '(ruin-evil 
         ruin-funcs
         ruin-org
         ruin-helm
         ruin-ido
         ruin-company
+
+        ruin-lua
+        ruin-ruby
+
+        ruin-flycheck
         ruin-git
-        ruin-powerline
-        ruin-theme
+        ;; ruin-sx
         ruin-misc
+        ruin-theme
+        ruin-powerline
         ))
 
-;; Now load other things
+;; load modularized features
 (dolist (file ruin-pkg)
   (require file))
 

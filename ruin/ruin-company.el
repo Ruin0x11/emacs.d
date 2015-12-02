@@ -1,3 +1,5 @@
+;;; ruin-company.el --- company setup
+
 (eval-after-load 'company
   '(progn
      (define-key company-active-map (kbd "TAB") 'company-select-next)

@@ -1,3 +1,4 @@
+;;; ruin-misc.el --- miscellaneous packages and settings
 ;; Always ALWAYS use UTF-8
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
@@ -7,6 +8,9 @@
 ;; Automatically save buffers before compiling
 (setq compilation-ask-about-save nil)
 
+;; Scroll the compilation window
+(setq compilation-scroll-output t)
+
 ;; Always ask for y/n keypress instead of typing out 'yes' or 'no'
 (defalias 'yes-or-no-p 'y-or-n-p)
 
@@ -14,8 +18,9 @@
 (set-default 'indicate-empty-lines t)
 (set-default 'imenu-auto-rescan t)
 
-(add-hook 'text-mode-hook 'turn-on-auto-fill)
-(add-hook 'text-mode-hook 'turn-on-flyspell)
+;; (add-hook 'text-mode-hook 'turn-on-auto-fill)
+;; (add-hook 'text-mode-hook 'turn-on-flyspell)
+(add-hook 'text-mode-hook 'turn-on-visual-line-mode)
 
 ;; Transparently open compressed files
 (auto-compression-mode t)
@@ -29,7 +34,15 @@
 ;; default unified diffs
 (setq diff-switches "-u")
 
-(setq gdb-many-windows t)
+(blink-cursor-mode 0)
+
+(setq ring-bell-function 'ignore)
+
+(setq gdb-many-windows t
+      gdb-show-main t)
+
+;; save clipboard before replacing
+(setq save-interprogram-paste-before-kill t)
 
 ;; registers
 (dolist
