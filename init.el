@@ -32,6 +32,8 @@
 (defmacro Xlaunch (&rest x)
   (list 'if (eq window-system 'x) (cons 'progn x)))
 
+(setq evil-want-C-u-scroll t)
+
 ;; modularize separate features
 (setq ruin-pkg
       '(ruin-evil 
@@ -48,6 +50,7 @@
         ruin-git
         ;; ruin-sx
         ruin-misc
+        linum-off
         ruin-theme
         ruin-powerline
         ))

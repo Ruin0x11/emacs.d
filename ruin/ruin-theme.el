@@ -34,7 +34,14 @@
 (setq redisplay-dont-pause t)
 
 ;; Show line numbers in buffers
+
+;; global linum mode causes freeze on executing org-agenda custom commands
+;; performance with org-mode is generally terrible
+;; http://emacs.stackexchange.com/a/18419
+;; http://stackoverflow.com/q/5229705
+(require 'linum-off)
 (global-linum-mode t)
+
 (setq linum-format (if on-console "%4d " "%4d"))
 
 ;; Show column numbers in modeline

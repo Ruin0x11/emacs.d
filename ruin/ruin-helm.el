@@ -42,4 +42,12 @@
 
 (add-hook 'quickrun-after-run-hook 'prev-window)
 
+(setq projectile-globally-ignored-directories
+      (append projectile-globally-ignored-directories '(".git"
+                                                        ".svn"
+                                                        ".hg"
+                                                        "elpa"
+                                                        "vendor"
+                                                        )))
+
 (provide 'ruin-helm)

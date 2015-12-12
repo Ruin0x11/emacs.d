@@ -1,6 +1,6 @@
 ;;; ruin-evil.el --- evil settings and non-package mappings
 
-(setq evil-want-C-u-scroll t)
+; (setq evil-want-C-u-scroll t)
 
 (package-require 'evil)
 (package-require 'evil-commentary)
@@ -28,9 +28,6 @@
   "x" 'evil-save-and-close
   "u" 'universal-argument
   "y" 'helm-show-kill-ring
-
-  "bl" 'helm-buffers-list
-  "bq" 'kill-this-buffer
 
   "df" 'describe-function
   "dv" 'describe-variable
@@ -66,12 +63,13 @@
   "hb" 'helm-bookmarks
   "hi" 'helm-imenu
 
+  "bl" 'helm-buffers-list
   "TAB" 'spacemacs/alternate-buffer
   "bd"  'kill-this-buffer
-  "bK"  'spacemacs/kill-other-buffers
   "bD"  'spacemacs/kill-other-buffers
   "bY"  'spacemacs/copy-whole-buffer-to-clipboard
   "b!"  'spacemacs/open-in-external-app
+  "b="  'my-diff-buffer-with-file
   )
 
 ;; normal mode binds
@@ -100,20 +98,20 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
 (global-set-key [escape] 'evil-exit-emacs-state)
 
-(defun comint-goto-end-and-insert ()
-  (interactive)
-  (if (not (comint-after-pmark-p))
-      (progn (comint-goto-process-mark)
-             (evil-append-line nil))
-    (evil-insert 1)))
+; (defun comint-goto-end-and-insert ()
+;   (interactive)
+;   (if (not (comint-after-pmark-p))
+;       (progn (comint-goto-process-mark)
+;              (evil-append-line nil))
+;     (evil-insert 1)))
 
-(evil-define-key 'normal comint-mode-map "i" 'comint-goto-end-and-insert)
-(evil-define-key 'normal inf-ruby-mode-map "i" 'comint-goto-end-and-insert)
+; (evil-define-key 'normal comint-mode-map "i" 'comint-goto-end-and-insert)
+; (evil-define-key 'normal inf-ruby-mode-map "i" 'comint-goto-end-and-insert)
 
-(evil-define-key 'insert comint-mode-map
-  (kbd "<up>") 'comint-previous-input
-  (kbd "<down>") 'comint-next-input)
+; (evil-define-key 'insert comint-mode-map
+;   (kbd "<up>") 'comint-previous-input
+;   (kbd "<down>") 'comint-next-input)
 
-(evil-define-key 'insert comint-mode-map     (kbd "RET") #'comint-send-input)
+; (evil-define-key 'insert comint-mode-map     (kbd "RET") #'comint-send-input)
 
 (provide 'ruin-evil)
