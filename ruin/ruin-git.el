@@ -4,7 +4,8 @@
 (require 'magit)
 
 (evil-leader/set-key
-        "gb" 'magit-blame
+        "gB" 'magit-blame
+        "gb" 'magit-branch
         "gl" 'magit-log-all
         "gL" 'magit-log-buffer-file
         "gs" 'magit-status

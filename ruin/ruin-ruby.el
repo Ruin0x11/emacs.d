@@ -3,6 +3,9 @@
 (package-require 'enh-ruby-mode)
 (package-require 'ruby-block)
 (package-require 'rspec-mode)
+(package-require 'chruby)
+
+(chruby "ruby-2.2.4")
 
 (require 'ruby-block)
 (ruby-block-mode t)

@@ -24,9 +24,11 @@
          )
         ("n" "note" entry (file "~/Dropbox/org/tracked/refile.org")
                "* %? :NOTE:\n%U\n")
+        ("e" "etc." entry (file "~/Dropbox/org/notes.org")
+               "* %? - %U\n")
         ("d" "diary" entry (file+headline "~/Dropbox/org/diary.org" "日記")
          "* %U\n%?\n" :prepend t)
-        ("y" "yume" entry (file "~/Dropbox/org/yume.org")
+        ("y" "yume" entry (file+headline "~/Dropbox/org/yume.org" "ゆめにっき")
          "* %U - %? %^g\n" :prepend t)
         ))
 
@@ -272,6 +274,13 @@
 ;; enter insert mode on capture
 (add-hook 'org-capture-mode-hook 'evil-insert-state)
 
+;;; Encryption
+(require 'org-crypt)
+(org-crypt-use-before-save-magic)
+(setq org-tags-exclude-from-inheritance (quote ("crypt")))
+;; GPG key to use for encryption
+;; Either the Key ID or set to nil to use symmetric encryption.
+(setq org-crypt-key nil)
 
 ;;; Misc.
 ;; custom helm completion handler for refiling

@@ -1,6 +1,6 @@
 ;;; ruin-evil.el --- evil settings and non-package mappings
 
-; (setq evil-want-C-u-scroll t)
+(setq evil-want-C-u-scroll t)
 
 (package-require 'evil)
 (package-require 'evil-commentary)
@@ -14,7 +14,7 @@
 (global-evil-surround-mode)
 (evil-commentary-mode)
 
-;; leader binds
+;;; leader binds
 (evil-leader/set-leader "<SPC>")
 
 (evil-leader/set-key
@@ -66,18 +66,17 @@
   "bl" 'helm-buffers-list
   "TAB" 'spacemacs/alternate-buffer
   "bd"  'kill-this-buffer
+  "br"  'revert-buffer
   "bD"  'spacemacs/kill-other-buffers
   "bY"  'spacemacs/copy-whole-buffer-to-clipboard
   "b!"  'spacemacs/open-in-external-app
   "b="  'my-diff-buffer-with-file
   )
 
-;; normal mode binds
+;;; mode-based binds
 (defun copy-to-end-of-line ()
   (interactive)
   (evil-yank (point) (point-at-eol)))
-
-(define-key evil-normal-state-map "Y" 'copy-to-end-of-line)
 
 ;; esc quits
 (defun minibuffer-keyboard-quit ()
@@ -89,14 +88,29 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
       (setq deactivate-mark  t)
     (when (get-buffer "*Completions*") (delete-windows-on "*Completions*"))
     (abort-recursive-edit)))
-(define-key evil-normal-state-map [escape] 'keyboard-quit)
-(define-key evil-visual-state-map [escape] 'keyboard-quit)
-(define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
-(global-set-key [escape] 'evil-exit-emacs-state)
+(setq sentence-end-double-space nil)
+
+(eval-after-load "evil"
+  '(progn
+     (define-key evil-normal-state-map "Y" 'copy-to-end-of-line)
+
+     ;; trade ctrl-h and others for faster window switching
+     (define-key evil-normal-state-map (kbd "C-h") 'evil-window-left)
+     (define-key evil-normal-state-map (kbd "C-j") 'evil-window-down)
+     (define-key evil-normal-state-map (kbd "C-k") 'evil-window-up)
+     (define-key evil-normal-state-map (kbd "C-l") 'evil-window-right)
+
+     ;; global escape-to-quit
+     (define-key evil-normal-state-map [escape] 'keyboard-quit)
+     (define-key evil-visual-state-map [escape] 'keyboard-quit)
+     (define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
+     (define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
+     (define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
+     (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
+     (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
+     (global-set-key [escape] 'evil-exit-emacs-state)
+     ))
+
 
 ; (defun comint-goto-end-and-insert ()
 ;   (interactive)

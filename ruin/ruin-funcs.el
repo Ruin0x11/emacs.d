@@ -1,5 +1,20 @@
 ;;; ruin-funcs.el --- various function definitions
 
+;;; My functions
+
+(defun ruin/haskell-interactive-switch-and-move ()
+  (interactive)
+  (haskell-interactive-switch)
+  (goto-char (point-max)))
+
+(defun ruin/haskell-load-file-and-switch ()
+  (interactive)
+  (haskell-process-load-file)
+  (haskell-interactive-switch-and-move))
+
+;;; Random functions from the Internet
+
+;;http://www.emacswiki.org/emacs/DescribeThingAtPoint#toc2
 ;;; describe this point lisp only
 (defun describe-foo-at-point ()
   "Show the documentation of the Elisp function and variable near point.
@@ -33,6 +48,19 @@ This checks in turn:
   (interactive)
   (let ((diff-switches "-u")) ;; unified diff
     (diff-buffer-with-file (current-buffer))))
+
+;;https://github.com/bodil/emacs.d/blob/master/bodil/bodil-defuns.el#L17
+(defun font-lock-replace-symbol (mode reg sym)
+  (font-lock-add-keywords
+   mode `((,reg
+           (0 (progn (compose-region (match-beginning 1) (match-end 1)
+                                     ,sym 'decompose-region)))))))
+
+;;http://stackoverflow.com/a/15028029/5862977
+(defun tex-without-changing-windows ()
+  (interactive)
+  (save-buffer)
+  (save-window-excursion (tex-file)))
 
 ;;; Spacemacs commands that seem useful
 

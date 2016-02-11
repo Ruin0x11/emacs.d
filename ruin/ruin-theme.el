@@ -62,6 +62,10 @@
 ;; (load-theme 'solarized-dark t)
 (load-theme 'monokai t)
 
+(package-require 'spaceline)
+(require 'spaceline-config)
+(spaceline-emacs-theme)
+
 ;; Calculate default font size
 (setq default-frame-font-size 9)
 (setq presentation-frame-font-size

@@ -48,6 +48,8 @@
                                                         ".hg"
                                                         "elpa"
                                                         "vendor"
+                                                        "bak"
+                                                        "auto-save-list"
                                                         )))
 
 (provide 'ruin-helm)
