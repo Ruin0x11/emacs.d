@@ -189,6 +189,8 @@
                                         ; Allow refile to create parent tasks with confirmation
 (setq org-refile-allow-creating-parent-nodes (quote confirm))
 
+;;; Other
+(setq org-hide-emphasis-markers t)
 
 ;;; Evil bindings
 (package-require 'evil-org)

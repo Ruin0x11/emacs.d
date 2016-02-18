@@ -29,6 +29,7 @@
                 mode-line-buffer-identification " " mode-line-position
                 ;; Some specific information about the current buffer:
                 lunaryorn-projectile-mode-line ; Project information
+                (vc-mode vc-mode)
                 ;; Misc information, notably battery state and function name
                 " "
                 mode-line-misc-info

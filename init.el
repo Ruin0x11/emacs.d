@@ -50,7 +50,6 @@
 
         ruin-flycheck
         ruin-git
-        ;; ruin-sx
         ruin-misc
         linum-off
         ruin-theme

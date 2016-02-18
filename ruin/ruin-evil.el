@@ -57,6 +57,7 @@
   "pr" 'helm-projectile-recentf
 
   "ff" 'helm-find-files
+  "fg" 'helm-do-grep-ag
   "fr" 'helm-recentf
   "hr" 'helm-regexp
   "hm" 'helm-man-woman
@@ -111,6 +112,9 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
      (global-set-key [escape] 'evil-exit-emacs-state)
      ))
 
+;;; normal Emacs binds
+(global-set-key (kbd "C-x |") 'align-regexp)
+(global-set-key (kbd "C-x =") 'eval-region)
 
 ; (defun comint-goto-end-and-insert ()
 ;   (interactive)

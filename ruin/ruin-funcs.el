@@ -5,12 +5,13 @@
 (defun ruin/haskell-interactive-switch-and-move ()
   (interactive)
   (haskell-interactive-switch)
-  (goto-char (point-max)))
+  (goto-char (point-max))
+  (evil-append 1))
 
 (defun ruin/haskell-load-file-and-switch ()
   (interactive)
   (haskell-process-load-file)
-  (haskell-interactive-switch-and-move))
+  (ruin/haskell-interactive-switch-and-move))
 
 ;;; Random functions from the Internet
 
