@@ -18,7 +18,7 @@
 (evil-leader/set-leader "<SPC>")
 
 (evil-leader/set-key
-  "r" 'quickrun
+  "r" (lambda () (interactive) (save-buffer) (quickrun))
   "R" 'quickrun-shell
   "w" 'save-buffer
   "j" 'jump-to-register

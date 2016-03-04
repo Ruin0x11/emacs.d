@@ -36,6 +36,9 @@
 
 (blink-cursor-mode 0)
 
+;; 4-column tabs
+(setq tab-width 4)
+
 (setq ring-bell-function 'ignore)
 
 (setq gdb-many-windows t

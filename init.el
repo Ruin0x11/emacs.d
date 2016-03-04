@@ -46,6 +46,7 @@
         ruin-lua
         ruin-ruby
         ruin-haskell
+        ruin-go
         ruin-tex
 
         ruin-flycheck

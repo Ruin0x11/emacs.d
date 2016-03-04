@@ -39,8 +39,7 @@
   (other-window -1))
 
 (setq quickrun-timeout-seconds nil)
-
-(add-hook 'quickrun-after-run-hook 'prev-window)
+(setq quickrun-focus-p nil)
 
 (setq projectile-globally-ignored-directories
       (append projectile-globally-ignored-directories '(".git"

@@ -235,7 +235,7 @@
   "ot" 'org-set-tags-command
   "oR" 'org-refile
   "os" 'org-save-all-org-buffers
-  "oh" 'helm-org-headlines)
+  "oh" 'helm-org-agenda-files-headings)
 
 ;; Evil bindings in agenda
 (eval-after-load "org-agenda"
@@ -275,6 +275,12 @@
 
 ;; enter insert mode on capture
 (add-hook 'org-capture-mode-hook 'evil-insert-state)
+
+;; automatically narrow on agenda follow
+;; http://emacs.stackexchange.com/a/17822
+(advice-add 'org-agenda-goto :after
+            (lambda (&rest args)
+              (org-narrow-to-element)))
 
 ;;; Encryption
 (require 'org-crypt)

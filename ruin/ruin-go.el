@@ -1,6 +1,18 @@
 ;;; ruin.go.el --- settings for the Go language
 
 (package-require 'go-mode)
-(require 'go-mode-load)
+
+(evil-leader/set-key-for-mode 'go-mode
+  "mgf" 'go-goto-function
+  "mgf" 'go-goto-arguments
+  "mgd" 'go-goto-docstring
+  "mgi" 'go-goto-imports
+  "mgr" 'go-goto-return-values
+  "mgm" 'go-goto-method-receiver
+  "mia" 'go-import-add
+  "mir" 'go-remove-unused-imports
+  "md" 'godoc
+  "mD" 'godoc-at-point
+  )
 
 (provide 'ruin-go)
