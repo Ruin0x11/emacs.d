@@ -35,8 +35,8 @@
   "dv" 'describe-variable
   "dm" 'describe-mode
   "dk" 'describe-key
-  "dp" 'describe-package
   "dd" 'describe-foo-at-point
+  "da" 'helm-apropos
 
   "eb" 'eval-buffer
   "es" 'eval-last-sexp
@@ -50,8 +50,7 @@
 
   "ps" 'helm-projectile-switch-project
   "pa" 'helm-projectile-ag
-  "pf" 'helm-projectile-find-file
-  "ph" 'helm-projectile
+  "pf" 'helm-projectile
   "pb" 'helm-projectile-switch-to-buffer
   "p!" 'projectile-run-async-shell-command-in-root
   "pc" 'projectile-compile-project
@@ -60,11 +59,18 @@
   "ff" 'helm-find-files
   "fg" 'helm-do-grep-ag
   "fr" 'helm-recentf
-  "hr" 'helm-regexp
+  "hs" 'helm-semantic-or-imenu
+  "hR" 'helm-regexp
   "hM" 'helm-man-woman
   "hm" 'helm-mini
+  "hM" 'helm-man-woman
   "hb" 'helm-bookmarks
-  "hi" 'helm-imenu
+  "hr" 'helm-resume
+  "hc" 'helm-colors
+
+  "ie" 'helm-info-emacs
+  "ii" 'helm-info-at-point
+  "il" 'helm-info-elisp
 
   "bl" 'helm-buffers-list
   "TAB" 'spacemacs/alternate-buffer

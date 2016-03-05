@@ -51,6 +51,7 @@
 
         ruin-flycheck
         ruin-git
+        ruin-shell
         ruin-misc
         linum-off
         ruin-theme

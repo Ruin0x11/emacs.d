@@ -34,6 +34,8 @@
 (projectile-global-mode)
 (helm-projectile-on)
 
+(semantic-mode)
+
 (defun prev-window ()
   (interactive)
   (other-window -1))
