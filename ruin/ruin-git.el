@@ -6,9 +6,11 @@
 (evil-leader/set-key
         "gB" 'magit-blame
         "gb" 'magit-branch
+        "gS" 'magic-checkout
         "gl" 'magit-log-all
         "gL" 'magit-log-buffer-file
         "gs" 'magit-status
+        "gM" 'magit-merge
         "gd" 'magit-diff-head
         "gp" 'magit-push
         "gP" 'magit-pull

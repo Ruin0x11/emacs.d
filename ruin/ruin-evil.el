@@ -13,6 +13,7 @@
 (global-evil-leader-mode)
 (global-evil-surround-mode)
 (evil-commentary-mode)
+(winner-mode)
 
 ;;; leader binds
 (evil-leader/set-leader "<SPC>")
@@ -28,6 +29,7 @@
   "x" 'evil-save-and-close
   "u" 'universal-argument
   "y" 'helm-show-kill-ring
+  "!" 'shell-command
 
   "df" 'describe-function
   "dv" 'describe-variable
@@ -42,7 +44,6 @@
   "ed" 'eval-defun
 
   "a" 'org-agenda
-  "s" 'org-store-link
   "c" 'org-capture
   "ob" 'org-iswitchb
   "oc" 'org-clock-goto
@@ -54,13 +55,14 @@
   "pb" 'helm-projectile-switch-to-buffer
   "p!" 'projectile-run-async-shell-command-in-root
   "pc" 'projectile-compile-project
-  "pr" 'helm-projectile-recentf
+  "pr" 'projectile-replace
 
   "ff" 'helm-find-files
   "fg" 'helm-do-grep-ag
   "fr" 'helm-recentf
   "hr" 'helm-regexp
-  "hm" 'helm-man-woman
+  "hM" 'helm-man-woman
+  "hm" 'helm-mini
   "hb" 'helm-bookmarks
   "hi" 'helm-imenu
 
@@ -72,6 +74,9 @@
   "bY"  'spacemacs/copy-whole-buffer-to-clipboard
   "b!"  'spacemacs/open-in-external-app
   "b="  'my-diff-buffer-with-file
+
+  "["   'winner-undo
+  "]"   'winner-redo
   )
 
 ;;; mode-based binds
