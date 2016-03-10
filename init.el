@@ -36,8 +36,9 @@
 
 ;; modularize separate features
 (setq ruin-pkg
-      '(ruin-evil 
+      '(ruin-general
         ruin-funcs
+        ruin-evil 
         ruin-org
         ruin-helm
         ruin-ido
@@ -45,14 +46,18 @@
 
         ruin-lua
         ruin-ruby
+        ruin-html
         ruin-haskell
         ruin-go
         ruin-tex
 
+        ruin-project
         ruin-flycheck
+        ruin-snippet
         ruin-git
         ruin-shell
-        ruin-misc
+        ruin-misc-modes
+
         linum-off
         ruin-theme
         ruin-powerline

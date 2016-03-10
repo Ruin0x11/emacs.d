@@ -13,7 +13,6 @@
 (global-evil-leader-mode)
 (global-evil-surround-mode)
 (evil-commentary-mode)
-(winner-mode)
 
 ;;; leader binds
 (evil-leader/set-leader "<SPC>")
@@ -23,12 +22,11 @@
   "R" 'quickrun-shell
   "w" 'save-buffer
   "j" 'jump-to-register
-  ;; "p" 'helm-find-files
-  ;; "q" 'kill-buffer-and-window
   "q" 'evil-quit
   "x" 'evil-save-and-close
   "u" 'universal-argument
   "y" 'helm-show-kill-ring
+  "=" 'calc-dispatch
   "!" 'shell-command
 
   "df" 'describe-function
@@ -48,14 +46,6 @@
   "ob" 'org-iswitchb
   "oc" 'org-clock-goto
 
-  "ps" 'helm-projectile-switch-project
-  "pa" 'helm-projectile-ag
-  "pf" 'helm-projectile
-  "pb" 'helm-projectile-switch-to-buffer
-  "p!" 'projectile-run-async-shell-command-in-root
-  "pc" 'projectile-compile-project
-  "pr" 'projectile-replace
-
   "ff" 'helm-find-files
   "fg" 'helm-do-grep-ag
   "fr" 'helm-recentf
@@ -67,10 +57,26 @@
   "hb" 'helm-bookmarks
   "hr" 'helm-resume
   "hc" 'helm-colors
+  "hg" 'helm-do-grep
 
-  "ie" 'helm-info-emacs
-  "ii" 'helm-info-at-point
-  "il" 'helm-info-elisp
+  "?e" 'info-emacs-manual
+  "?h" 'helm-info-emacs
+  ;; "ii" 'helm-info-at-point
+  ;; "il" 'helm-info-elisp
+
+  "ii" 'other-window
+  "i=" 'balance-windows
+  "io" 'delete-other-windows
+  "ih" 'evil-window-move-far-left
+  "il" 'evil-window-move-far-right
+  "ij" 'evil-window-move-very-bottom
+  "ik" 'evil-window-move-very-top
+  "iv" 'split-window-below
+  "is" 'split-window-right
+  "iV" 'split-window-below-and-focus
+  "iS" 'split-window-right-and-focus
+  "iu" 'winner-undo
+  "iU" 'winner-redo
 
   "bl" 'helm-buffers-list
   "TAB" 'spacemacs/alternate-buffer
@@ -80,9 +86,6 @@
   "bY"  'spacemacs/copy-whole-buffer-to-clipboard
   "b!"  'spacemacs/open-in-external-app
   "b="  'my-diff-buffer-with-file
-
-  "["   'winner-undo
-  "]"   'winner-redo
   )
 
 ;;; mode-based binds
@@ -123,24 +126,21 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
      (global-set-key [escape] 'evil-exit-emacs-state)
      ))
 
+;; j and k where it counts
+(define-key archive-mode-map "j" 'archive-next-line)
+(define-key archive-mode-map "k" 'archive-previous-line)
+
 ;;; normal Emacs binds
 (global-set-key (kbd "C-x |") 'align-regexp)
 (global-set-key (kbd "C-x =") 'eval-region)
 
-; (defun comint-goto-end-and-insert ()
-;   (interactive)
-;   (if (not (comint-after-pmark-p))
-;       (progn (comint-goto-process-mark)
-;              (evil-append-line nil))
-;     (evil-insert 1)))
+(global-set-key [f7] 'previous-error)
+(global-set-key [f8] 'next-error)
+(global-set-key [f9] 'projectile-compile-project)
 
-; (evil-define-key 'normal comint-mode-map "i" 'comint-goto-end-and-insert)
-; (evil-define-key 'normal inf-ruby-mode-map "i" 'comint-goto-end-and-insert)
-
-; (evil-define-key 'insert comint-mode-map
-;   (kbd "<up>") 'comint-previous-input
-;   (kbd "<down>") 'comint-next-input)
-
-; (evil-define-key 'insert comint-mode-map     (kbd "RET") #'comint-send-input)
+;;literal Ctrl-D (EOF) in term-mode
+;;http://stackoverflow.com/a/27258145/5862977
+(delete 'term-mode evil-insert-state-modes)
+(add-to-list 'evil-emacs-state-modes 'term-mode)
 
 (provide 'ruin-evil)

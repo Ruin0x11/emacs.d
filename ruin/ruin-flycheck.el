@@ -11,6 +11,6 @@
      (setq flycheck-highlighting-mode 'symbols)
      (set-face-foreground 'flycheck-warning nil)))
 
-(setq-default flycheck-disabled-checkers '(ruby-rubocop))
+;; (setq-default flycheck-disabled-checkers '(ruby-rubocop))
 
 (provide 'ruin-flycheck)

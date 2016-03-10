@@ -9,7 +9,7 @@
 (defvar shell-default-position 'bottom
   "Position of the shell. Possible values are `top', `bottom' and `full'.")
 
-(defvar shell-default-height 30
+(defvar shell-default-height 40
   "Height in percents for the shell window.")
 
 (defvar shell-default-term-shell "/bin/zsh"

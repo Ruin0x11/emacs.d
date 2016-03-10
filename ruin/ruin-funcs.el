@@ -13,6 +13,31 @@
   (haskell-process-load-file)
   (ruin/haskell-interactive-switch-and-move))
 
+(require 'url)
+
+(defun download-file-and-open (&optional url download-dir download-name)
+  (interactive)
+  (let* ((url (or url
+                  (read-string "Enter download URL: ")))
+         (file-name (or download-name
+                        (car (last (split-string url "/" t)))))
+         (file-dir (concat (or download-dir
+                                "~/ダウンロード/")
+                            file-name)))
+    (if (not (file-exists-p file-dir))
+    (let ((download-buffer (url-retrieve-synchronously url)))
+      ;; (save-excursion
+        (set-buffer download-buffer)
+        ;; we may have to trim the http response
+        (goto-char (point-min))
+        (re-search-forward "^$" nil 'move)
+        (forward-char)
+        (delete-region (point-min) (point))
+        (write-file file-dir)
+        (find-file file-dir))
+    (find-file file-dir))))
+      ;; )
+
 ;;; Random functions from the Internet
 
 ;;http://www.emacswiki.org/emacs/DescribeThingAtPoint#toc2
@@ -114,6 +139,34 @@ current window."
          ((spacemacs/system-is-linux) (let ((process-connection-type nil))
                               (start-process "" nil "xdg-open" file-path))))
       (message "No file associated to this buffer."))))
+
+(defun split-window-below-and-focus ()
+  "Split the window vertically and focus the new window."
+  (interactive)
+  (split-window-below)
+  (windmove-down)
+  (when (and (boundp 'golden-ratio-mode)
+             (symbol-value golden-ratio-mode))
+    (golden-ratio)))
+(defun split-window-right-and-focus ()
+  "Split the window horizontally and focus the new window."
+  (interactive)
+  (split-window-right)
+  (windmove-right)
+  (when (and (boundp 'golden-ratio-mode)
+             (symbol-value golden-ratio-mode))
+    (golden-ratio)))
+
+;; https://github.com/magnars/.emacs.d/blob/master/defuns/lisp-defuns.el#L3
+(defun eval-and-replace ()
+  "Replace the preceding sexp with its value."
+  (interactive)
+  (backward-kill-sexp)
+  (condition-case nil
+      (prin1 (eval (read (current-kill 0)))
+             (current-buffer))
+    (error (message "Invalid expression")
+           (insert (current-kill 0)))))
 
 ;;; Norang
 
