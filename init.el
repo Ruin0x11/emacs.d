@@ -44,6 +44,7 @@
         ruin-ido
         ruin-company
 
+        ruin-lisp
         ruin-lua
         ruin-ruby
         ruin-html
@@ -55,12 +56,13 @@
         ruin-flycheck
         ruin-snippet
         ruin-git
+        ruin-mail
         ruin-shell
         ruin-misc-modes
 
         linum-off
-        ruin-theme
         ruin-powerline
+        ruin-theme
         ))
 
 ;; load modularized features

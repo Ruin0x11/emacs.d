@@ -35,4 +35,26 @@
 (define-key evil-visual-state-map (kbd "C-e") 'er/expand-region)
 (define-key evil-normal-state-map (kbd "C-e") 'er/expand-region)
 
+;; anzu
+(package-require 'anzu)
+(global-anzu-mode 1)
+
+;; diminish
+(package-require 'diminish)
+(eval-after-load "helm" '(diminish 'helm-mode))
+(eval-after-load "yasnippet" '(diminish 'yas-minor-mode))
+(eval-after-load "undo-tree" '(diminish 'undo-tree-mode))
+(eval-after-load "which-key" '(diminish 'which-key-mode))
+(eval-after-load "flycheck" '(diminish 'flycheck-mode))
+(eval-after-load "evil-commentary" '(diminish 'evil-commentary-mode))
+;; (eval-after-load "paredit" '(diminish 'paredit-mode))
+;; (eval-after-load "autopair" '(diminish 'autopair-mode))
+(eval-after-load "company" '(diminish 'company-mode))
+(eval-after-load "projectile" '(diminish 'projectile-mode))
+;; (eval-after-load "highlight-parentheses" '(diminish 'highlight-parentheses-mode))
+;; (eval-after-load "subword" '(diminish 'subword-mode))
+(eval-after-load "anzu" '(diminish 'anzu-mode))
+;; (eval-after-load "smartparens" '(diminish 'smartparens-mode))
+(eval-after-load "magit" '(diminish 'magit-auto-revert-mode))
+
 (provide 'ruin-misc-modes)

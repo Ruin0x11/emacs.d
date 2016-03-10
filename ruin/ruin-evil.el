@@ -1,5 +1,7 @@
 ;;; ruin-evil.el --- evil settings and non-package mappings
 
+(+ (- 4 5) 1)
+
 (setq evil-want-C-u-scroll t)
 
 (package-require 'evil)
@@ -49,7 +51,7 @@
   "ff" 'helm-find-files
   "fg" 'helm-do-grep-ag
   "fr" 'helm-recentf
-  "hs" 'helm-semantic-or-imenu
+  "fd" 'helm-semantic-or-imenu
   "hR" 'helm-regexp
   "hM" 'helm-man-woman
   "hm" 'helm-mini
@@ -127,8 +129,16 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
      ))
 
 ;; j and k where it counts
-(define-key archive-mode-map "j" 'archive-next-line)
-(define-key archive-mode-map "k" 'archive-previous-line)
+(setq archive-mode-hook #'(lambda ()
+  (define-key archive-mode-map " " 'scroll-up)
+  (define-key archive-mode-map "'" 'scroll-down)
+  (define-key archive-mode-map "j" 'archive-next-line)
+  (define-key archive-mode-map "k" 'archive-previous-line)
+  (define-key archive-mode-map "J" 'scroll-up-next-n-lines)
+  (define-key archive-mode-map "K" 'scroll-down-previous-n-lines)
+  (define-key archive-mode-map "l" 'quit-window)
+  (define-key archive-mode-map ";" 'archive-view)))
+
 
 ;;; normal Emacs binds
 (global-set-key (kbd "C-x |") 'align-regexp)
