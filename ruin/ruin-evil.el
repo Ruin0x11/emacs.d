@@ -95,6 +95,12 @@
   (interactive)
   (evil-yank (point) (point-at-eol)))
 
+(defun window-movement-for-map (map)
+     (define-key map (kbd "C-h") 'evil-window-left)
+     (define-key map (kbd "C-j") 'evil-window-down)
+     (define-key map (kbd "C-k") 'evil-window-up)
+     (define-key map (kbd "C-l") 'evil-window-right))
+
 ;; esc quits
 (defun minibuffer-keyboard-quit ()
   "Abort recursive edit.
@@ -112,10 +118,7 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
      (define-key evil-normal-state-map "Y" 'copy-to-end-of-line)
 
      ;; trade ctrl-h and others for faster window switching
-     (define-key evil-normal-state-map (kbd "C-h") 'evil-window-left)
-     (define-key evil-normal-state-map (kbd "C-j") 'evil-window-down)
-     (define-key evil-normal-state-map (kbd "C-k") 'evil-window-up)
-     (define-key evil-normal-state-map (kbd "C-l") 'evil-window-right)
+     (window-movement-for-map evil-normal-state-map)
 
      ;; global escape-to-quit
      (define-key evil-normal-state-map [escape] 'keyboard-quit)
@@ -128,10 +131,23 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
      (global-set-key [escape] 'evil-exit-emacs-state)
      ))
 
+(add-hook 'term-mode-hook '(lambda ()
+                            (window-movement-for-map term-mode-map)
+                            (window-movement-for-map term-raw-map)
+			    (font-lock-mode 1)
+			    ))
+
 ;; j and k where it counts
+(setq tar-mode-hook #'(lambda ()
+  (define-key tar-mode-map "j" 'tar-next-line)
+  (define-key tar-mode-map "k" 'tar-previous-line)
+  (define-key tar-mode-map "J" 'scroll-up-next-n-lines)
+  (define-key tar-mode-map "K" 'scroll-down-previous-n-lines)
+  (define-key tar-mode-map ";" 'tar-view)
+  (if (>= emacs-major-version 21)
+      (define-key tar-mode-map "l" 'quit-window)
+    (define-key tar-mode-map "l" 'tar-quit))))
 (setq archive-mode-hook #'(lambda ()
-  (define-key archive-mode-map " " 'scroll-up)
-  (define-key archive-mode-map "'" 'scroll-down)
   (define-key archive-mode-map "j" 'archive-next-line)
   (define-key archive-mode-map "k" 'archive-previous-line)
   (define-key archive-mode-map "J" 'scroll-up-next-n-lines)
@@ -152,5 +168,8 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 ;;http://stackoverflow.com/a/27258145/5862977
 (delete 'term-mode evil-insert-state-modes)
 (add-to-list 'evil-emacs-state-modes 'term-mode)
+
+(package-require 'evil-matchit)
+(global-evil-matchit-mode 1)
 
 (provide 'ruin-evil)

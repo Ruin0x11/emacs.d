@@ -39,16 +39,16 @@
 
 (add-hook 'enh-ruby-mode-hook 'robe-mode)
 
+(add-hook 'enh-ruby-mode-hook
+	  #'(lambda ()
+	      (yas-activate-extra-mode 'ruby-mode)))
+
 (add-hook 'ruby-mode-hook
           (function (lambda ()
                       (setq evil-shift-width enh-ruby-indent-level))))
 
 (eval-after-load 'company
   '(push 'company-robe company-backends))
-
-(add-hook 'enh-ruby-mode-hook
-	  #'(lambda ()
-	      (yas-activate-extra-mode 'ruby-mode)))
 
 (evil-leader/set-key-for-mode 'enh-ruby-mode
   "mi" 'inf-ruby

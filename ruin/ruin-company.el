@@ -12,4 +12,7 @@
 
 (global-company-mode)
 
+(eval-after-load 'company
+  '(push 'company-semantic company-backends))
+
 (provide 'ruin-company)
