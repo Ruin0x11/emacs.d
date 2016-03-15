@@ -28,7 +28,6 @@
   "x" 'evil-save-and-close
   "u" 'universal-argument
   "y" 'helm-show-kill-ring
-  "=" 'calc-dispatch
   "!" 'shell-command
 
   "df" 'describe-function
@@ -43,7 +42,7 @@
   "ee" 'eval-expression
   "ed" 'eval-defun
 
-  "a" 'org-agenda
+  "aa" 'org-agenda
   "c" 'org-capture
   "ob" 'org-iswitchb
   "oc" 'org-clock-goto
@@ -64,7 +63,7 @@
   "?e" 'info-emacs-manual
   "?h" 'helm-info-emacs
   ;; "ii" 'helm-info-at-point
-  ;; "il" 'helm-info-elisp
+  "?l" 'helm-info-elisp
 
   "ii" 'other-window
   "i=" 'balance-windows

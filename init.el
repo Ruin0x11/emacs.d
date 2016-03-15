@@ -70,3 +70,4 @@
   (require file))
 
 (load custom-file 'noerror)
+(put 'downcase-region 'disabled nil)

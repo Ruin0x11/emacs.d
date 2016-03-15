@@ -18,6 +18,22 @@
 (global-set-key (kbd "M-x") 'helm-M-x)
 (helm-mode t)
 
+(evil-leader/set-key
+  "ff" 'helm-find-files
+  "fg" 'helm-do-grep-ag
+  "fr" 'helm-recentf
+  "fd" 'helm-semantic-or-imenu
+  "fF" 'helm-find
+
+  "hR" 'helm-regexp
+  "hM" 'helm-man-woman
+  "hm" 'helm-mini
+  "hM" 'helm-man-woman
+  "hb" 'helm-bookmarks
+  "hr" 'helm-resume
+  "hc" 'helm-colors
+  "hg" 'helm-do-grep)
+
 (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
 (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
 (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z

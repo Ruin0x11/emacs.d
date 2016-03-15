@@ -51,6 +51,9 @@
 ;; save clipboard before replacing
 (setq save-interprogram-paste-before-kill t)
 
+;; autosave recentf
+(run-at-time nil (* 5 60) 'recentf-save-list)
+
 ;; registers
 (dolist
     (r `((?i (file . ,(concat dotfiles-dir "init.el")))
