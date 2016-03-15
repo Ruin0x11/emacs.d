@@ -322,4 +322,41 @@
 (setq linum-delay t 
       linum-eager nil)
 
+
+;; give visual notifications of deadlines with appt
+;; http://emacs.stackexchange.com/a/5821
+(require 'appt)
+(appt-activate t)
+
+(setq appt-message-warning-time 30)
+(setq appt-display-interval 5) ; disable multiple reminders
+(setq appt-display-mode-line t)
+
+; use appointment data from org-mode
+(defun my-org-agenda-to-appt ()
+  (interactive)
+  (setq appt-time-msg-list nil)
+  (org-agenda-to-appt))
+
+; run when starting Emacs and everyday at 12:05am
+(my-org-agenda-to-appt)
+(run-at-time "12:05am" (* 24 3600) 'my-org-agenda-to-appt)
+
+; display appointments as a notifications in the window manager
+(setq appt-disp-window-function 'my-appt-display)
+
+(setq my-appt-notification-app (concat (getenv "HOME") "/.bin/appt-notification"))
+
+(defun my-appt-display (min-to-app new-time msg)
+  (if (atom min-to-app)
+    (call-process my-appt-notification-app nil nil nil min-to-app msg)
+  (dolist (i (number-sequence 0 (1- (length min-to-app))))
+    (call-process my-appt-notification-app nil nil nil (nth i min-to-app) (nth i msg)))))
+
+; automatically update appointments when TODO.txt is saved
+(add-hook 'after-save-hook
+          '(lambda ()
+             (if (string= (buffer-file-name) (concat (getenv "HOME") "/ideas/TODO.txt"))
+                 (my-org-agenda-to-appt))))
+
 (provide 'ruin-org)

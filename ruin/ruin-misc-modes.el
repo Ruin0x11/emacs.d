@@ -31,7 +31,10 @@
 
 ;; expand-region
 (package-require 'expand-region)
-(global-set-key (kbd "C-<SPC>") 'er/expand-region)
+(define-key evil-normal-state-map (kbd "C-'") 'er/expand-region)
+(define-key evil-visual-state-map (kbd "C-'") 'er/expand-region)
+(define-key evil-normal-state-map (kbd "C-;") 'er/contract-region)
+(define-key evil-visual-state-map (kbd "C-;") 'er/contract-region)
 
 ;; anzu
 (package-require 'anzu)

@@ -35,8 +35,9 @@
         (delete-region (point-min) (point))
         (write-file file-dir)
         (find-file file-dir))
+    (write-file file-dir t)
     (find-file file-dir))))
-      ;; )
+;; )
 
 ;;; Random functions from the Internet
 
@@ -72,6 +73,7 @@ This checks in turn:
 (defun my-diff-buffer-with-file ()
   "Compare the current modified buffer with the saved version."
   (interactive)
+  (recover-this-file)
   (let ((diff-switches "-u")) ;; unified diff
     (diff-buffer-with-file (current-buffer))))
 
@@ -150,7 +152,7 @@ current window."
          ((spacemacs/system-is-mswindows) (w32-shell-execute "open" (replace-regexp-in-string "/" "\\\\" file-path)))
          ((spacemacs/system-is-mac) (shell-command (format "open \"%s\"" file-path)))
          ((spacemacs/system-is-linux) (let ((process-connection-type nil))
-                              (start-process "" nil "xdg-open" file-path))))
+                                        (start-process "" nil "xdg-open" file-path))))
       (message "No file associated to this buffer."))))
 
 (defun split-window-below-and-focus ()

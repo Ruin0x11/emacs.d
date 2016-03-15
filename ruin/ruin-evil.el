@@ -137,6 +137,10 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 			    (font-lock-mode 1)
 			    ))
 
+(add-hook 'help-mode-hook '(lambda ()
+                             (window-movement-for-map help-mode-map)
+                             ))
+
 ;; j and k where it counts
 (setq tar-mode-hook #'(lambda ()
   (define-key tar-mode-map "j" 'tar-next-line)
