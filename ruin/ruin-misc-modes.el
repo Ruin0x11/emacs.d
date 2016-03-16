@@ -18,11 +18,20 @@
 (setq quickrun-timeout-seconds nil
       quickrun-focus-p nil)
 
-;; dictionary
-(package-require 'dictionary)
+;; lookup
+(add-to-list 'load-path "/usr/share/emacs/site-lisp/lookup")
+(load "lookup-autoloads")
 (evil-leader/set-key
-  "dw" 'dictionary-lookup-definition
-  "dl" 'dictionary-search)
+ "ll" 'lookup
+ "lw" 'lookup-word
+ "lp" 'lookup-pattern)
+
+;; (load "lookup-autoloads")
+(setq lookup-mecab-coding-system 'utf-8)
+(setq lookup-search-agents '((ndmecab)
+                             (ndict "dict.us.dict.org")
+                             ;; (ndsary "~/dicts/JMdict")
+                             ))
 
 ;; multiple-cursors
 (package-require 'evil-multiedit)
@@ -39,6 +48,12 @@
 ;; anzu
 (package-require 'anzu)
 (global-anzu-mode 1)
+(setq anzu-cons-mode-line-p nil)
+
+;; aggressive-indent
+(package-require 'aggressive-indent)
+(add-hook 'emacs-lisp-hook #'aggressive-indent-mode)
+(add-hook 'go-mode-hook #'aggressive-indent-mode)
 
 ;; diminish
 (package-require 'diminish)
@@ -55,7 +70,8 @@
 ;; (eval-after-load "highlight-parentheses" '(diminish 'highlight-parentheses-mode))
 ;; (eval-after-load "subword" '(diminish 'subword-mode))
 (eval-after-load "anzu" '(diminish 'anzu-mode))
-;; (eval-after-load "smartparens" '(diminish 'smartparens-mode))
+(eval-after-load "smartparens" '(diminish 'smartparens-mode))
 (eval-after-load "magit" '(diminish 'magit-auto-revert-mode))
+(eval-after-load "abbrev" '(diminish 'abbrev-mode))
 
 (provide 'ruin-misc-modes)

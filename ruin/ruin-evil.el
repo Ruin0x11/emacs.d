@@ -47,6 +47,8 @@
   "ob" 'org-iswitchb
   "oc" 'org-clock-goto
 
+  "ac" 'calc-dispatch
+
   "ff" 'helm-find-files
   "fg" 'helm-do-grep-ag
   "fr" 'helm-recentf
@@ -94,11 +96,18 @@
   (interactive)
   (evil-yank (point) (point-at-eol)))
 
-(defun window-movement-for-map (map)
-     (define-key map (kbd "C-h") 'evil-window-left)
-     (define-key map (kbd "C-j") 'evil-window-down)
-     (define-key map (kbd "C-k") 'evil-window-up)
-     (define-key map (kbd "C-l") 'evil-window-right))
+(defun ruin/window-movement-for-map (map)
+  (define-key map (kbd "C-h") 'evil-window-left)
+  (define-key map (kbd "C-j") 'evil-window-down)
+  (define-key map (kbd "C-k") 'evil-window-up)
+  (define-key map (kbd "C-l") 'evil-window-right))
+
+
+;; (global-set-key (kbd "C-h") 'evil-window-left)
+;; (global-set-key (kbd "C-j") 'evil-window-down)
+;; (global-set-key (kbd "C-k") 'evil-window-up)
+;; (global-set-key (kbd "C-l") 'evil-window-right)
+
 
 ;; esc quits
 (defun minibuffer-keyboard-quit ()
@@ -117,7 +126,7 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
      (define-key evil-normal-state-map "Y" 'copy-to-end-of-line)
 
      ;; trade ctrl-h and others for faster window switching
-     (window-movement-for-map evil-normal-state-map)
+     (ruin/window-movement-for-map evil-normal-state-map)
 
      ;; global escape-to-quit
      (define-key evil-normal-state-map [escape] 'keyboard-quit)
@@ -131,32 +140,47 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
      ))
 
 (add-hook 'term-mode-hook '(lambda ()
-                            (window-movement-for-map term-mode-map)
-                            (window-movement-for-map term-raw-map)
-			    (font-lock-mode 1)
-			    ))
+                             (ruin/window-movement-for-map term-mode-map)
+                             (ruin/window-movement-for-map term-raw-map)
+                             (font-lock-mode 1)
+                             ))
 
 (add-hook 'help-mode-hook '(lambda ()
-                             (window-movement-for-map help-mode-map)
+                             (ruin/window-movement-for-map help-mode-map)
                              ))
+
+(add-hook 'man-mode-hook '(lambda ()
+                            (ruin/window-movement-for-map man-mode-map)
+                            ))
 
 ;; j and k where it counts
 (setq tar-mode-hook #'(lambda ()
-  (define-key tar-mode-map "j" 'tar-next-line)
-  (define-key tar-mode-map "k" 'tar-previous-line)
-  (define-key tar-mode-map "J" 'scroll-up-next-n-lines)
-  (define-key tar-mode-map "K" 'scroll-down-previous-n-lines)
-  (define-key tar-mode-map ";" 'tar-view)
-  (if (>= emacs-major-version 21)
-      (define-key tar-mode-map "l" 'quit-window)
-    (define-key tar-mode-map "l" 'tar-quit))))
-(setq archive-mode-hook #'(lambda ()
-  (define-key archive-mode-map "j" 'archive-next-line)
-  (define-key archive-mode-map "k" 'archive-previous-line)
-  (define-key archive-mode-map "J" 'scroll-up-next-n-lines)
-  (define-key archive-mode-map "K" 'scroll-down-previous-n-lines)
-  (define-key archive-mode-map "l" 'quit-window)
-  (define-key archive-mode-map ";" 'archive-view)))
+                        (define-key tar-mode-map "j" 'tar-next-line)
+                        (define-key tar-mode-map "k" 'tar-previous-line)
+                        (define-key tar-mode-map "J" 'scroll-up-next-n-lines)
+                        (define-key tar-mode-map "K" 'scroll-down-previous-n-lines)
+                        (define-key tar-mode-map ";" 'tar-view)
+                        (if (>= emacs-major-version 21)
+                            (define-key tar-mode-map "l" 'quit-window)
+                          (define-key tar-mode-map "l" 'tar-quit))))
+
+(setq mu4e-view-mode-hook #'(lambda ()
+                              (ruin/window-movement-for-map mu4e-view-mode-map)
+                              (define-key mu4e-view-mode-map (kbd "C-u") 'evil-scroll-up)
+                              (define-key mu4e-view-mode-map (kbd "C-d") 'evil-scroll-down)
+                              (define-key mu4e-view-mode-map "j" 'evil-next-line)
+                              (define-key mu4e-view-mode-map "k" 'evil-previous-line)
+                              (define-key mu4e-view-mode-map "J" 'mu4e-view-headers-next-unread)
+                              (define-key mu4e-view-mode-map "K" 'mu4e-view-headers-prev-unread)))
+
+(setq mu4e-headers-mode-hook #'(lambda ()
+                                 (ruin/window-movement-for-map mu4e-headers-mode-map)
+                                 (define-key mu4e-headers-mode-map (kbd "C-u") 'evil-scroll-up)
+                                 (define-key mu4e-headers-mode-map (kbd "C-d") 'evil-scroll-down)
+                                 (define-key mu4e-headers-mode-map "j" 'evil-next-line)
+                                 (define-key mu4e-headers-mode-map "k" 'evil-previous-line)
+                                 (define-key mu4e-headers-mode-map "J" 'mu4e-headers-next-unread)
+                                 (define-key mu4e-headers-mode-map "K" 'mu4e-headers-prev-unread)))
 
 
 ;;; normal Emacs binds
@@ -167,8 +191,6 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (global-set-key [f8] 'next-error)
 (global-set-key [f9] 'projectile-compile-project)
 
-;;literal Ctrl-D (EOF) in term-mode
-;;http://stackoverflow.com/a/27258145/5862977
 (delete 'term-mode evil-insert-state-modes)
 (add-to-list 'evil-emacs-state-modes 'term-mode)
 

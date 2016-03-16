@@ -36,7 +36,11 @@
 
 ;; modularize separate features
 (setq ruin-pkg
-      '(ruin-general
+      '( linum-off
+        ruin-powerline
+        ruin-theme
+
+        ruin-general
         ruin-funcs
         ruin-evil 
         ruin-org
@@ -59,10 +63,6 @@
         ruin-mail
         ruin-shell
         ruin-misc-modes
-
-        linum-off
-        ruin-powerline
-        ruin-theme
         ))
 
 ;; load modularized features
