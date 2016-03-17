@@ -54,6 +54,7 @@
 (package-require 'aggressive-indent)
 (add-hook 'emacs-lisp-hook #'aggressive-indent-mode)
 (add-hook 'go-mode-hook #'aggressive-indent-mode)
+(add-hook 'enh-ruby-mode-hook #'aggressive-indent-mode)
 
 ;; diminish
 (package-require 'diminish)

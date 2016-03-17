@@ -8,12 +8,17 @@
       (require 'smtpmail)
 
       (setq
+       mu4e-mu-binary           "/usr/bin/mu"
        mu4e-maildir             "~/mail"
        mu4e-drafts-folder       "/[Gmail].Drafts"
        mu4e-sent-folder         "/[Gmail].Sent Mail"
        mu4e-trash-folder        "/[Gmail].Trash"
-       mu4e-get-mail-command    "sync-mail"
+       mu4e-get-mail-command    "mail-sync"
        mu4e-confirm-quit     nil)
+
+      (setq mu4e-html2text-command "/usr/bin/w3m -T text/html")
+
+      (add-to-list 'mu4e-view-actions '("retag message" . mu4e-action-retag-message))
 
       ;; something about ourselves
       (setq
@@ -34,6 +39,10 @@
       ;; don't save messages to Sent Messages, Gmail/IMAP takes care of this
       (setq mu4e-sent-messages-behavior 'delete)
 
+      (add-hook 'mu4e-view-mode-hook
+                '(lambda () (start-process "panel-mail" nil "panel-mail"))
+                'append)
+
       (defun ruin/mu4e-update-and-start ()
         (interactive)
         (mu4e-update-index)
@@ -45,6 +54,7 @@
       (evil-leader/set-key
         "am" 'ruin/mu4e-update-and-start))
 
-      (add-hook 'mu4e-view-mode-hook #'(lambda () (start-process "panel-mail" nil "panel-mail"))))
+
+  )
 
 (provide 'ruin-mail)

@@ -23,7 +23,6 @@
   "r" (lambda () (interactive) (save-buffer) (quickrun))
   "R" 'quickrun-shell
   "w" 'save-buffer
-  "j" 'jump-to-register
   "q" 'evil-quit
   "x" 'evil-save-and-close
   "u" 'universal-argument
@@ -40,6 +39,7 @@
   "eb" 'eval-buffer
   "es" 'eval-last-sexp
   "ee" 'eval-expression
+  "eh" 'helm-eval-expression-with-eldoc
   "ed" 'eval-defun
 
   "aa" 'org-agenda
@@ -48,6 +48,8 @@
   "oc" 'org-clock-goto
 
   "ac" 'calc-dispatch
+
+  "jr" 'helm-register
 
   "ff" 'helm-find-files
   "fg" 'helm-do-grep-ag
@@ -95,6 +97,14 @@
 (defun copy-to-end-of-line ()
   (interactive)
   (evil-yank (point) (point-at-eol)))
+
+(defun ruin/window-movement-for-mode (mode map)
+  (eval-after-load mode `(lambda ()
+                   (define-key ,map (kbd "C-h") 'evil-window-left)
+                   (define-key ,map (kbd "C-j") 'evil-window-down)
+                   (define-key ,map (kbd "C-k") 'evil-window-up)
+                   (define-key ,map (kbd "C-l") 'evil-window-right))
+            ))
 
 (defun ruin/window-movement-for-map (map)
   (define-key map (kbd "C-h") 'evil-window-left)
@@ -145,16 +155,10 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
                              (font-lock-mode 1)
                              ))
 
-(add-hook 'help-mode-hook '(lambda ()
-                             (ruin/window-movement-for-map help-mode-map)
-                             ))
-
-(add-hook 'man-mode-hook '(lambda ()
-                            (ruin/window-movement-for-map man-mode-map)
-                            ))
+(ruin/window-movement-for-mode "help-mode" 'help-mode-map)
 
 ;; j and k where it counts
-(setq tar-mode-hook #'(lambda ()
+(eval-after-load "tar" #'(lambda ()
                         (define-key tar-mode-map "j" 'tar-next-line)
                         (define-key tar-mode-map "k" 'tar-previous-line)
                         (define-key tar-mode-map "J" 'scroll-up-next-n-lines)
@@ -164,8 +168,8 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
                             (define-key tar-mode-map "l" 'quit-window)
                           (define-key tar-mode-map "l" 'tar-quit))))
 
-(setq mu4e-view-mode-hook #'(lambda ()
-                              (ruin/window-movement-for-map mu4e-view-mode-map)
+(eval-after-load "mu4e-view" #'(lambda ()
+                              (ruin/window-movement-for-map 'mu4e-view-mode-map)
                               (define-key mu4e-view-mode-map (kbd "C-u") 'evil-scroll-up)
                               (define-key mu4e-view-mode-map (kbd "C-d") 'evil-scroll-down)
                               (define-key mu4e-view-mode-map "j" 'evil-next-line)
@@ -173,7 +177,7 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
                               (define-key mu4e-view-mode-map "J" 'mu4e-view-headers-next-unread)
                               (define-key mu4e-view-mode-map "K" 'mu4e-view-headers-prev-unread)))
 
-(setq mu4e-headers-mode-hook #'(lambda ()
+(eval-after-load "mu4e-headers" #'(lambda ()
                                  (ruin/window-movement-for-map mu4e-headers-mode-map)
                                  (define-key mu4e-headers-mode-map (kbd "C-u") 'evil-scroll-up)
                                  (define-key mu4e-headers-mode-map (kbd "C-d") 'evil-scroll-down)

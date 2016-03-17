@@ -1,20 +1,29 @@
 (package-require 'smartparens)
 (require 'smartparens-config)
+(require 'cl)
 
 (smartparens-global-mode t)
 ; (add-lisp-hook 'smartparens-strict-mode)
 
+(defun turn-on-sp-navigate-consider-stringlike ()
+  (unless (memq major-mode sp-navigate-consider-stringlike-sexp)
+    (add-to-list 'sp-navigate-consider-stringlike-sexp major-mode)))
+
+(setq
+ sp-cancel-autoskip-on-backward-movement nil
+ sp-autoskip-closing-pair 'always)
+
 (defmacro def-pairs (pairs)
   `(progn
      ,@(loop for (key . val) in pairs
-          collect
-            `(defun ,(read (concat
-                            "wrap-with-"
-                            (prin1-to-string key)
-                            "s"))
-                 (&optional arg)
-               (interactive "p")
-               (sp-wrap-with-pair ,val)))))
+             collect
+             `(defun ,(read (concat
+                             "wrap-with-"
+                             (prin1-to-string key)
+                             "s"))
+                  (&optional arg)
+                (interactive "p")
+                (sp-wrap-with-pair ,val)))))
 
 (def-pairs ((paren        . "(")
             (bracket      . "[")
@@ -38,6 +47,8 @@
 (define-key smartparens-mode-map (kbd "M-[") 'sp-backward-unwrap-sexp)
 (define-key smartparens-mode-map (kbd "M-]") 'sp-unwrap-sexp)
 (define-key smartparens-mode-map (kbd "C-M-d") 'sp-kill-sexp)
+(define-key smartparens-mode-map (kbd "C-s") 'sp-forward-slurp-sexp)
+(define-key smartparens-mode-map (kbd "C-M-s") 'sp-forward-barf-sexp)
 
 (define-key smartparens-mode-map (kbd "C-c (") 'wrap-with-parens)
 (define-key smartparens-mode-map (kbd "C-c {") 'wrap-with-braces)

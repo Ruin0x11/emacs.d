@@ -11,8 +11,10 @@
   "mgm" 'go-goto-method-receiver
   "mia" 'go-import-add
   "mir" 'go-remove-unused-imports
-  "md" 'godoc
-  "mD" 'godoc-at-point
+  "mD" 'godoc
+  "md" 'godoc-at-point
   )
+
+(ruin/window-movement-for-mode "go-mode" 'godoc-mode-map)
 
 (provide 'ruin-go)

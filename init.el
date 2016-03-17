@@ -9,6 +9,16 @@
 (setq autoload-file (concat dotfiles-dir "loaddefs.el"))
 (setq custom-file (concat dotfiles-dir "custom.el"))
 
+(require 'cl)
+(defun online? ()
+  (if (and (functionp 'network-interface-list)
+           (network-interface-list))
+      (some (lambda (iface) (unless (equal "lo" (car iface))
+                         (member 'up (first (last (network-interface-info
+                                                   (car iface)))))))
+            (network-interface-list))
+    t))
+
 ;; ELPA
 (setq package-user-dir (concat dotfiles-dir "elpa"))
 (require 'package)
@@ -17,7 +27,8 @@
                   ("elpa" . "http://tromey.com/elpa/")))
   (add-to-list 'package-archives source t))
 (package-initialize)
-(unless package-archive-contents (package-refresh-contents))
+(when (online?)
+  (unless package-archive-contents (package-refresh-contents)))
 
 (defun package-require (pkg)
   "Install a package only if it's not already installed."
@@ -36,7 +47,7 @@
 
 ;; modularize separate features
 (setq ruin-pkg
-      '( linum-off
+      '(linum-off
         ruin-powerline
         ruin-theme
 
@@ -63,6 +74,7 @@
         ruin-mail
         ruin-shell
         ruin-misc-modes
+        ruin-home
         ))
 
 ;; load modularized features

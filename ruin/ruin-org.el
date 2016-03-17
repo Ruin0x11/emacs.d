@@ -33,7 +33,7 @@
         ))
 
 ;; save at top of hour
-(run-at-time "00:59" 3600 'org-save-all-org-buffers)
+;; (run-at-time "00:59" 3600 'org-save-all-org-buffers)
 
 
 ;;; Clocking
@@ -324,9 +324,13 @@
 
 ;; autosave after capture / TODO state change
 (add-hook 'org-capture-after-finalize-hook
-          '(lambda () (org-save-all-org-buffers)))
+          '(lambda ()
+             (org-save-all-org-buffers)
+             (my-org-agenda-to-appt)))
 (add-hook 'org-after-todo-state-change-hook
-          '(lambda () (org-save-all-org-buffers)))
+          '(lambda ()
+             (org-save-all-org-buffers)
+             (my-org-agenda-to-appt)))
 
 ;; give visual notifications of deadlines with appt
 ;; http://emacs.stackexchange.com/a/5821
@@ -334,7 +338,7 @@
 (appt-activate t)
 
 (setq appt-message-warning-time 30)
-(setq appt-display-interval 5) ; disable multiple reminders
+(setq appt-display-interval 10) ; disable multiple reminders
 (setq appt-display-mode-line t)
 
                                         ; use appointment data from org-mode
