@@ -29,6 +29,7 @@
 
 ;; Save a list of recent files visited.
 (recentf-mode 1)
+(setq recentf-max-saved-items 100)
 
 ;; Highlight matching parentheses when the point is on them.
 (show-paren-mode 1)

@@ -56,6 +56,20 @@
 (add-hook 'go-mode-hook #'aggressive-indent-mode)
 (add-hook 'enh-ruby-mode-hook #'aggressive-indent-mode)
 
+;; arduino-mode
+(package-require 'arduino-mode)
+(setq auto-mode-alist (remove (rassoc 'arduino-mode auto-mode-alist) auto-mode-alist))
+(add-to-list 'auto-mode-alist '("\\.ino\\'" . arduino-mode))
+(add-to-list 'auto-mode-alist '("\\.pde\\'" . processing-mode))
+
+;; processing-mode
+(package-require 'processing-mode)
+(setq processing-location "/usr/bin/processing-java"
+      processing-application-dir "/usr/bin/processing"
+      processing-sketchbook-dir "/home/ruin/sketchbook")
+(evil-leader/set-key-for-mode 'processing-mode
+  "mr" 'processing-sketch-run)
+
 ;; diminish
 (package-require 'diminish)
 (eval-after-load "helm" '(diminish 'helm-mode))

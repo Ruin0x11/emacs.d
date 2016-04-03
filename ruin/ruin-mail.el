@@ -2,19 +2,19 @@
 
 (if (eq system-type 'gnu/linux)
     (progn
-
       (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e")
       (require 'mu4e)
       (require 'smtpmail)
 
       (setq
-       mu4e-mu-binary           "/usr/bin/mu"
        mu4e-maildir             "~/mail"
        mu4e-drafts-folder       "/[Gmail].Drafts"
        mu4e-sent-folder         "/[Gmail].Sent Mail"
        mu4e-trash-folder        "/[Gmail].Trash"
        mu4e-get-mail-command    "mail-sync"
-       mu4e-confirm-quit     nil)
+       mu4e-confirm-quit     nil
+       message-cite-reply-position 'above
+       message-cite-style message-cite-style-gmail)
 
       (setq mu4e-html2text-command "/usr/bin/w3m -T text/html")
 
@@ -52,9 +52,8 @@
       (setq message-kill-buffer-on-exit t)
 
       (evil-leader/set-key
-        "am" 'ruin/mu4e-update-and-start))
-
-
+        "am" 'ruin/mu4e-update-and-start)
+      )
   )
 
 (provide 'ruin-mail)

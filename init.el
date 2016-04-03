@@ -62,6 +62,7 @@
         ruin-lisp
         ruin-lua
         ruin-ruby
+        ruin-python
         ruin-html
         ruin-haskell
         ruin-go

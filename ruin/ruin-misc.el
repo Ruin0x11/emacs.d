@@ -51,6 +51,9 @@
 ;; save clipboard before replacing
 (setq save-interprogram-paste-before-kill t)
 
+;; use primary and clipboard X selections
+(setq x-select-enable-primary t)
+
 ;; autosave recentf
 (run-at-time nil (* 5 60) 'recentf-save-list)
 

@@ -1,8 +1,7 @@
 ;;; ruin-evil.el --- evil settings and non-package mappings
 
-(+ (- 4 5) 1)
-
 (setq evil-want-C-u-scroll t)
+(global-set-key (kbd "C-S-u") 'universal-argument)
 
 (package-require 'evil)
 (package-require 'evil-commentary)
@@ -47,19 +46,21 @@
   "ob" 'org-iswitchb
   "oc" 'org-clock-goto
 
-  "ac" 'calc-dispatch
+  "ac" 'calc
 
   "jr" 'helm-register
+  "jb" 'helm-bookmarks
 
   "ff" 'helm-find-files
   "fg" 'helm-do-grep-ag
   "fr" 'helm-recentf
   "fd" 'helm-semantic-or-imenu
+  "fw" 'download-file-and-open
+  
   "hR" 'helm-regexp
   "hM" 'helm-man-woman
   "hm" 'helm-mini
   "hM" 'helm-man-woman
-  "hb" 'helm-bookmarks
   "hr" 'helm-resume
   "hc" 'helm-colors
   "hg" 'helm-do-grep
@@ -118,6 +119,13 @@
 ;; (global-set-key (kbd "C-k") 'evil-window-up)
 ;; (global-set-key (kbd "C-l") 'evil-window-right)
 
+(delete 'term-mode evil-insert-state-modes)
+(eval-after-load 'evil-vars '(add-to-list 'evil-emacs-state-modes 'term-mode))
+;; (evil-set-initial-state 'term-mode 'emacs)
+(delete 'shell-mode evil-insert-state-modes)
+(add-to-list 'evil-emacs-state-modes 'shell-mode)
+(delete 'calc-mode evil-insert-state-modes)
+(add-to-list 'evil-emacs-state-modes 'calc-mode)
 
 ;; esc quits
 (defun minibuffer-keyboard-quit ()
@@ -155,6 +163,10 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
                              (font-lock-mode 1)
                              ))
 
+(add-hook 'man-mode-hook '(lambda ()
+                            (ruin/window-movement-for-map man-mode-map)
+                             ))
+
 (ruin/window-movement-for-mode "help-mode" 'help-mode-map)
 
 ;; j and k where it counts
@@ -174,6 +186,8 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
                               (define-key mu4e-view-mode-map (kbd "C-d") 'evil-scroll-down)
                               (define-key mu4e-view-mode-map "j" 'evil-next-line)
                               (define-key mu4e-view-mode-map "k" 'evil-previous-line)
+                              (define-key mu4e-view-mode-map "g" 'mu4e~headers-jump-to-maildir)
+                              (define-key mu4e-view-mode-map "u" 'mu4e-update-index)
                               (define-key mu4e-view-mode-map "J" 'mu4e-view-headers-next-unread)
                               (define-key mu4e-view-mode-map "K" 'mu4e-view-headers-prev-unread)))
 
@@ -183,6 +197,8 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
                                  (define-key mu4e-headers-mode-map (kbd "C-d") 'evil-scroll-down)
                                  (define-key mu4e-headers-mode-map "j" 'evil-next-line)
                                  (define-key mu4e-headers-mode-map "k" 'evil-previous-line)
+                                 (define-key mu4e-headers-mode-map "g" 'mu4e~headers-jump-to-maildir)
+                                 (define-key mu4e-headers-mode-map "u" 'mu4e-update-index)
                                  (define-key mu4e-headers-mode-map "J" 'mu4e-headers-next-unread)
                                  (define-key mu4e-headers-mode-map "K" 'mu4e-headers-prev-unread)))
 
@@ -194,9 +210,6 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (global-set-key [f7] 'previous-error)
 (global-set-key [f8] 'next-error)
 (global-set-key [f9] 'projectile-compile-project)
-
-(delete 'term-mode evil-insert-state-modes)
-(add-to-list 'evil-emacs-state-modes 'term-mode)
 
 (package-require 'evil-matchit)
 (global-evil-matchit-mode 1)

@@ -11,6 +11,6 @@
      (setq flycheck-highlighting-mode 'symbols)
      (set-face-foreground 'flycheck-warning nil)))
 
-;; (setq-default flycheck-disabled-checkers '(go-build))
+(setq-default flycheck-disabled-checkers '(processing))
 
 (provide 'ruin-flycheck)
