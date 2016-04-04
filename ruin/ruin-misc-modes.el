@@ -19,7 +19,7 @@
       quickrun-focus-p nil)
 
 (add-hook 'quickrun-after-run-hook (lambda ()
-                                (recenter 0)
+                                     (progn (goto-point (point-min)) (recenter 0))
                                 ))
 
 ;; delete active quickrun window and buffer
@@ -75,6 +75,13 @@
       processing-sketchbook-dir "/home/ruin/sketchbook")
 (evil-leader/set-key-for-mode 'processing-mode
   "mr" 'processing-sketch-run)
+
+;; Quickrun for processing-mode
+(quickrun-add-command "processing"
+                      '((:command . "/usr/bin/processing-java")
+                        (:exec    . "%c --force --sketch=%d --run --output=%d/output")
+                        (:tempfile . nil))
+                      :mode 'processing-mode)
 
 ;; diminish
 (package-require 'diminish)

@@ -52,6 +52,7 @@
 
   "jr" 'helm-register
   "jb" 'helm-bookmarks
+  "jf" 'find-function
 
   "ff" 'helm-find-files
   "fg" 'helm-do-grep-ag
