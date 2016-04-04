@@ -1,4 +1,7 @@
 ;;; ruin-general.el --- miscellaneous packages and settings
+;; Use English when working with other people
+(set-language-environment "English")
+
 ;; Always ALWAYS use UTF-8
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)

@@ -28,6 +28,8 @@
   "y" 'helm-show-kill-ring
   "!" 'shell-command
 
+  "s" 'sos
+
   "df" 'describe-function
   "dv" 'describe-variable
   "dm" 'describe-mode

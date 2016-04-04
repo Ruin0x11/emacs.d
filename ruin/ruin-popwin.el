@@ -4,7 +4,7 @@
 ;; popwin settings
 (setq popwin:special-display-config
       '(
-        ;; ("*Help*" :height 0.4 :stick t)
+        ("*Help*" :height 0.4 :stick t)
         ;; Debug
         ("*Warnings*" :position bottom :height 0.3 )
         ("*Backtrace*" :position bottom :height 0.3 )

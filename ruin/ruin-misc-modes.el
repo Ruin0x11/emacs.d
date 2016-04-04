@@ -18,6 +18,17 @@
 (setq quickrun-timeout-seconds nil
       quickrun-focus-p nil)
 
+(add-hook 'quickrun-after-run-hook (lambda ()
+                                (recenter 0)
+                                ))
+
+;; delete active quickrun window and buffer
+(defun quickrun/kill-quickrun-buffer ()
+  (when (get-buffer quickrun/buffer-name)
+    (if (window-live-p (get-buffer-window quickrun/buffer-name))
+        (delete-window (get-buffer-window quickrun/buffer-name)))
+    (kill-buffer quickrun/buffer-name)))
+
 ;; lookup
 (add-to-list 'load-path "/usr/share/emacs/site-lisp/lookup")
 (load "lookup-autoloads")
@@ -32,11 +43,6 @@
                              (ndict "dict.us.dict.org")
                              ;; (ndsary "~/dicts/JMdict")
                              ))
-
-;; multiple-cursors
-(package-require 'evil-multiedit)
-(global-set-key (kbd "C-'") 'evil-multiedit-match-and-next)
-(global-set-key (kbd "C-\"") 'evil-multiedit-match-all)
 
 ;; expand-region
 (package-require 'expand-region)
