@@ -7,9 +7,7 @@
 (package-require 'evil-commentary)
 (package-require 'evil-surround)
 (package-require 'evil-leader)
-(package-require 'evil-jumper)
 (evil-mode 1)
-(evil-jumper-mode 1)
 
 (global-evil-leader-mode)
 (global-evil-surround-mode)

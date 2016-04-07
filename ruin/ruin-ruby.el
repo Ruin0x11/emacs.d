@@ -47,8 +47,8 @@
           (function (lambda ()
                       (setq evil-shift-width enh-ruby-indent-level))))
 
-(eval-after-load 'company
-  '(push 'company-robe company-backends))
+;; (eval-after-load 'company
+;;   '(push 'company-robe company-backends))
 
 (evil-leader/set-key-for-mode 'enh-ruby-mode
   "mi" 'inf-ruby
