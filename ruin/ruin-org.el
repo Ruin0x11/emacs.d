@@ -234,7 +234,7 @@
   "oil" 'org-insert-link
   "ot" 'org-set-tags-command
   "oR" 'org-refile
-  "os" 'org-save-all-org-buffers
+  "ow" 'org-save-all-org-buffers
   "oh" 'helm-org-agenda-files-headings)
 
 ;; Evil bindings in agenda

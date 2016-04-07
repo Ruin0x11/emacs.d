@@ -42,6 +42,7 @@
   "ee" 'eval-expression
   "eh" 'helm-eval-expression-with-eldoc
   "ed" 'eval-defun
+  "eD" 'toggle-debug-on-error
 
   "aa" 'org-agenda
   "c" 'org-capture
@@ -52,12 +53,12 @@
 
   "jr" 'helm-register
   "jb" 'helm-bookmarks
-  "jf" 'find-function
 
   "ff" 'helm-find-files
   "fg" 'helm-do-grep-ag
   "fr" 'helm-recentf
   "fd" 'helm-semantic-or-imenu
+  "fs" 'find-function
   "fw" 'download-file-and-open
   
   "hR" 'helm-regexp
@@ -72,6 +73,7 @@
   "?h" 'helm-info-emacs
   ;; "ii" 'helm-info-at-point
   "?l" 'helm-info-elisp
+  "?y" 'yas-describe-tables
 
   "ii" 'other-window
   "i=" 'balance-windows
@@ -80,10 +82,10 @@
   "il" 'evil-window-move-far-right
   "ij" 'evil-window-move-very-bottom
   "ik" 'evil-window-move-very-top
-  "iv" 'split-window-below
-  "is" 'split-window-right
-  "iV" 'split-window-below-and-focus
-  "iS" 'split-window-right-and-focus
+  "iV" 'split-window-below
+  "iS" 'split-window-right
+  "iv" 'split-window-below-and-focus
+  "is" 'split-window-right-and-focus
   "iu" 'winner-undo
   "iU" 'winner-redo
 

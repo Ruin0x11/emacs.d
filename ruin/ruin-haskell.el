@@ -39,13 +39,16 @@
   ;; "mL" 'haskell-process-load-file
   "ml" 'ruin/haskell-load-file-and-switch
   "mt" 'haskell-process-do-type
-  "mi" 'haskell-process-do-info)
+  "mi" 'haskell-process-do-info
+  "mh" 'hoogle)
 
 (add-hook 'haskell-interactive-mode-hook 'evil-insert-state)
 
 (evil-define-key 'insert haskell-interactive-mode-map (kbd "<up>") 'haskell-interactive-mode-history-previous)
 (evil-define-key 'insert haskell-interactive-mode-map (kbd "<down>") 'haskell-interactive-mode-history-next)
 (evil-define-key 'insert haskell-interactive-mode-map (kbd "S-<escape>") 'haskell-interactive-switch-back)
+
+(require 'haskell-mode)
 
 ;; https://github.com/haskell/haskell-mode/issues/896#issuecomment-185945576
 (defun haskell-indentation-indent-line ()

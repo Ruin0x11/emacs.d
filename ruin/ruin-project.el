@@ -13,6 +13,7 @@
                                                         "bak"
                                                         "tmp"
                                                         "auto-save-list"
+                                                        "semanticdb"
                                                         )))
 
 (evil-leader/set-key

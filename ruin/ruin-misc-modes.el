@@ -48,8 +48,8 @@
 (package-require 'expand-region)
 (define-key evil-normal-state-map (kbd "C-'") 'er/expand-region)
 (define-key evil-visual-state-map (kbd "C-'") 'er/expand-region)
-(define-key evil-normal-state-map (kbd "C-;") 'er/contract-region)
-(define-key evil-visual-state-map (kbd "C-;") 'er/contract-region)
+(define-key evil-normal-state-map (kbd "C-\"") 'er/contract-region)
+(define-key evil-visual-state-map (kbd "C-\"") 'er/contract-region)
 
 ;; anzu
 (package-require 'anzu)
@@ -65,8 +65,6 @@
 ;; arduino-mode
 (package-require 'arduino-mode)
 (setq auto-mode-alist (remove (rassoc 'arduino-mode auto-mode-alist) auto-mode-alist))
-(add-to-list 'auto-mode-alist '("\\.ino\\'" . arduino-mode))
-(add-to-list 'auto-mode-alist '("\\.pde\\'" . processing-mode))
 
 ;; processing-mode
 (package-require 'processing-mode)
@@ -76,12 +74,18 @@
 (evil-leader/set-key-for-mode 'processing-mode
   "mr" 'processing-sketch-run)
 
+(add-to-list 'auto-mode-alist '("\\.ino\\'" . arduino-mode))
+(add-to-list 'auto-mode-alist '("\\.pde\\'" . processing-mode))
+
 ;; Quickrun for processing-mode
 (quickrun-add-command "processing"
                       '((:command . "/usr/bin/processing-java")
                         (:exec    . "%c --force --sketch=%d --run --output=%d/output")
                         (:tempfile . nil))
                       :mode 'processing-mode)
+
+;; sos
+(require 'sos)
 
 ;; diminish
 (package-require 'diminish)

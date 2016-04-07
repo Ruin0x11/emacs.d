@@ -1,5 +1,5 @@
 (package-require 'popwin)
-(popwin-mode t)
+(require 'popwin)
 
 ;; popwin settings
 (setq popwin:special-display-config
@@ -54,6 +54,7 @@
         ;; Programing
         ("Django:" :regexp t :width 0.3 :position right)
         ("*Python*" :stick t)
+        ;; (haskell-interactive-mode :stick t)
         ("*jedi:doc*" :noselect t)
         ;; Console
         ("*shell*" :height 0.3)
@@ -69,18 +70,28 @@
         )
       )
 
+(defun ruin/toggle-popwin ()
+  "Opens ansi-term if popwin closed, otherwise closes popwin."
+  (interactive)
+  (if popwin:popup-window
+      (popwin:close-popup-window)
+    (popwin-term:ansi-term)))
+
+(evil-leader/set-key
+  "\'" 'ruin/toggle-popwin)
+
 ;; (defun live-display-ansi ()
 ;;   (interactive)
 ;;   (popwin:display-buffer "*ansi-term*"))
 
-;; (defun popwin-term:ansi-term ()
-;;   (interactive)
-;;   (popwin:display-buffer-1
-;;    (or (get-buffer "*ansi-term*")
-;;        (save-window-excursion
-;;          (interactive)
-;;          (ansi-term "/bin/bash")))
-;;    :default-config-keywords '(:position :bottom :height 10 :stick t)))
+(defun popwin-term:ansi-term ()
+  (interactive)
+  (popwin:display-buffer-1
+   (or (get-buffer "*ansi-term*")
+       (save-window-excursion
+         (interactive)
+         (ansi-term "/bin/zsh")))
+   :default-config-keywords '(:position :bottom :height 10 :stick t)))
 
 
 ;; (defun popwin-term:multi-term ()

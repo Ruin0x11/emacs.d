@@ -2,10 +2,10 @@
 
 (eval-after-load 'company
   '(progn
-     (define-key company-active-map (kbd "TAB") 'company-select-next)
-     (define-key company-active-map [tab] 'company-select-next)
-     (define-key company-active-map (kbd "<backtab>") 'company-select-previous)
-     (define-key company-active-map [S-tab] 'company-select-previous)
+     (define-key company-active-map (kbd "C-n") 'company-select-next)
+     (define-key company-active-map (kbd "C-p") 'company-select-previous)
+     (define-key company-active-map (kbd "TAB") 'company-complete)
+     (define-key company-active-map [tab] 'company-complete)
      ))
 
 (package-require 'company)

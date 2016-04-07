@@ -14,7 +14,8 @@
        mu4e-get-mail-command    "mail-sync"
        mu4e-confirm-quit     nil
        message-cite-reply-position 'above
-       message-cite-style message-cite-style-gmail)
+       message-cite-style message-cite-style-gmail
+       )
 
       (setq mu4e-html2text-command "/usr/bin/w3m -T text/html")
 
@@ -29,6 +30,8 @@
        ;;  ""
        ;;  "http://www.example.com\n")
        )
+
+      (setq message-citation-line-format "On %a, %b %d %Y, %N wrote:")
 
       (setq message-send-mail-function 'smtpmail-send-it
             smtpmail-stream-type 'starttls
