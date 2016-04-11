@@ -1,5 +1,6 @@
 ;;; ruin-haskell.el --- settings for Haskell
 (package-require 'haskell-mode)
+(package-require 'flycheck-haskell)
 (package-require 'ghc)
 (package-require 'shm)
 
@@ -47,6 +48,9 @@
 (evil-define-key 'insert haskell-interactive-mode-map (kbd "<up>") 'haskell-interactive-mode-history-previous)
 (evil-define-key 'insert haskell-interactive-mode-map (kbd "<down>") 'haskell-interactive-mode-history-next)
 (evil-define-key 'insert haskell-interactive-mode-map (kbd "S-<escape>") 'haskell-interactive-switch-back)
+
+(eval-after-load 'flycheck
+  '(add-hook 'flycheck-mode-hook #'flycheck-haskell-setup))
 
 (require 'haskell-mode)
 

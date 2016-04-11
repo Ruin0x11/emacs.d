@@ -1,6 +1,7 @@
 ;;; ruin-helm.el --- helm settings
 (package-require 'helm)
 (package-require 'helm-ag)
+(package-require 'helm-swoop)
 (require 'helm-config)
 
 (setq helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
@@ -12,7 +13,7 @@
       helm-bookmark-show-location t
       helm-buffers-fuzzy-matching t
       helm-candidate-number-limit 50
-      helm-input-idle-delay 0.2
+      helm-input-idle-delay 0.1
       )
 
 (global-set-key (kbd "M-x") 'helm-M-x)
@@ -26,13 +27,37 @@
   "fF" 'helm-find
 
   "hR" 'helm-regexp
-  "hM" 'helm-man-woman
-  "hm" 'helm-mini
-  "hM" 'helm-man-woman
+  "hm" 'helm-man-woman
+  "hM" 'helm-mini
   "hb" 'helm-bookmarks
   "hr" 'helm-resume
   "hc" 'helm-colors
-  "hg" 'helm-do-grep)
+  "hg" 'helm-google
+  "/"  'helm-swoop)
+
+
+(defcustom browse-url-surf-arguments nil
+  "A list of strings to pass to surf as arguments."
+  :type '(repeat (string :tag "Argument"))
+  :version "24.1"
+  :group 'browse-url)
+
+;;;###autoload
+(defun browse-url-surf (url &optional _new-window)
+  "Ask the surf WWW browser to load URL.
+Default to the URL around or before point.  The strings in
+variable `browse-url-surf-arguments' are also passed to
+surf."
+  (interactive (browse-url-interactive-arg "URL: "))
+  (setq url (browse-url-encode-url url))
+  (let* ((process-environment (browse-url-process-environment)))
+    (apply 'start-process
+	   (concat "surf " url) nil
+           "surf"
+	   (append
+	    browse-url-surf-arguments
+	    (list url)))))
+
 
 (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
 (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal

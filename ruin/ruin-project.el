@@ -26,4 +26,7 @@
   "pr" 'projectile-replace
   )
 
+;; (eval-after-load "helm" (helm-add-action-to-source "Ag in projects" 'helm-projectile-ag helm-source-projectile-projects))
+
+
 (provide 'ruin-project)

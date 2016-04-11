@@ -25,6 +25,7 @@
   "u" 'universal-argument
   "y" 'helm-show-kill-ring
   "!" 'shell-command
+  "z" 'zone
 
   "s" 'sos
 
@@ -117,10 +118,8 @@
   (define-key map (kbd "C-l") 'evil-window-right))
 
 
-;; (global-set-key (kbd "C-h") 'evil-window-left)
-;; (global-set-key (kbd "C-j") 'evil-window-down)
-;; (global-set-key (kbd "C-k") 'evil-window-up)
-;; (global-set-key (kbd "C-l") 'evil-window-right)
+(global-set-key (kbd "C-{") 'winner-undo)
+(global-set-key (kbd "C-}") 'winner-redo)
 
 (delete 'term-mode evil-insert-state-modes)
 (eval-after-load 'evil-vars '(add-to-list 'evil-emacs-state-modes 'term-mode))
@@ -166,9 +165,9 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
                              (font-lock-mode 1)
                              ))
 
-(add-hook 'man-mode-hook '(lambda ()
-                            (ruin/window-movement-for-map man-mode-map)
-                             ))
+(add-hook 'Man-mode-hook '(lambda ()
+                            (ruin/window-movement-for-map Man-mode-map)
+                            ))
 
 (ruin/window-movement-for-mode "help-mode" 'help-mode-map)
 
