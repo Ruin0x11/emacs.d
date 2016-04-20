@@ -25,6 +25,7 @@
   "u" 'universal-argument
   "y" 'helm-show-kill-ring
   "!" 'shell-command
+  "\"" 'crux-visit-term-buffer
   "z" 'zone
 
   "s" 'sos
@@ -68,10 +69,7 @@
   "hc" 'helm-colors
   "hg" 'helm-do-grep
 
-  "?e" 'info-emacs-manual
-  "?h" 'helm-info-emacs
-  ;; "ii" 'helm-info-at-point
-  "?l" 'helm-info-elisp
+  "?E" 'info-emacs-manual
   "?y" 'yas-describe-tables
 
   "ii" 'other-window

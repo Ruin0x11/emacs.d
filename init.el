@@ -5,7 +5,7 @@
 (setq dotfiles-dir (file-name-directory
                     (or (buffer-file-name) load-file-name)))
 (add-to-list 'load-path (concat dotfiles-dir "ruin"))
-(add-to-list 'load-path (concat dotfiles-dir "external"))
+(add-to-list 'load-path (concat dotfiles-dir "site-lisp"))
 
 (defun sanityinc/add-subdirs-to-load-path (parent-dir)
   "Adds every non-hidden subdir of PARENT-DIR to `load-path'."
@@ -88,7 +88,7 @@
         ruin-snippet
         ruin-git
         ruin-mail
-        ruin-shell
+        ;; ruin-shell
         ruin-popwin
         ruin-misc-modes
         ruin-home

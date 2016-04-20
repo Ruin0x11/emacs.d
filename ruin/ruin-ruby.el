@@ -4,8 +4,10 @@
 (package-require 'ruby-block)
 (package-require 'rspec-mode)
 (package-require 'chruby)
+(package-require 'yari) ;ルビヌスの槍
+;; (require 'rcodetools)
 
-(chruby "ruby-2.2.4")
+;; (chruby "ruby-2.2.4")
 
 (require 'ruby-block)
 (ruby-block-mode t)
@@ -52,7 +54,8 @@
 
 (evil-leader/set-key-for-mode 'enh-ruby-mode
   "mi" 'inf-ruby
-  "md" 'robe-doc)
+  "md" 'robe-doc
+  "my" 'yari-helm)
 
 ;; autostart inf-ruby and robe
 ;; (dolist (hook (list

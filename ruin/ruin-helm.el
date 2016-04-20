@@ -3,6 +3,7 @@
 (package-require 'helm-ag)
 (package-require 'helm-swoop)
 (require 'helm-config)
+(eval-after-load "helm-net" '(require 'helm-google))
 
 (setq helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
       helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
@@ -20,6 +21,8 @@
 (helm-mode t)
 
 (evil-leader/set-key
+  "/"  'helm-swoop
+
   "ff" 'helm-find-files
   "fg" 'helm-do-grep-ag
   "fr" 'helm-recentf
@@ -33,7 +36,11 @@
   "hr" 'helm-resume
   "hc" 'helm-colors
   "hg" 'helm-google
-  "/"  'helm-swoop)
+
+  ;; "ii" 'helm-info-at-point
+  "?e" 'helm-info-emacs
+  "?l" 'helm-info-elisp
+  "?c" 'helm-info-calc)
 
 
 (defcustom browse-url-surf-arguments nil
@@ -57,7 +64,6 @@ surf."
 	   (append
 	    browse-url-surf-arguments
 	    (list url)))))
-
 
 (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
 (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal

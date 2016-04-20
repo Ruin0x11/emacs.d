@@ -1,4 +1,4 @@
-(package-require 'shell-pop)
+(package-require 'multi-term)
 
 (defvar shell-default-shell (if (eq window-system 'w32)
                                 'eshell

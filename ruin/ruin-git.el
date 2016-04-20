@@ -10,6 +10,7 @@
         "gl" 'magit-log-all
         "gL" 'magit-log-buffer-file
         "gs" 'magit-status
+        "gf" 'magit-fetch-all
         "gM" 'magit-merge
         "gd" 'magit-diff-head
         "gp" 'magit-push

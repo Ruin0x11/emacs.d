@@ -6,6 +6,8 @@
 (require 'org)
 (require 'org-bullets)
 
+(require 'ob-ruby)
+
 ;; Startup & Directories
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 (setq org-startup-indented t) 

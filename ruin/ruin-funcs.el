@@ -1,6 +1,6 @@
 ;;; ruin-funcs.el --- various function definitions
 
-;;; My functions
+;;; Ruin functions
 
 (defun ruin/haskell-interactive-switch-and-move ()
   (interactive)
@@ -22,24 +22,24 @@
          (file-name (or download-name
                         (car (last (split-string url "/" t)))))
          (file-dir (concat (or download-dir
-                                "~/ダウンロード/")
-                            file-name)))
+                               "~/ダウンロード/")
+                           file-name)))
     (if (not (file-exists-p file-dir))
-    (let ((download-buffer (url-retrieve-synchronously url)))
-      ;; (save-excursion
-        (set-buffer download-buffer)
-        ;; we may have to trim the http response
-        (goto-char (point-min))
-        (re-search-forward "^$" nil 'move)
-        (forward-char)
-        (delete-region (point-min) (point))
-        (write-file file-dir)
-        (find-file file-dir))
-    (write-file file-dir t)
-    (find-file file-dir))))
+        (let ((download-buffer (url-retrieve-synchronously url)))
+          ;; (save-excursion
+          (set-buffer download-buffer)
+          ;; we may have to trim the http response
+          (goto-char (point-min))
+          (re-search-forward "^$" nil 'move)
+          (forward-char)
+          (delete-region (point-min) (point))
+          (write-file file-dir)
+          (find-file file-dir))
+      (write-file file-dir t)
+      (find-file file-dir))))
 ;; )
 
-;;; Random functions from the Internet
+;;; Functions from the Internet
 
 ;;http://www.emacswiki.org/emacs/DescribeThingAtPoint#toc2
 ;;; describe this point lisp only
@@ -69,6 +69,7 @@ This checks in turn:
           ;; surrounding sexp for a function call.
           ((setq sym (function-at-point)) (describe-function sym)))))
 
+
 ;;http://emacs.stackexchange.com/q/3776
 (defun my-diff-buffer-with-file ()
   "Compare the current modified buffer with the saved version."
@@ -77,6 +78,7 @@ This checks in turn:
   (let ((diff-switches "-u")) ;; unified diff
     (diff-buffer-with-file (current-buffer))))
 
+
 ;;https://github.com/bodil/emacs.d/blob/master/bodil/bodil-defuns.el#L17
 (defun font-lock-replace-symbol (mode reg sym)
   (font-lock-add-keywords
@@ -84,11 +86,6 @@ This checks in turn:
            (0 (progn (compose-region (match-beginning 1) (match-end 1)
                                      ,sym 'decompose-region)))))))
 
-;;http://stackoverflow.com/a/15028029/5862977
-(defun tex-without-changing-windows ()
-  (interactive)
-  (save-buffer)
-  (save-window-excursion (tex-file)))
 
 ;;http://emacsredux.com/blog/2013/04/21/edit-files-as-root/
 (defun sudo-edit (&optional arg)
@@ -103,8 +100,78 @@ buffer is not visiting a file."
                          (ido-read-file-name "Find file(as root): ")))
     (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
 
-;;; Spacemacs commands that seem useful
 
+;;https://news.ycombinator.com/item?id=11488417
+(defconst trc-comment-keywords "\\<\\(FIXME\\|TODO\\|BUG\\|HACK\\|NOTE\\|WARNING\\|ERROR\\)")
+
+;; Install the word coloring
+(defun add-comment-keywords ()
+  (font-lock-add-keywords nil
+                          `((,trc-comment-keywords 1 font-lock-warning-face t))))
+
+(add-hook 'find-file-hooks 'add-comment-keywords t)
+(set-face-underline 'font-lock-warning-face "yellow") ; Just make sure we'll see it
+
+(defun list-comment-notes ()
+  "List all TODO/FIXME/HACK, itp. in a new buffer for reference."
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (let ((collected-lines '()))
+      (while (re-search-forward trc-comment-keywords nil t)
+        ;; collect lines
+        (setq collected-lines (cons 
+                               (format "%d: %s" (line-number-at-pos) (thing-at-point 'line t))
+                               collected-lines)))
+      
+      ;; generate a new buffer
+      (let ((notes-buffer (generate-new-buffer (concat (buffer-name) "-comment-notes"))))
+        (set-buffer notes-buffer)
+        ;; dump collected stuff to here.
+        (dolist (a-line collected-lines)
+          (insert a-line)
+          (insert "\n"))))))
+
+
+;; Crux
+;;https://github.com/bbatsov/crux/blob/master/crux.el#L258
+(defun crux-view-url ()
+  "Open a new buffer containing the contents of URL."
+  (interactive)
+  (let* ((default (thing-at-point-url-at-point))
+         (url (read-from-minibuffer "URL: " default)))
+    (switch-to-buffer (url-retrieve-synchronously url))
+    (rename-buffer url t)
+    (goto-char (point-min))
+    (re-search-forward "^$")
+    (delete-region (point-min) (point))
+    (delete-blank-lines)
+    (set-auto-mode)))
+
+(defvar crux-term-buffer-name "multi"
+  "The default `ansi-term' name used by `crux-visit-term-buffer'.
+This variable can be set via .dir-locals.el to provide multi-term support.")
+
+(defun crux-start-or-switch-to (function buffer-name)
+  "Invoke FUNCTION if there is no buffer with BUFFER-NAME.
+Otherwise switch to the buffer named BUFFER-NAME.  Don't clobber
+the current buffer."
+  (if (not (get-buffer buffer-name))
+      (progn
+        (split-window-sensibly (selected-window))
+        (other-window 1)
+        (funcall function))
+    (switch-to-buffer-other-window buffer-name)))
+
+(defun crux-visit-term-buffer ()
+  "Create or visit a terminal buffer."
+  (interactive)
+  (crux-start-or-switch-to (lambda ()
+                             (ansi-term "/bin/zsh" (concat crux-term-buffer-name "-term")))
+                           (format "*%s-term*" crux-term-buffer-name)))
+
+
+;; Spacemacs
 (defun spacemacs/alternate-buffer ()
   "Switch back and forth between current and last buffer in the
 current window."
@@ -183,8 +250,8 @@ current window."
     (error (message "Invalid expression")
            (insert (current-kill 0)))))
 
-;;; Norang
 
+;; Norang
 (defun bh/set-agenda-restriction-lock (arg)
   "Set restriction lock to current task subtree or file if prefix is specified"
   (interactive "p")

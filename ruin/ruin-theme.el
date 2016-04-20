@@ -119,6 +119,8 @@
     (global-set-key (kbd "C-=") 'increase-emacs-font-size)
     (global-set-key (kbd "C--") 'decrease-emacs-font-size)))
 
+(setq spaceline-workspace-numbers-unicode 't)
+
 (if (daemonp)
     (add-hook 'after-make-frame-functions
               (lambda (frame)

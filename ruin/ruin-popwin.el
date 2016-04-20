@@ -1,10 +1,13 @@
 (package-require 'popwin)
 (require 'popwin)
+;; (require 'open-junk-file)
+(popwin-mode)
 
 ;; popwin settings
 (setq popwin:special-display-config
       '(
         ("*Help*" :height 0.4 :stick t)
+        (Man-mode :height 0.4 :stick t)
         ;; Debug
         ("*Warnings*" :position bottom :height 0.3 )
         ("*Backtrace*" :position bottom :height 0.3 )
@@ -71,11 +74,11 @@
       )
 
 (defun ruin/toggle-popwin ()
-  "Opens ansi-term if popwin closed, otherwise closes popwin."
+  "Opens multi-term if popwin closed, otherwise closes popwin."
   (interactive)
   (if popwin:popup-window
       (popwin:close-popup-window)
-    (popwin-term:ansi-term)))
+    (popwin-term:multi-term)))
 
 (evil-leader/set-key
   "\'" 'ruin/toggle-popwin)
@@ -84,22 +87,21 @@
 ;;   (interactive)
 ;;   (popwin:display-buffer "*ansi-term*"))
 
-(defun popwin-term:ansi-term ()
-  (interactive)
-  (popwin:display-buffer-1
-   (or (get-buffer "*ansi-term*")
-       (save-window-excursion
-         (interactive)
-         (ansi-term "/bin/zsh")))
-   :default-config-keywords '(:position :bottom :height 10 :stick t)))
-
-
-;; (defun popwin-term:multi-term ()
+;; (defun popwin-term:ansi-term ()
 ;;   (interactive)
 ;;   (popwin:display-buffer-1
-;;    (or (get-buffer "*terminal*")
+;;    (or (get-buffer "*ansi-term*")
 ;;        (save-window-excursion
-;;          (call-interactively 'multi-term)))
+;;          (interactive)
+;;          (ansi-term "/bin/zsh")))
 ;;    :default-config-keywords '(:position :bottom :height 10 :stick t)))
+
+(defun popwin-term:multi-term ()
+  (interactive)
+  (popwin:display-buffer-1
+   (or (get-buffer "*terminal*")
+       (save-window-excursion
+         (call-interactively 'multi-term)))
+   :default-config-keywords '(:position :bottom :height 10 :stick t)))
 
 (provide 'ruin-popwin)

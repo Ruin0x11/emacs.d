@@ -43,7 +43,11 @@
   "mi" 'haskell-process-do-info
   "mh" 'hoogle)
 
-(add-hook 'haskell-interactive-mode-hook 'evil-insert-state)
+(add-to-list 'evil-emacs-state-modes 'haskell-interactive-mode)
+
+(add-hook 'haskell-interactive-mode-hook '(lambda ()
+                            (ruin/window-movement-for-map haskell-interactive-mode-map)
+                            ))
 
 (evil-define-key 'insert haskell-interactive-mode-map (kbd "<up>") 'haskell-interactive-mode-history-previous)
 (evil-define-key 'insert haskell-interactive-mode-map (kbd "<down>") 'haskell-interactive-mode-history-next)
