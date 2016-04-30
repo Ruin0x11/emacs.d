@@ -1,9 +1,18 @@
 (package-require 'smartparens)
+(package-require 'evil-smartparens)
 (require 'smartparens-config)
 (require 'cl)
 
+(setq lisp-modes
+      '(scheme-mode emacs-lisp-mode lisp-mode clojure-mode
+                    lolisp-mode shen-mode bodol-mode))
+
+(defun add-lisp-hook (func)
+  (add-hooks lisp-modes func))
+
 (smartparens-global-mode t)
-; (add-lisp-hook 'smartparens-strict-mode)
+(add-lisp-hook 'smartparens-strict-mode)
+(add-lisp-hook #'evil-smartparens-mode)
 
 (defun turn-on-sp-navigate-consider-stringlike ()
   (unless (memq major-mode sp-navigate-consider-stringlike-sexp)
@@ -34,8 +43,8 @@
 
 (define-key smartparens-mode-map (kbd "M-b") 'sp-beginning-of-sexp)
 (define-key smartparens-mode-map (kbd "M-e") 'sp-end-of-sexp)
-(define-key smartparens-mode-map (kbd "M-j") 'sp-down-sexp)
-(define-key smartparens-mode-map (kbd "M-k") 'sp-up-sexp)
+(define-key smartparens-mode-map (kbd "M-j") 'sp-next-sexp)
+(define-key smartparens-mode-map (kbd "M-k") 'sp-previous-sexp)
 (define-key smartparens-mode-map (kbd "C-M-k") 'sp-backward-up-sexp)
 (define-key smartparens-mode-map (kbd "C-M-j") 'sp-backward-down-sexp)
 (define-key smartparens-mode-map (kbd "M-l") 'sp-forward-sexp)
@@ -54,4 +63,9 @@
 (define-key smartparens-mode-map (kbd "C-c {") 'wrap-with-braces)
 
 (show-smartparens-global-mode t)
+
+;; Clojure
+
+(package-require 'cider)
+
 (provide 'ruin-lisp)

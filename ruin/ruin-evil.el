@@ -43,6 +43,7 @@
   "eh" 'helm-eval-expression-with-eldoc
   "ed" 'eval-defun
   "eD" 'toggle-debug-on-error
+  "ei" 'ielm
 
   "aa" 'org-agenda
   "c" 'org-capture
@@ -168,6 +169,7 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
                             ))
 
 (ruin/window-movement-for-mode "help-mode" 'help-mode-map)
+(ruin/window-movement-for-mode "compilation-mode" 'compilation-mode-map)
 
 ;; j and k where it counts
 (eval-after-load "tar" #'(lambda ()

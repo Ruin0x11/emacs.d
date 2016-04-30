@@ -39,6 +39,14 @@
       (find-file file-dir))))
 ;; )
 
+(defun shell-command-on-buffer ()
+  "Asks for a command and executes it in inferior shell with current buffer
+as input."
+  (interactive)
+  (shell-command-on-region
+   (point-min) (point-max)
+   (read-shell-command "Shell command on buffer: ")))
+
 ;;; Functions from the Internet
 
 ;;http://www.emacswiki.org/emacs/DescribeThingAtPoint#toc2
@@ -77,15 +85,6 @@ This checks in turn:
   (recover-this-file)
   (let ((diff-switches "-u")) ;; unified diff
     (diff-buffer-with-file (current-buffer))))
-
-
-;;https://github.com/bodil/emacs.d/blob/master/bodil/bodil-defuns.el#L17
-(defun font-lock-replace-symbol (mode reg sym)
-  (font-lock-add-keywords
-   mode `((,reg
-           (0 (progn (compose-region (match-beginning 1) (match-end 1)
-                                     ,sym 'decompose-region)))))))
-
 
 ;;http://emacsredux.com/blog/2013/04/21/edit-files-as-root/
 (defun sudo-edit (&optional arg)
@@ -132,6 +131,17 @@ buffer is not visiting a file."
           (insert a-line)
           (insert "\n"))))))
 
+
+;; Bodil
+;;https://github.com/bodil/emacs.d/blob/master/bodil/bodil-defuns.el#L17
+(defun font-lock-replace-symbol (mode reg sym)
+  (font-lock-add-keywords
+   mode `((,reg
+           (0 (progn (compose-region (match-beginning 1) (match-end 1)
+                                     ,sym 'decompose-region)))))))
+(defun add-hooks (modes func)
+  (dolist (mode modes)
+    (add-hook (intern (concat (symbol-name mode) "-hook")) func)))
 
 ;; Crux
 ;;https://github.com/bbatsov/crux/blob/master/crux.el#L258
