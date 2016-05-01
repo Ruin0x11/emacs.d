@@ -93,17 +93,16 @@
 ;; eyebrowse
 (package-require 'eyebrowse)
 (eyebrowse-mode t)
-(evil-leader/set-key
-        "0" 'eyebrowse-switch-to-window-config-0
-        "1" 'eyebrowse-switch-to-window-config-1
-        "2" 'eyebrowse-switch-to-window-config-2
-        "3" 'eyebrowse-switch-to-window-config-3
-        "4" 'eyebrowse-switch-to-window-config-4
-        "5" 'eyebrowse-switch-to-window-config-5
-        "6" 'eyebrowse-switch-to-window-config-6
-        "7" 'eyebrowse-switch-to-window-config-7
-        "8" 'eyebrowse-switch-to-window-config-8
-        "9" 'eyebrowse-switch-to-window-config-9)
+(global-set-key (kbd "M-0") 'eyebrowse-switch-to-window-config-0)
+(global-set-key (kbd "M-1") 'eyebrowse-switch-to-window-config-1)
+(global-set-key (kbd "M-2") 'eyebrowse-switch-to-window-config-2)
+(global-set-key (kbd "M-3") 'eyebrowse-switch-to-window-config-3)
+(global-set-key (kbd "M-4") 'eyebrowse-switch-to-window-config-4)
+(global-set-key (kbd "M-5") 'eyebrowse-switch-to-window-config-5)
+(global-set-key (kbd "M-6") 'eyebrowse-switch-to-window-config-6)
+(global-set-key (kbd "M-7") 'eyebrowse-switch-to-window-config-7)
+(global-set-key (kbd "M-8") 'eyebrowse-switch-to-window-config-8)
+(global-set-key (kbd "M-9") 'eyebrowse-switch-to-window-config-9)
 
 ;; sos
 (require 'sos)

@@ -27,8 +27,8 @@
   "!" 'shell-command
   "\"" 'crux-visit-term-buffer
   "z" 'zone
-
   "s" 'sos
+  "F" 'flycheck-list-errors
 
   "df" 'describe-function
   "dv" 'describe-variable

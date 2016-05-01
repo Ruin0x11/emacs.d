@@ -5,6 +5,7 @@
       (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e")
       (require 'mu4e)
       (require 'smtpmail)
+      (package-require 'helm-mu)
 
       (setq
        mu4e-maildir             "~/mail"
@@ -55,7 +56,9 @@
       (setq message-kill-buffer-on-exit t)
 
       (evil-leader/set-key
-        "am" 'ruin/mu4e-update-and-start)
+        "am" 'ruin/mu4e-update-and-start
+        "aC" 'helm-mu-contacts
+        "ah" 'helm-mu)
       )
   )
 
