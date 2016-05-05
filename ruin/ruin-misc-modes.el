@@ -19,7 +19,7 @@
       quickrun-focus-p nil)
 
 (add-hook 'quickrun-after-run-hook (lambda ()
-                                     (progn (goto-point (point-min)) (recenter 0))
+                                     (progn (goto-point (point-min)) (recenter -2))
                                 ))
 
 (require 'quickrun)
@@ -31,7 +31,7 @@
     (kill-buffer quickrun/buffer-name)))
 
 ;; lookup
-(add-to-list 'load-path "/usr/share/emacs/site-lisp/lookup")
+;; (add-to-list 'load-path "/usr/share/emacs/site-lisp/lookup")
 (load "lookup-autoloads")
 (evil-leader/set-key
  "ll" 'lookup
@@ -40,8 +40,8 @@
 
 (load "lookup-autoloads")
 (setq lookup-mecab-coding-system 'utf-8)
-(setq lookup-search-agents '((ndmecab)
-                             ;; (ndict "dict.us.dict.org")
+(setq lookup-search-agents '(;;(ndmecab)
+                             (ndict "dict.us.dict.org")
                              (ndsary "~/dicts")
                              ))
 (add-to-list 'evil-emacs-state-modes 'lookup-select-mode)

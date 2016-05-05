@@ -26,6 +26,6 @@
 ;; always open symlinks as actual file
 (setq vc-follow-symlinks t)
 
-(evil-set-initial-state 'git-commit-mode 'insert)
+(add-to-list 'evil-insert-state-modes 'git-commit-mode)
 
 (provide 'ruin-git)

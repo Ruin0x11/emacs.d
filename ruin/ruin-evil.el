@@ -9,9 +9,9 @@
 (package-require 'evil-leader)
 (evil-mode 1)
 
-(global-evil-leader-mode)
-(global-evil-surround-mode)
-(evil-commentary-mode)
+(global-evil-leader-mode t)
+(global-evil-surround-mode t)
+(evil-commentary-mode t)
 
 ;;; leader binds
 (evil-leader/set-leader "<SPC>")
@@ -25,6 +25,7 @@
   "u" 'universal-argument
   "y" 'helm-show-kill-ring
   "!" 'shell-command
+  ":" 'helm-M-x
   "\"" 'crux-visit-term-buffer
   "z" 'zone
   "s" 'sos
@@ -60,6 +61,7 @@
   "fr" 'helm-recentf
   "fd" 'helm-semantic-or-imenu
   "fs" 'find-function
+  "fv" 'find-variable
   "fw" 'download-file-and-open
   
   "hR" 'helm-regexp
@@ -119,6 +121,8 @@
 
 (global-set-key (kbd "C-{") 'winner-undo)
 (global-set-key (kbd "C-}") 'winner-redo)
+(global-set-key (kbd "C-x M-e") 'eval-and-replace)
+
 
 (delete 'term-mode evil-insert-state-modes)
 (eval-after-load 'evil-vars '(add-to-list 'evil-emacs-state-modes 'term-mode))

@@ -69,7 +69,7 @@
 
 (eval-after-load "cider" #'(lambda ()
                         (define-key cider-repl-mode-map "j" 'cider-repl-next-input)
-                        (define-key cider-repl-mode-map "k" 'cider-repl-previous-input))))
+                        (define-key cider-repl-mode-map "k" 'cider-repl-previous-input)))
 (add-to-list 'evil-emacs-state-modes 'cider-repl-mode)
 (ruin/window-movement-for-mode "cider-repl-mode" 'cider-repl-mode-map)
 

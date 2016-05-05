@@ -45,6 +45,8 @@
 (defvar sos-question-list-buffer 'nil
   "Current buffer displaying StackOverflow questions.")
 
+(defvar sos-buffer-list 'nil)
+
 (defvar sos-get-answers 'nil
   "If non-nil retrieve and SO's answers to SO's questions when building the search result buffer.
 This will slow down the process.")
@@ -247,6 +249,10 @@ API Reference: http://api.stackexchange.com/docs/excerpt-search"
 
   (setq sos-question-list-window (selected-window))
   (setq sos-question-list-buffer (current-buffer))
+
+  ;;TODO: bad
+  (setq sos-buffer-list (cl-adjoin sos-question-list-buffer sos-buffer-list))
+
   (sos-mode)
   (erase-buffer)
   (visual-line-mode t)
@@ -322,6 +328,10 @@ API Reference: http://api.stackexchange.com/docs/excerpt-search"
                        (selected-window)))))
       (select-window sos-answer-view-window)
       (switch-to-buffer "*sos answer*")
+
+      ;;TODO: bad
+      (setq sos-buffer-list (cl-adjoin (current-buffer) sos-buffer-list))
+
       (sos-answer-mode)
 
       ;; an html2text bug removes "pre" since "p" is a substring
@@ -337,7 +347,27 @@ API Reference: http://api.stackexchange.com/docs/excerpt-search"
         (erase-buffer)
         (insert (sos-get-answers id))
         (html2text)
-        (goto-char (point-min))))))
+        (goto-char (point-min))
+
+        (while (null (eobp))
+        ;; Don't fill pre blocks.
+        (unless (sx-question-mode--dont-fill-here)
+          (let ((beg (point)))
+            (skip-chars-forward "\r\n[:blank:]")
+            (forward-paragraph)
+            (let ((end (point-marker)))
+              (set-marker-insertion-type end t)
+              ;; Turn markdown linebreaks into their final form
+              (sx-question-mode--process-line-breaks beg end)
+              ;; Compactify links by paragraph, so we don't linkify
+              ;; inside code-blocks. This will still linkify inside
+              ;; code tags, unfortunately.
+              (sx-question-mode--process-links beg end)
+              ;; Filling is done after all of the above, since those
+              ;; steps change the length of text.
+              (fill-region beg end)
+              (goto-char end)))))
+        ))))
 
 (defun sos-questions-move (lines)
   "Move point LINES lines forward (if LINES is positive) or
@@ -346,38 +376,56 @@ docid. Otherwise, return nil."
   (unless (eq major-mode 'sos-mode)
     (error "Must be in SOS mode."))
   (let ((succeeded (zerop (forward-line lines)))
-	 (current-id (sos-current-id))
-    ;; move point, even if this function is called when this window is not
-    ;; visible
-    (when current-id
-      ;; update all windows showing the headers buffer
-      (walk-windows
-	(lambda (win)
-	  (when (eq (window-buffer win) sos-question-list-buffer)
-	    (set-window-point win (point))))
-	nil t)
-       ;;(set-window-point (get-buffer-window mu4e~headers-buffer t) (point))
-      ;; attempt to highlight the new line, display the message
-      ;; (mu4e~headers-highlight docid)
-      ;; update message view if it was already showing
-      (when (and t (window-live-p sos-question-list-window))
-	(sos-answer id))
-      docid))))
+        (current-id (sos-current-id))
+        ;; move point, even if this function is called when this window is not
+        ;; visible
+        (when current-id
+          ;; update all windows showing the headers buffer
+          (walk-windows
+           (lambda (win)
+             (when (eq (window-buffer win) sos-question-list-buffer)
+               (set-window-point win (point))))
+           nil t)
+          ;;(set-window-point (get-buffer-window mu4e~headers-buffer t) (point))
+          ;; attempt to highlight the new line, display the message
+          ;; (mu4e~headers-highlight docid)
+          ;; update message view if it was already showing
+          (when (and t (window-live-p sos-question-list-window))
+            (sos-answer id))
+          docid))))
 
-(defun sos-quit-buffer ()
+(defun sos-hide-buffer (buffer)
+  (let ((window (get-buffer-window buffer)))
+    (when window
+      (cond ((eq window sos-question-list-window)
+             (setq sos-question-list-window nil))
+            ((eq window sos-answer-view-window)
+             (if (window-live-p sos-question-list-window)
+                 (select-window sos-question-list-window))
+             (setq sos-answer-view-window nil)))
+      (if (> (count-windows) 1)
+          (delete-window window)
+        (switch-to-buffer (other-buffer)))))
+  (when (buffer-live-p buffer) (bury-buffer buffer)))
+
+(defun sos-suspend ()
   (interactive)
-  (unless (eq major-mode 'sos-mode)
-    (error "Must be in sos-mode"))
-  (when (window-live-p sos-answer-view-window)
-    (delete-window sos-answer-view-window))
-  (kill-buffer-and-window))
+  (mapc 'sos-hide-buffer sos-buffer-list))
+
+;; (defun sos-quit-buffer ()
+;;   (interactive)
+;;   (unless (eq major-mode 'sos-mode)
+;;     (error "Must be in sos-mode"))
+;;   (when (window-live-p sos-answer-view-window)
+;;     (delete-window sos-answer-view-window))
+;;   (kill-buffer-and-window))
 
 (defvar sos-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map "\C-m" 'sos-answer)
     (define-key map "j" 'next-line)
     (define-key map "k" 'previous-line)
-    (define-key map "q" 'sos-quit-buffer)
+    (define-key map "q" 'sos-suspend)
     map)
   "Keymap used for sos-mode commands.")
 
@@ -458,7 +506,7 @@ If DIRECTION is negative, move backwards instead."
   (interactive)
   (if (re-search-forward sos-answer-code-block-regexp)
       (goto-char (match-beginning 1)))
-)
+  )
 
 (defun sos-answer-previous-code-block ()
   (interactive)

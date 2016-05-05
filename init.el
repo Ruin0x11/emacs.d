@@ -54,6 +54,12 @@
 (setq backup-directory-alist
       `(("." . ,(expand-file-name (concat dotfiles-dir "bak")))))
 
+;; Write auto-save files to own directory
+;; (setq auto-save-file-name-transforms
+;;       `(("\\(?:[^/]*/\\)*\\(.*\\)" ,(expand-file-name (concat dotfiles-dir "auto-save/\\1")) t)))
+(setq auto-save-file-name-transforms
+      `((".*" ,(expand-file-name (concat dotfiles-dir "auto-save/\\2")) t)))
+
 ;; Macro for X specific code
 (defmacro Xlaunch (&rest x)
   (list 'if (eq window-system 'x) (cons 'progn x)))

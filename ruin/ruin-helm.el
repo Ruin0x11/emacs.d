@@ -2,6 +2,7 @@
 (package-require 'helm)
 (package-require 'helm-ag)
 (package-require 'helm-swoop)
+(package-require 'helm-flx)
 (require 'helm-config)
 (eval-after-load "helm-net" '(require 'helm-google))
 
@@ -19,6 +20,7 @@
 
 (global-set-key (kbd "M-x") 'helm-M-x)
 (helm-mode t)
+(helm-flx-mode +1)
 
 (evil-leader/set-key
   "/"  'helm-swoop

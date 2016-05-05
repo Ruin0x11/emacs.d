@@ -52,11 +52,17 @@
         (mu4e-update-index)
         (mu4e))
 
+      (defun ruin/open-unread-mail ()
+        (interactive)
+        (mu4e-update-index)
+        (mu4e-headers-search "flag:unread AND NOT flag:trashed"))
+
       ;; don't keep message buffers around
       (setq message-kill-buffer-on-exit t)
 
       (evil-leader/set-key
-        "am" 'ruin/mu4e-update-and-start
+        "aM" 'ruin/mu4e-update-and-start
+        "am" 'ruin/open-unread-mail
         "aC" 'helm-mu-contacts
         "ah" 'helm-mu)
       )
