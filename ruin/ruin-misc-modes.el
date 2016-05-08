@@ -112,6 +112,10 @@
 (evil-leader/set-key
   "fw" 'crux-view-url)
 
+;; lively
+(require 'lively)
+(evil-define-key 'insert emacs-lisp-mode-map (kbd "C-M-l") 'lively)
+
 ;; diminish
 (package-require 'diminish)
 (eval-after-load "helm" '(diminish 'helm-mode))
@@ -130,5 +134,8 @@
 (eval-after-load "smartparens" '(diminish 'smartparens-mode))
 (eval-after-load "magit" '(diminish 'magit-auto-revert-mode))
 (eval-after-load "abbrev" '(diminish 'abbrev-mode))
+(eval-after-load "evil-smartparens" '(diminish 'evil-smartparens-mode))
+(eval-after-load "eldoc" '(diminish 'eldoc-mode))
+(eval-after-load "autorevert" '(diminish 'auto-revert-mode))
 
 (provide 'ruin-misc-modes)

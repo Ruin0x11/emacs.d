@@ -30,6 +30,7 @@
   "z" 'zone
   "s" 'sos
   "F" 'flycheck-list-errors
+  "M" 'popwin:messages
 
   "df" 'describe-function
   "dv" 'describe-variable
@@ -63,10 +64,11 @@
   "fs" 'find-function
   "fv" 'find-variable
   "fw" 'download-file-and-open
+  "fp" 'find-library
   
   "hR" 'helm-regexp
-  "hM" 'helm-man-woman
-  "hm" 'helm-mini
+  "hm" 'helm-man-woman
+  "hM" 'helm-mini
   "hM" 'helm-man-woman
   "hr" 'helm-resume
   "hc" 'helm-colors
@@ -131,6 +133,11 @@
 (add-to-list 'evil-emacs-state-modes 'shell-mode)
 (delete 'calc-mode evil-insert-state-modes)
 (add-to-list 'evil-emacs-state-modes 'calc-mode)
+(add-to-list 'evil-emacs-state-modes 'mpc-mode)
+(add-to-list 'evil-emacs-state-modes 'mpc-songs-mode)
+(add-to-list 'evil-emacs-state-modes 'mpc-status-mode)
+(add-to-list 'evil-emacs-state-modes 'mpc-tagbrowser-mode)
+(add-to-list 'evil-emacs-state-modes 'mpc-tagbrowser-dir-mode)
 
 ;; esc quits
 (defun minibuffer-keyboard-quit ()

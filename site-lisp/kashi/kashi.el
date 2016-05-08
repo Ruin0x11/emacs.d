@@ -7,7 +7,8 @@
 (defvar kashi-song-status nil)
 (defvar kashi-status-callbacks
   '((state . kashi--status-timers-refresh)
-    (t     . kashi--update-buffer)))
+    ;; (t     . kashi--get-lyrics)
+    ))
 
 (defun kashi ()
   (interactive)
@@ -18,18 +19,25 @@
   (kashi--status-refresh)
   )
 
-(defun kashi--update-buffer ()
+(defun kashi--get-lyrics ()
   (interactive)
+  (let ((artist (cdr (assq 'Artist kashi-song-status)))
+        (title (cdr (assq 'Title kashi-song-status))))
+    (kashi--minilyrics artist title)))
+
+(defun kashi--update-buffer (content)
   (with-current-buffer kashi-buffer
     (save-excursion
       (erase-buffer)
       (let ((artist (cdr (assq 'Artist kashi-song-status)))
             (title (cdr (assq 'Title kashi-song-status))))
-        (insert (concat artist title)))))
-  (message "done.")
+        (insert (concat artist " " title "\n"
+                        content
+                        )))))
   )
 
 (defun kashi--status-refresh (&optional callback)
+  (interactive)
   (let ((cb callback))
     (mpc-proc-cmd (mpc-proc-cmd-list '("status" "currentsong"))
                   (lambda ()
@@ -39,7 +47,7 @@
 (defun kashi--mpc-callback ()
 (let ((old-status kashi-song-status))
     ;; Update the alist.
-    (setq kashi-song-status mpc-status)
+    (setq kashi-song-status (mpc-proc-buf-to-alist))
     (cl-assert kashi-song-status)
     (unless (equal old-status kashi-song-status)
       ;; Run the relevant refresher functions.
@@ -106,12 +114,14 @@
 
 ;;ViewLyrics interface
 
+(defvar kashi-minilyrics-server-url "http://www.viewlyrics.com/")
 (defvar kashi-minilyrics-url "http://search.crintsoft.com/searchlyrics.htm")
 (defvar kashi-minilyrics-query-base "<?xml version='1.0' encoding='utf-8' standalone='yes' ?><searchV1 client=\"ViewLyricsOpenSearcher\" artist=\"{artist}\" title=\"{title}\" OnlyMatched=\"1\" />")
 (defvar kashi-minilyrics-useragent "MiniLyrics")
 (defvar kashi-minilyrics-md5watermark "Mlv1clt4.0")
 
 (defun kashi--minilyrics (artist title)
+  (message (concat "loading " artist " - " title))
   (kashi--minilyrics-post (kashi--minilyrics-build-query artist title) 'kashi--minilyrics-get-url)
   )
 
@@ -124,21 +134,24 @@
                                     )))
 
 (defun kashi--minilyrics-post (data cb)
-  (request
-   kashi-minilyrics-url
-   :type "POST"
-   :data data
-   :headers `(("User-Agent" . ,kashi-minilyrics-useragent)
-              ("Content-Length" . ,(length data))             
-              ("Connection" . "Keep-Alive")
-              ("Expect" . "100-continue")
-              ("Content-Type" . "application/x-www-form-urlencoded"))
-   
-   ;; :data "key=value&key2=value2"  ; this is equivalent
-   :parser 'identity
-   :success (function*
-             (lambda (&key data &allow-other-keys)
-               (message "I sent: %S" (assoc-default 'form data)))))
+  (let* ((response (request
+                   kashi-minilyrics-url
+                   :type "POST"
+                   :data data
+                   :sync t
+                   :headers `(("User-Agent" . ,kashi-minilyrics-useragent)
+                              ("Content-Length" . ,(length data))             
+                              ("Connection" . "Keep-Alive")
+                              ("Expect" . "100-continue")
+                              ("Content-Type" . "application/x-www-form-urlencoded"))
+                   
+                   ;; :data "key=value&key2=value2"  ; this is equivalent
+                   :parser 'buffer-string
+                   :success (function*
+                             (lambda (&key data &allow-other-keys)
+                               (message "I sent: %S" data)))))
+         (xml (kashi--minilyrics-decode (request-response-data response))))
+    (kashi--minilyrics-get-url xml))
   
   ;; (let ((url-request-method        "POST")
   ;;       (url-request-extra-headers `(("User-Agent" . ,kashi-minilyrics-useragent)
@@ -215,18 +228,26 @@
 (defvar kashi--asdf nil)
 (defvar kashi--asdfg nil)
 
-(defun kashi--minilyrics-get-url (data)
-  (let* ((xml (kashi--minilyrics-decode data))
-         (root (with-temp-buffer
+(defun kashi--minilyrics-get-url (xml)
+  (let* ((root (with-temp-buffer
                  (insert xml)
                  (xml-parse-region (point-min) (point-max))))
          (post (car root))
-         (attrs (xml-node-attributes post))
-         (time (cdr (assq 'time attrs)))
-         (msg (car (xml-get-children post 'msg)))
-         (text (car (xml-node-children msg))))
-    (setq kashi--asdf data)
-    (setq kashi--asdfg xml)))
+         (results (xml-node-children post))
+         (first (cadr results))
+         (attrs (xml-node-attributes first))
+         (link (cdr (assq 'link attrs)))
+         (url (concat kashi-minilyrics-server-url link)))
+    (if (not link)
+        (message "No results.")
+      (kashi--update-buffer
+       (with-current-buffer (url-retrieve-synchronously url)
+         (goto-char (point-min))
+         (re-search-forward "^$" nil 'move)
+         (forward-char)
+         (delete-region (point-min) (point))
+         (buffer-string))))
+    ))
 
 
 (provide 'kashi)

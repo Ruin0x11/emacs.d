@@ -21,6 +21,8 @@
       (setq mu4e-html2text-command "/usr/bin/w3m -T text/html")
 
       (add-to-list 'mu4e-view-actions '("retag message" . mu4e-action-retag-message))
+      (add-to-list 'mu4e-view-actions '("ViewInBrowser" . mu4e-action-view-in-browser) t)
+
 
       ;; something about ourselves
       (setq
