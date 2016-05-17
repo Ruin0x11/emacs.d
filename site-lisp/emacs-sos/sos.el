@@ -412,20 +412,20 @@ docid. Otherwise, return nil."
   (interactive)
   (mapc 'sos-hide-buffer sos-buffer-list))
 
-;; (defun sos-quit-buffer ()
-;;   (interactive)
-;;   (unless (eq major-mode 'sos-mode)
-;;     (error "Must be in sos-mode"))
-;;   (when (window-live-p sos-answer-view-window)
-;;     (delete-window sos-answer-view-window))
-;;   (kill-buffer-and-window))
+(defun sos-quit-buffer ()
+  (interactive)
+  (unless (eq major-mode 'sos-mode)
+    (error "Must be in sos-mode"))
+  (when (window-live-p sos-answer-view-window)
+    (delete-window sos-answer-view-window))
+  (kill-buffer-and-window))
 
 (defvar sos-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map "\C-m" 'sos-answer)
     (define-key map "j" 'next-line)
     (define-key map "k" 'previous-line)
-    (define-key map "q" 'sos-suspend)
+    (define-key map "q" 'sos-quit-buffer)
     map)
   "Keymap used for sos-mode commands.")
 

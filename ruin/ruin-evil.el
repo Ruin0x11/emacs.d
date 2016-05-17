@@ -39,12 +39,8 @@
   "dd" 'describe-foo-at-point
   "da" 'helm-apropos
 
-  "eb" 'eval-buffer
-  "es" 'eval-last-sexp
-  "ee" 'eval-expression
-  "eh" 'helm-eval-expression-with-eldoc
-  "ed" 'eval-defun
   "eD" 'toggle-debug-on-error
+  "ee" 'eval-expression
   "ei" 'ielm
 
   "aa" 'org-agenda
@@ -53,6 +49,7 @@
   "oc" 'org-clock-goto
 
   "ac" 'calc
+  "ad" 'diff
 
   "jr" 'helm-register
   "jb" 'helm-bookmarks
@@ -72,7 +69,7 @@
   "hM" 'helm-man-woman
   "hr" 'helm-resume
   "hc" 'helm-colors
-  "hg" 'helm-do-grep
+  "hg" 'helm-google
 
   "?E" 'info-emacs-manual
   "?y" 'yas-describe-tables
@@ -180,7 +177,7 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
                             ))
 
 (ruin/window-movement-for-mode "help-mode" 'help-mode-map)
-(ruin/window-movement-for-mode "compilation-mode" 'compilation-mode-map)
+(ruin/window-movement-for-mode "compile" 'compilation-mode-map)
 
 ;; j and k where it counts
 (eval-after-load "tar" #'(lambda ()

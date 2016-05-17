@@ -88,6 +88,7 @@
         ruin-haskell
         ruin-go
         ruin-tex
+        ruin-ess
 
         ruin-project
         ruin-flycheck

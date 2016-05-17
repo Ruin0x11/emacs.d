@@ -7,7 +7,7 @@
 (defvar kashi-song-status nil)
 (defvar kashi-status-callbacks
   '((state . kashi--status-timers-refresh)
-    ;; (t     . kashi--get-lyrics)
+    (song  . kashi--get-lyrics)
     ))
 
 (defun kashi ()
@@ -21,6 +21,7 @@
 
 (defun kashi--get-lyrics ()
   (interactive)
+  (message "go")
   (let ((artist (cdr (assq 'Artist kashi-song-status)))
         (title (cdr (assq 'Title kashi-song-status))))
     (kashi--minilyrics artist title)))
@@ -29,23 +30,18 @@
   (with-current-buffer kashi-buffer
     (save-excursion
       (erase-buffer)
-      (let ((artist (cdr (assq 'Artist kashi-song-status)))
-            (title (cdr (assq 'Title kashi-song-status))))
-        (insert (concat artist " " title "\n"
-                        content
-                        )))))
-  )
+      (insert content))))
 
 (defun kashi--status-refresh (&optional callback)
   (interactive)
   (let ((cb callback))
     (mpc-proc-cmd (mpc-proc-cmd-list '("status" "currentsong"))
                   (lambda ()
-                    (kashi--mpc-callback)
-                    ))))
+                    (kashi--mpc-callback))
+                  )))
 
 (defun kashi--mpc-callback ()
-(let ((old-status kashi-song-status))
+  (let ((old-status kashi-song-status))
     ;; Update the alist.
     (setq kashi-song-status (mpc-proc-buf-to-alist))
     (cl-assert kashi-song-status)
@@ -135,21 +131,21 @@
 
 (defun kashi--minilyrics-post (data cb)
   (let* ((response (request
-                   kashi-minilyrics-url
-                   :type "POST"
-                   :data data
-                   :sync t
-                   :headers `(("User-Agent" . ,kashi-minilyrics-useragent)
-                              ("Content-Length" . ,(length data))             
-                              ("Connection" . "Keep-Alive")
-                              ("Expect" . "100-continue")
-                              ("Content-Type" . "application/x-www-form-urlencoded"))
-                   
-                   ;; :data "key=value&key2=value2"  ; this is equivalent
-                   :parser 'buffer-string
-                   :success (function*
-                             (lambda (&key data &allow-other-keys)
-                               (message "I sent: %S" data)))))
+                    kashi-minilyrics-url
+                    :type "POST"
+                    :data data
+                    :sync t
+                    :headers `(("User-Agent" . ,kashi-minilyrics-useragent)
+                               ("Content-Length" . ,(length data))             
+                               ("Connection" . "Keep-Alive")
+                               ("Expect" . "100-continue")
+                               ("Content-Type" . "application/x-www-form-urlencoded"))
+                    
+                    ;; :data "key=value&key2=value2"  ; this is equivalent
+                    :parser 'buffer-string
+                    :success (function*
+                              (lambda (&key data &allow-other-keys)
+                                (message "I sent: %S" data)))))
          (xml (kashi--minilyrics-decode (request-response-data response))))
     (kashi--minilyrics-get-url xml))
   

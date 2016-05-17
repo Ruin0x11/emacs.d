@@ -17,7 +17,7 @@
         (".*overtone.log" :regexp t :height 0.3)
         ("collected.org" :position top :height 15)
         (flycheck-error-list-mode :position bottom :height 0.3 :stick t)
-        (compilation-mode :position bottom :height 0.3 :noselect t)
+        ;; (compilation-mode :position bottom :height 0.3 :noselect t)
         ;; Utils
         ;; ("helm" :regexp t :height 0.3)
         ("*Occur*" :position bottom :height 0.3)
@@ -25,7 +25,7 @@
         ("*undo-tree*" :width 0.3 :position right)
         ("*grep*" :position bottom :height 0.2 :stick t)
         ("*Completions*" :height 0.4)
-        ("*compilation*" :height 0.4 :noselect t :stick t)
+        ("*compilation*" :height 0.3 :noselect t :stick t)
         ("*quickrun*" :height 0.3 :stick t)
         ;; Magit/vc
         ;; (magit-status-mode :position bottom :noselect t :height 0.3 :stick t)
@@ -42,7 +42,6 @@
         ("*imenu-tree*" :position left :width 50 :stick t)
         (direx:direx-mode :position left :width 35 :dedicated t)
         (dired-mode :position top)
-
         ("*gists*" :height 0.3)
         ("*sldb.*":regexp t :height 0.3)
         ("*Gofmt Errors*" :noselect t)
@@ -59,6 +58,9 @@
         ("*Python*" :stick t)
         ;; (haskell-interactive-mode :stick t)
         ("*jedi:doc*" :noselect t)
+        (cider-docview-mode :height 0.4 :stick t)
+        (cider-stacktrace-mode :height 0.4 :stick t)
+        (yari-mode :height 0.4 :stick t :dedicated t)
         ;; Console
         ("*shell*" :height 0.3)
         ("\\*ansi-term.*\\*" :regexp t :height 0.3)

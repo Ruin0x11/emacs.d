@@ -55,21 +55,24 @@
 (evil-leader/set-key-for-mode 'enh-ruby-mode
   "mi" 'inf-ruby
   "md" 'robe-doc
+  "dd" 'yari-helm
   "my" 'yari-helm)
 
+(add-to-list 'evil-emacs-state-modes 'yari-mode)
+
 ;; autostart inf-ruby and robe
-;; (dolist (hook (list
-;;                'enh-ruby-mode-hook
-;;                ))
-;;   (add-hook hook (lambda ()
-;;                    (robe-mode)
-;;                    (save-excursion
-;;                      (window-configuration-to-register 'a)
-;;                      (inf-ruby)
-;;                      (robe-start)
-;;                      (jump-to-register 'a)
-;;                      )
-;;                    )))
+(dolist (hook (list
+               'enh-ruby-mode-hook
+               ))
+  (add-hook hook (lambda ()
+                   (robe-mode)
+                   (save-excursion
+                     (window-configuration-to-register 'a)
+                     (inf-ruby)
+                     (robe-start)
+                     (jump-to-register 'a)
+                     )
+                   )))
 
 ;;; Rails
 (package-require 'projectile-rails)

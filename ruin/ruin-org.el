@@ -7,6 +7,8 @@
 (require 'org-bullets)
 
 (require 'ob-ruby)
+(require 'ob-R)
+(require 'ob-sh)
 
 ;; Startup & Directories
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
@@ -190,6 +192,9 @@
 
                                         ; Allow refile to create parent tasks with confirmation
 (setq org-refile-allow-creating-parent-nodes (quote confirm))
+
+;;; Babel
+(setq org-babel-confirm-evaluate nil)
 
 ;;; Other
 (setq org-hide-emphasis-markers t)

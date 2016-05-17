@@ -9,8 +9,8 @@
   "mgi" 'go-goto-imports
   "mgr" 'go-goto-return-values
   "mgm" 'go-goto-method-receiver
-  "mia" 'go-import-add
-  "mir" 'go-remove-unused-imports
+  "ma" 'go-import-add
+  "mr" 'go-remove-unused-imports
   "mD" 'godoc
   "md" 'godoc-at-point
   )

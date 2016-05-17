@@ -14,6 +14,8 @@
       helm-quick-update t
       helm-bookmark-show-location t
       helm-buffers-fuzzy-matching t
+      helm-semantic-fuzzy-match t
+      helm-imenu-fuzzy-match    t
       helm-candidate-number-limit 50
       helm-input-idle-delay 0.1
       )

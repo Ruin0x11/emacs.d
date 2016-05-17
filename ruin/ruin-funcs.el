@@ -13,6 +13,11 @@
   (haskell-process-load-file)
   (ruin/haskell-interactive-switch-and-move))
 
+(defun ruin/write-and-eval-buffer ()
+  (interactive)
+  (save-buffer)
+  (eval-buffer))
+
 (require 'url)
 
 (defun download-file-and-open (&optional url download-dir download-name)
@@ -131,6 +136,26 @@ buffer is not visiting a file."
           (insert a-line)
           (insert "\n"))))))
 
+(defun save-defaults ()
+  (desktop-save desktop-dirname)
+  (savehist-save)
+  (bookmark-save))
+
+;; (defun save-histories ()
+;;   (let ((buf (current-buffer)))
+;;     (save-excursion
+;;       (dolist (b (buffer-list))
+;;         (switch-to-buffer b)
+;;         (save-history)))
+;;     (switch-to-buffer buf)))
+
+(defun save ()
+  (interactive)
+  (recentf-save-list)
+  (save-desktop)
+  (save-defaults)
+  ;; (save-histories)
+  )
 
 ;; Bodil
 ;;https://github.com/bodil/emacs.d/blob/master/bodil/bodil-defuns.el#L17

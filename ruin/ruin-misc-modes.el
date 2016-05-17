@@ -12,6 +12,30 @@
 (setq which-key-idle-delay 0.2)
 (which-key-mode)
 
+;; desktop
+(require 'desktop)
+
+(desktop-save-mode)
+
+(setq desktop-dirname "~/.emacs.d"
+      desktop-base-file-name "desktop"
+      desktop-base-lock-name "desktop.lock"
+      desktop-save t
+      desktop-restore-frames t
+      desktop-restore-reuses-frames t
+      desktop-restore-in-current-display t
+      desktop-restore-forces-onscreen t)
+
+(defun save-desktop ()
+  (interactive)
+  (if (eq (desktop-owner) (emacs-pid))
+      (desktop-save desktop-dirname)))
+
+;; savehist
+(savehist-mode t)
+
+(setq savehist-file "~/.emacs.d/savehist")
+
 ;; quickrun
 (package-require 'quickrun)
 
@@ -116,6 +140,14 @@
 (require 'lively)
 (evil-define-key 'insert emacs-lisp-mode-map (kbd "C-M-l") 'lively)
 
+(package-require 'google-translate)
+(setq google-translate-default-target-language "en")
+(evil-leader/set-key
+  "at" 'google-translate-at-point)
+
+;; cucumber
+(package-require 'feature-mode)
+
 ;; diminish
 (package-require 'diminish)
 (eval-after-load "helm" '(diminish 'helm-mode))
@@ -137,5 +169,6 @@
 (eval-after-load "evil-smartparens" '(diminish 'evil-smartparens-mode))
 (eval-after-load "eldoc" '(diminish 'eldoc-mode))
 (eval-after-load "autorevert" '(diminish 'auto-revert-mode))
+(eval-after-load "ruby-block" '(diminish 'ruby-block-mode))
 
 (provide 'ruin-misc-modes)
