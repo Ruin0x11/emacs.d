@@ -6,7 +6,8 @@
 (evil-leader/set-key
         "gB" 'magit-blame
         "gb" 'magit-branch
-        "gS" 'magit-checkout
+        "gh" 'magit-checkout
+        "gH" 'magit-branch-and-checkout
         "gl" 'magit-log-all
         "gL" 'magit-log-buffer-file
         "gs" 'magit-status

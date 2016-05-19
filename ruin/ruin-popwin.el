@@ -1,4 +1,5 @@
 (package-require 'popwin)
+(package-require 'multi-term)
 (require 'popwin)
 ;; (require 'open-junk-file)
 (popwin-mode)
@@ -53,9 +54,11 @@
         ("*project-status*" :noselect t)
         ("*Compile-Log" :height 0.2 :stick t)
         ("*pytest*" :noselect t)
+        (rspec-compilation-mode :height 0.4 :tail nil)
         ;; Programing
         ("Django:" :regexp t :width 0.3 :position right)
         ("*Python*" :stick t)
+        (inf-ruby-mode :stick t :height 0.3)
         ;; (haskell-interactive-mode :stick t)
         ("*jedi:doc*" :noselect t)
         (cider-docview-mode :height 0.4 :stick t)
@@ -63,6 +66,7 @@
         (yari-mode :height 0.4 :stick t :dedicated t)
         ;; Console
         ("*shell*" :height 0.3)
+        (shell-mode :height 0.3)
         ("\\*ansi-term.*\\*" :regexp t :height 0.3)
         ("\\*terminal.*\\*" :regexp t :height 0.3)
         (term-mode :position :bottom :height 10 :stick t)

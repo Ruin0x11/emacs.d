@@ -418,7 +418,7 @@ docid. Otherwise, return nil."
     (error "Must be in sos-mode"))
   (when (window-live-p sos-answer-view-window)
     (delete-window sos-answer-view-window))
-  (kill-buffer-and-window))
+  (kill-buffer))
 
 (defvar sos-mode-map
   (let ((map (make-sparse-keymap)))

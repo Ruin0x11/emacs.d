@@ -9,14 +9,13 @@
 
 ;; (chruby "ruby-2.2.4")
 
+(setq ruby-align-to-stmt-keywords '(def case)) ;; indent "case" as per ruby style guide
+
 (require 'ruby-block)
 (ruby-block-mode t)
-;; do overlay
-(setq ruby-block-highlight-toggle 'overlay)
-;; display to minibuffer
-(setq ruby-block-highlight-toggle 'minibuffer)
-;; display to minibuffer and do overlay
-(setq ruby-block-highlight-toggle t)
+(setq ruby-block-highlight-toggle 'overlay    ;; do overlay
+      ruby-block-highlight-toggle 'minibuffer ;; display to minibuffer
+      ruby-block-highlight-toggle t)          ;; display to minibuffer and do overlay
 
 (add-hook 'ruby-mode-hook 'robe-mode)
 
@@ -56,9 +55,14 @@
   "mi" 'inf-ruby
   "md" 'robe-doc
   "dd" 'yari-helm
-  "my" 'yari-helm)
+  "my" 'yari-helm
+  "tt" 'rspec-verify
+  "ta" 'rspec-verify-all
+  "tf" 'rspec-run-last-failed
+  "tj" 'rspec-find-spec-or-target-other-window)
 
-(add-to-list 'evil-emacs-state-modes 'yari-mode)
+(add-to-list 'evil-emacs-state-modes 'inf-ruby-mode)
+(ruin/window-movement-for-mode "inf-ruby" 'inf-ruby-mode-map)
 
 ;; autostart inf-ruby and robe
 (dolist (hook (list
@@ -78,7 +82,7 @@
 (package-require 'projectile-rails)
 (add-hook 'projectile-mode-hook 'projectile-rails-on)
 
-(evil-leader/set-key-for-mode 'projectile-mode
+(evil-leader/set-key-for-mode 'ruby-mode
   "mrm" 'projectile-rails-find-model
   "mrM" 'projectile-rails-find-current-model
   "mrc" 'projectile-rails-find-controller

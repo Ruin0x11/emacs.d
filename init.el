@@ -88,7 +88,8 @@
         ruin-haskell
         ruin-go
         ruin-tex
-        ruin-ess
+        ; ruin-ess
+        ruin-hipchat
 
         ruin-project
         ruin-flycheck
@@ -98,7 +99,7 @@
         ;; ruin-shell
         ruin-popwin
         ruin-misc-modes
-        ruin-home
+        ; ruin-home
         ))
 
 ;; load modularized features

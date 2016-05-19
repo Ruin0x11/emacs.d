@@ -7,15 +7,19 @@
 (winner-mode)
 
 ;; which-key
-(package-require 'which-key)
-
-(setq which-key-idle-delay 0.2)
-(which-key-mode)
+;; (package-require 'which-key)
+;; (require 'which-key-autoloads)
+;; (require 'which-key)
+;; (setq which-key-idle-delay 0.2)
+;; (which-key-mode)
 
 ;; desktop
 (require 'desktop)
 
-(desktop-save-mode)
+;; request
+(package-require 'request)
+
+; (desktop-save-mode)
 
 (setq desktop-dirname "~/.emacs.d"
       desktop-base-file-name "desktop"
@@ -43,8 +47,10 @@
       quickrun-focus-p nil)
 
 (add-hook 'quickrun-after-run-hook (lambda ()
-                                     (progn (goto-point (point-min)) (recenter -2))
-                                ))
+                                     (quickrun/remove-temp-files)
+                                     (quickrun/recenter -5)))
+(add-hook 'quickrun/mode-hook      (lambda ()
+                                     (quickrun/recenter -5)))
 
 (require 'quickrun)
 ;; delete active quickrun window and buffer
@@ -55,24 +61,24 @@
     (kill-buffer quickrun/buffer-name)))
 
 ;; lookup
-;; (add-to-list 'load-path "/usr/share/emacs/site-lisp/lookup")
-(load "lookup-autoloads")
-(evil-leader/set-key
- "ll" 'lookup
- "lw" 'lookup-word
- "lp" 'lookup-pattern)
+                                        ; ;; (add-to-list 'load-path "/usr/share/emacs/site-lisp/lookup")
+                                        ; (load "lookup-autoloads")
+                                        ; (evil-leader/set-key
+                                        ;  "ll" 'lookup
+                                        ;  "lw" 'lookup-word
+                                        ;  "lp" 'lookup-pattern)
 
-(load "lookup-autoloads")
-(setq lookup-mecab-coding-system 'utf-8)
-(setq lookup-search-agents '(;;(ndmecab)
-                             (ndict "dict.us.dict.org")
-                             (ndsary "~/dicts")
-                             ))
-(add-to-list 'evil-emacs-state-modes 'lookup-select-mode)
-(add-to-list 'evil-emacs-state-modes 'lookup-history-mode)
-(add-to-list 'evil-emacs-state-modes 'lookup-content-mode)
-(add-to-list 'evil-emacs-state-modes 'lookup-modules-mode)
-(add-to-list 'evil-emacs-state-modes 'lookup-summary-mode)
+                                        ; (load "lookup-autoloads")
+                                        ; (setq lookup-mecab-coding-system 'utf-8)
+                                        ; (setq lookup-search-agents '(;;(ndmecab)
+                                        ;                              (ndict "dict.us.dict.org")
+                                        ;                              (ndsary "~/dicts")
+                                        ;                              ))
+                                        ; (add-to-list 'evil-emacs-state-modes 'lookup-select-mode)
+                                        ; (add-to-list 'evil-emacs-state-modes 'lookup-history-mode)
+                                        ; (add-to-list 'evil-emacs-state-modes 'lookup-content-mode)
+                                        ; (add-to-list 'evil-emacs-state-modes 'lookup-modules-mode)
+                                        ; (add-to-list 'evil-emacs-state-modes 'lookup-summary-mode)
 
 ;; expand-region
 (package-require 'expand-region)
@@ -144,6 +150,11 @@
 (setq google-translate-default-target-language "en")
 (evil-leader/set-key
   "at" 'google-translate-at-point)
+
+;; markdown-mode
+(package-require 'markdown-mode)
+(eval-after-load "markdown-mode" #'(lambda ()
+                                (define-key markdown-mode-map (kbd "<C-return>") 'markdown-follow-thing-at-point)))
 
 ;; cucumber
 (package-require 'feature-mode)
