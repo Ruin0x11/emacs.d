@@ -11,6 +11,9 @@
         "gl" 'magit-log-all
         "gL" 'magit-log-buffer-file
         "gs" 'magit-status
+        "gtt" 'magit-stash
+        "gtp" 'magit-stash-pop
+        "gtl" 'magit-stash-list
         "gf" 'magit-fetch-all
         "gM" 'magit-merge
         "gd" 'magit-diff-head

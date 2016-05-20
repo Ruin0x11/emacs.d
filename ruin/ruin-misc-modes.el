@@ -158,6 +158,11 @@
 
 ;; cucumber
 (package-require 'feature-mode)
+(evil-leader/set-key-for-mode 'feature-mode
+  "tt" 'feature-verify-scenario-at-pos
+  "tb" 'feature-verify-all-scenarios-in-buffer
+  "ta" 'feature-verify-all-scenarios-in-project
+  )
 
 ;; diminish
 (package-require 'diminish)

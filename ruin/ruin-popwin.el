@@ -4,6 +4,9 @@
 ;; (require 'open-junk-file)
 (popwin-mode)
 
+(defvar ruin/last-popwin-buffer nil
+  "The last buffer opened by popwin.")
+
 ;; popwin settings
 (setq popwin:special-display-config
       '(

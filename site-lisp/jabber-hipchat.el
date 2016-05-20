@@ -127,3 +127,5 @@ settings / API access.  Must have view_group scope."
       nil))
 
   (add-to-list 'jabber-body-printers #'jabber-chat-html-body))
+
+(provide 'jabber-hipchat)

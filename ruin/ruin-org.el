@@ -16,7 +16,7 @@
 
 (setq org-directory "~/org")
 (setq org-default-notes-file "~/org/tracked/refile.org")
-(setq org-agenda-files (quote ("~/org/tracked")))
+(setq org-agenda-files '("~/org/tracked"))
 (setq org-capture-templates 
       '(("t" "todo" entry (file "~/org/tracked/refile.org")
          "* TODO %?\n%U"

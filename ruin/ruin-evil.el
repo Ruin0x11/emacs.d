@@ -21,6 +21,7 @@
   "R" 'quickrun-shell
   "w" 'save-buffer
   "q" 'evil-quit
+  "Q" 'kill-buffer-and-window
   "x" 'evil-save-and-close
   "u" 'universal-argument
   "y" 'helm-show-kill-ring
@@ -60,7 +61,7 @@
   "fd" 'helm-semantic-or-imenu
   "fs" 'find-function
   "fv" 'find-variable
-  "fw" 'download-file-and-open
+  "fw" 'crux-view-url
   "fp" 'find-library
   
   "hR" 'helm-regexp
@@ -96,6 +97,7 @@
   "bD"  'spacemacs/kill-other-buffers
   "bY"  'spacemacs/copy-whole-buffer-to-clipboard
   "b!"  'spacemacs/open-in-external-app
+  "bB"  'browse-url-of-file
   "b="  'my-diff-buffer-with-file
   )
 
@@ -131,7 +133,7 @@
 (add-to-list 'evil-emacs-state-modes 'shell-mode)
 (delete 'calc-mode evil-insert-state-modes)
 (add-to-list 'evil-emacs-state-modes 'calc-mode)
-(ruin/window-movement-for-mode "calc" calc-mode-map)
+(ruin/window-movement-for-mode "calc" 'calc-mode-map)
 
 (add-to-list 'evil-emacs-state-modes 'mpc-mode)
 (add-to-list 'evil-emacs-state-modes 'mpc-songs-mode)

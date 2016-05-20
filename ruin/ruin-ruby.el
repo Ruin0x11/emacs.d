@@ -41,24 +41,81 @@
 (add-hook 'enh-ruby-mode-hook 'robe-mode)
 
 (add-hook 'enh-ruby-mode-hook
-	  #'(lambda ()
-	      (yas-activate-extra-mode 'ruby-mode)))
+          #'(lambda ()
+              (yas-activate-extra-mode 'ruby-mode)))
 
 (add-hook 'ruby-mode-hook
           (function (lambda ()
                       (setq evil-shift-width enh-ruby-indent-level))))
 
+(add-hook 'rspec-mode-hook
+          #'(lambda ()
+              (setq compilation-scroll-output nil)))
+
 (eval-after-load 'company
   '(push 'company-robe company-backends))
+
+(defun ruby-insert-end ()
+  (interactive)
+  (if (eq (char-syntax (char-before)) ?w)
+      (insert " "))
+  (insert "end")
+  (save-excursion
+    (if (eq (char-syntax (char-after)) ?w)
+        (insert " "))
+    (ruby-indent-line t)
+    (end-of-line)))
+
+(defun ruby-brace-to-do-end ()
+  (when (looking-at "{")
+    (let ((orig (point)) (end (progn (ruby-forward-sexp) (point))))
+      (when (eq (char-before) ?\})
+        (delete-char -1)
+        (if (eq (char-syntax (char-before)) ?w)
+            (insert " "))
+        (insert "end")
+        (if (eq (char-syntax (char-after)) ?w)
+            (insert " "))
+        (goto-char orig)
+        (delete-char 1)
+        (if (eq (char-syntax (char-before)) ?w)
+            (insert " "))
+        (insert "do")
+        (when (looking-at "\\sw\\||")
+          (insert " ")
+          (backward-char))
+        t))))
+
+(defun ruby-do-end-to-brace ()
+  (when (and (or (bolp)
+                 (not (memq (char-syntax (char-before)) '(?w ?_))))
+             (looking-at "\\<do\\(\\s \\|$\\)"))
+    (let ((orig (point)) (end (progn (ruby-forward-sexp) (point))))
+      (backward-char 3)
+      (when (looking-at ruby-block-end-re)
+        (delete-char 3)
+        (insert "}")
+        (goto-char orig)
+        (delete-char 2)
+        (insert "{")
+        (if (looking-at "\\s +|")
+            (delete-char (- (match-end 0) (match-beginning 0) 1)))
+        t))))
+
+(defun ruby-toggle-block ()
+  (interactive)
+  (or (ruby-brace-to-do-end)
+      (ruby-do-end-to-brace)))
 
 (evil-leader/set-key-for-mode 'enh-ruby-mode
   "mi" 'inf-ruby
   "md" 'robe-doc
+  "mb" 'ruby-toggle-block
   "dd" 'yari-helm
   "my" 'yari-helm
   "tt" 'rspec-verify
   "ta" 'rspec-verify-all
-  "tf" 'rspec-run-last-failed
+  "tr" 'rspec-run-last-failed
   "tj" 'rspec-find-spec-or-target-other-window)
 
 (add-to-list 'evil-emacs-state-modes 'inf-ruby-mode)

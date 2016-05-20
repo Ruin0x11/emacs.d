@@ -1,10 +1,11 @@
 ;;; ruin-flycheck.el --- flycheck settings
 
 (package-require 'flycheck)
+(package-require 'helm-flycheck)
 (add-hook 'after-init-hook #'global-flycheck-mode)
 
-(global-set-key (kbd "M-n") 'next-error)
-(global-set-key (kbd "M-p") 'previous-error)
+(global-set-key (kbd "M-n") 'flycheck-next-error)
+(global-set-key (kbd "M-p") 'flycheck-previous-error)
 
 (eval-after-load "flycheck"
   '(progn
@@ -15,6 +16,10 @@
      (define-key flycheck-error-list-mode-map "k" 'previous-line)
      (ruin/window-movement-for-map flycheck-error-list-mode-map)
     ))
+
+(eval-after-load "flycheck"
+  '(evil-leader/set-key-for-mode 'flycheck-mode
+     "he" 'helm-flycheck))
 
 (setq-default flycheck-disabled-checkers '(processing))
 

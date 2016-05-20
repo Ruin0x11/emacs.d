@@ -33,6 +33,7 @@
   "fd" 'helm-semantic-or-imenu
   "fF" 'helm-find
 
+  "hf" 'helm-flycheck
   "hR" 'helm-regexp
   "hm" 'helm-man-woman
   "hM" 'helm-mini
