@@ -60,6 +60,10 @@
 ;; autosave recentf
 (run-at-time nil (* 5 60) 'recentf-save-list)
 
+;; don't confirm on killing process
+(setq kill-buffer-query-functions
+      (delq 'process-kill-buffer-query-function kill-buffer-query-functions))
+
 ;; registers
 (dolist
     (r `((?i (file . ,(concat dotfiles-dir "init.el")))

@@ -7,7 +7,7 @@
 (package-require 'yari) ;ルビヌスの槍
 ;; (require 'rcodetools)
 
-;; (chruby "ruby-2.2.4")
+(chruby "ruby-2.3.1")
 
 (setq ruby-align-to-stmt-keywords '(def case)) ;; indent "case" as per ruby style guide
 

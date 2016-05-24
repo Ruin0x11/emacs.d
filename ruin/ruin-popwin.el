@@ -6,6 +6,8 @@
 
 (defvar ruin/last-popwin-buffer nil
   "The last buffer opened by popwin.")
+(defvar ruin/last-popwin-cookie nil
+  "The last popwin modeline cookie returned by face-remap-add-relative.")
 
 ;; popwin settings
 (setq popwin:special-display-config
@@ -65,11 +67,13 @@
         ;; (haskell-interactive-mode :stick t)
         ("*jedi:doc*" :noselect t)
         (cider-docview-mode :height 0.4 :stick t)
+        ("*YASnippet tables*" :height 0.4 :stick t)
         (cider-stacktrace-mode :height 0.4 :stick t)
         (yari-mode :height 0.4 :stick t :dedicated t)
         ;; Console
         ("*shell*" :height 0.3)
         (shell-mode :height 0.3)
+        ("*Async Shell Command*" :height 0.3)
         ("\\*ansi-term.*\\*" :regexp t :height 0.3)
         ("\\*terminal.*\\*" :regexp t :height 0.3)
         (term-mode :position :bottom :height 10 :stick t)
@@ -79,6 +83,7 @@
         (calendar-mode :position bottom :height 15 :stick nil)
         (org-agenda-mode :position bottom :height 15 :stick t)
         ("*Org Agenda.*\\*" :regexp t :position bottom :height 15 :stick t)
+        (org-capture-mode :position right :stick t)
         )
       )
 
@@ -112,5 +117,27 @@
        (save-window-excursion
          (call-interactively 'multi-term)))
    :default-config-keywords '(:position :bottom :height 10 :stick t)))
+
+;; stop eyebrowse from saving to-be-deleted popup window
+(add-hook 'eyebrowse-pre-window-switch-hook
+          (lambda ()
+            (if popwin:popup-window
+                (popwin:close-popup-window))))
+
+;; (add-hook 'popwin:before-popup-hook
+;;           (lambda ()
+;;             (when (buffer-live-p ruin/last-popwin-buffer)
+;;               (with-current-buffer ruin/last-popwin-buffer
+;;                 (when ruin/last-popwin-cookie
+;;                   (face-remap-remove-relative ruin/last-popwin-cookie)
+;;                   (setq ruin/last-popwin-cookie nil))))
+;;             ))
+
+;; (add-hook 'popwin:after-popup-hook
+;;           (lambda ()
+;;             (setq ruin/last-popwin-buffer popwin:popup-buffer)
+;;             (with-current-buffer popwin:popup-buffer
+;;               (setq ruin/last-popwin-cookie (face-remap-add-relative
+;;                                              'powerline-inactive2 '((:foreground "ivory" :background "DarkOrange2") powerline-inactive2))))))
 
 (provide 'ruin-popwin)

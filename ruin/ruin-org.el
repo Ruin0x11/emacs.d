@@ -1,7 +1,8 @@
 ;;; ruin-org.el --- org-mode settings
-
 (package-require 'org)
 (package-require 'org-bullets)
+
+(setq org-agenda-files '("~/org/tracked"))
 
 (require 'org)
 (require 'org-bullets)
@@ -16,7 +17,6 @@
 
 (setq org-directory "~/org")
 (setq org-default-notes-file "~/org/tracked/refile.org")
-(setq org-agenda-files '("~/org/tracked"))
 (setq org-capture-templates 
       '(("t" "todo" entry (file "~/org/tracked/refile.org")
          "* TODO %?\n%U"

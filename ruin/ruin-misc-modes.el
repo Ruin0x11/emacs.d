@@ -9,8 +9,8 @@
 ;; which-key
 ;; (package-require 'which-key)
 ;; (require 'which-key-autoloads)
-;; (require 'which-key)
 ;; (setq which-key-idle-delay 0.2)
+;; (require 'which-key)
 ;; (which-key-mode)
 
 ;; desktop
@@ -97,6 +97,7 @@
 (add-hook 'emacs-lisp-hook #'aggressive-indent-mode)
 (add-hook 'go-mode-hook #'aggressive-indent-mode)
 (add-hook 'enh-ruby-mode-hook #'aggressive-indent-mode)
+(add-hook 'feature-mode-hook #'aggressive-indent-mode)
 
 ;; arduino-mode
 (package-require 'arduino-mode)
@@ -163,6 +164,9 @@
   "tb" 'feature-verify-all-scenarios-in-buffer
   "ta" 'feature-verify-all-scenarios-in-project
   )
+(add-hook 'compilation-shell-minor-mode-hook
+          #'(lambda ()
+              (setq compilation-scroll-output nil)))
 
 ;; diminish
 (package-require 'diminish)
