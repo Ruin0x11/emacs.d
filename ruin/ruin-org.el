@@ -2,7 +2,7 @@
 (package-require 'org)
 (package-require 'org-bullets)
 
-(setq org-agenda-files '("~/org/tracked"))
+(setq org-agenda-files (quote ("~/org/tracked")))
 
 (require 'org)
 (require 'org-bullets)
@@ -375,5 +375,12 @@
           '(lambda ()
              (if (string= (buffer-file-name) (concat (getenv "HOME") "/ideas/TODO.txt"))
                  (my-org-agenda-to-appt))))
+
+;; start agenda on emacs startup
+(add-hook 'emacs-startup-hook
+          '(lambda ()
+             (setq org-agenda-files (quote ("~/org/tracked")))
+             (org-agenda nil "a")
+             (previous-window)))
 
 (provide 'ruin-org)

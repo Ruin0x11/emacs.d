@@ -157,7 +157,7 @@ buffer is not visiting a file."
   ;; (save-histories)
   )
 
-;; source: http://steve.yegge.googlepages.com/my-dot-emacs-file
+;;http://steve.yegge.googlepages.com/my-dot-emacs-file
 (defun rename-file-and-buffer (new-name)
   "Renames both current buffer and file it's visiting to NEW-NAME."
   (interactive "sNew name: ")
@@ -172,6 +172,24 @@ buffer is not visiting a file."
           (rename-buffer new-name)
           (set-visited-file-name new-name)
           (set-buffer-modified-p nil))))))
+
+(defun move-buffer-file (dir)
+  "Moves both current buffer and file it's visiting to DIR."
+  (interactive "DNew directory: ")
+  (let* ((name (buffer-name))
+         (filename (buffer-file-name))
+         (dir
+          (if (string-match dir "\\(?:/\\|\\\\)$")
+              (substring dir 0 -1) dir))
+         (newname (concat dir "/" name)))
+    (if (not filename)
+        (message "Buffer '%s' is not visiting a file!" name)
+      (progn (copy-file filename newname 1)
+             (delete-file filename)
+             (set-visited-file-name newname)
+             (set-buffer-modified-p nil)
+             t)))) 
+
 
 ;; Bodil
 ;;https://github.com/bodil/emacs.d/blob/master/bodil/bodil-defuns.el#L17

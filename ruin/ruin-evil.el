@@ -6,6 +6,7 @@
 (package-require 'evil)
 (package-require 'evil-commentary)
 (package-require 'evil-surround)
+(load-file (locate-user-emacs-file "site-lisp/evil-leader/evil-leader.el"))
 (package-require 'evil-leader)
 (evil-mode 1)
 
@@ -43,6 +44,8 @@
   "eD" 'toggle-debug-on-error
   "ee" 'eval-expression
   "ei" 'ielm
+  "enn" 'debug-on-entry
+  "enc" 'cancel-debug-on-entry
 
   "aa" 'org-agenda
   "c" 'org-capture
@@ -51,6 +54,7 @@
 
   "ac" 'calc
   "ad" 'diff
+  "aw" 'browse-url-at-point
 
   "jr" 'helm-register
   "jb" 'helm-bookmarks
@@ -93,6 +97,7 @@
   "TAB" 'spacemacs/alternate-buffer
   "bd"  'kill-this-buffer
   "bn"  'rename-file-and-buffer
+  "bm"  'move-buffer-file
   "br"  'revert-buffer
   "bD"  'spacemacs/kill-other-buffers
   "bY"  'spacemacs/copy-whole-buffer-to-clipboard
@@ -183,6 +188,8 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 
 (ruin/window-movement-for-mode "help-mode" 'help-mode-map)
 (ruin/window-movement-for-mode "compile" 'compilation-mode-map)
+
+(evil-define-key 'normal comint-mode-map "C-d" 'evil-scroll-down)
 
 ;; j and k where it counts
 (eval-after-load "tar" #'(lambda ()

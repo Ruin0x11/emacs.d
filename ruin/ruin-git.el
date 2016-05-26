@@ -1,7 +1,11 @@
 ;;; ruin-git.el --- git/magit settings
 
 (package-require 'magit)
+(package-require 'git-timemachine)
+(package-require 'smeargle)
 (require 'magit)
+
+(add-to-list 'evil-emacs-state-modes 'git-timemachine-mode)
 
 (evil-leader/set-key
         "gB" 'magit-blame
@@ -11,16 +15,19 @@
         "gl" 'magit-log-all
         "gL" 'magit-log-buffer-file
         "gs" 'magit-status
+        "gS" 'smeargle
         "gtt" 'magit-stash
         "gtp" 'magit-stash-pop
         "gtl" 'magit-stash-list
+        "gT" 'git-timemachine
         "gf" 'magit-fetch-all
         "gM" 'magit-merge
         "gd" 'magit-diff-head
         "gp" 'magit-push
         "gP" 'magit-pull
         "gC" 'magit-clone
-        "gc" 'magit-commit)
+        "gc" 'magit-commit
+        "gR" 'magit-reset-hard)
 
 (defun magit-diff-head ()
         "Execute `magit-diff' against current HEAD."

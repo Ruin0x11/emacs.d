@@ -107,12 +107,18 @@
   (or (ruby-brace-to-do-end)
       (ruby-do-end-to-brace)))
 
+(defun yari-helm-rehash ()
+  (interactive)
+  (setq yari-ruby-obarray-cache nil)
+  (yari-helm))
+
 (evil-leader/set-key-for-mode 'enh-ruby-mode
   "mi" 'inf-ruby
   "md" 'robe-doc
   "mb" 'ruby-toggle-block
   "dd" 'yari-helm
   "my" 'yari-helm
+  "mY" 'yari-helm-rehash
   "tt" 'rspec-verify
   "ta" 'rspec-verify-all
   "tr" 'rspec-run-last-failed

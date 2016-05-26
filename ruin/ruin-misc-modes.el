@@ -97,7 +97,6 @@
 (add-hook 'emacs-lisp-hook #'aggressive-indent-mode)
 (add-hook 'go-mode-hook #'aggressive-indent-mode)
 (add-hook 'enh-ruby-mode-hook #'aggressive-indent-mode)
-(add-hook 'feature-mode-hook #'aggressive-indent-mode)
 
 ;; arduino-mode
 (package-require 'arduino-mode)
@@ -159,14 +158,21 @@
 
 ;; cucumber
 (package-require 'feature-mode)
+(require 'helm-feature)
 (evil-leader/set-key-for-mode 'feature-mode
   "tt" 'feature-verify-scenario-at-pos
   "tb" 'feature-verify-all-scenarios-in-buffer
   "ta" 'feature-verify-all-scenarios-in-project
+  "th" 'helm-feature-snippets
   )
 (add-hook 'compilation-shell-minor-mode-hook
           #'(lambda ()
               (setq compilation-scroll-output nil)))
+
+(setq feature-cucumber-command "bundle exec rake cucumber CUCUMBER_OPTS=\"{options} -r features\" FEATURE=\"{feature}\"")
+
+;; YAML
+(package-require 'yaml-mode)
 
 ;; diminish
 (package-require 'diminish)

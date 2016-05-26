@@ -73,7 +73,7 @@
         ;; Console
         ("*shell*" :height 0.3)
         (shell-mode :height 0.3)
-        ("*Async Shell Command*" :height 0.3)
+        ("*Async Shell Command*" :height 0.3 :stick t)
         ("\\*ansi-term.*\\*" :regexp t :height 0.3)
         ("\\*terminal.*\\*" :regexp t :height 0.3)
         (term-mode :position :bottom :height 10 :stick t)
@@ -118,11 +118,18 @@
          (call-interactively 'multi-term)))
    :default-config-keywords '(:position :bottom :height 10 :stick t)))
 
+(defun close-popwin-if-open ()
+  (if popwin:popup-window
+      (popwin:close-popup-window)))
+
+;; replace popwin if one is already active
+(add-hook 'popwin:before-popup-hook 'close-popwin-if-open)
+
 ;; stop eyebrowse from saving to-be-deleted popup window
-(add-hook 'eyebrowse-pre-window-switch-hook
-          (lambda ()
-            (if popwin:popup-window
-                (popwin:close-popup-window))))
+(add-hook 'eyebrowse-pre-window-switch-hook 'close-popwin-if-open)
+
+;; stop winner from saving popup
+(add-hook 'winner-mode-hook 'close-popwin-if-open)
 
 ;; (add-hook 'popwin:before-popup-hook
 ;;           (lambda ()
