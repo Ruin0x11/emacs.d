@@ -30,7 +30,11 @@
 
 (defun get-feature-snippet-list ()
   (interactive)
-  (let* ((feature-arg (buffer-file-name))
+  (save-some-buffers
+   nil (lambda ()
+         (string-equal (file-name-extension (buffer-name)) "feature")
+         ))
+  (let* ((feature-arg feature-default-directory)
          (cuke-opts (list "-d" ))
          (opts-str (mapconcat 'identity cuke-opts " "))
          (cucumber-command (concat (replace-regexp-in-string "{options}" opts-str
@@ -42,12 +46,31 @@
         (insert cucumber-output)
         (goto-char (point-min))
         (setq search-result (search-forward-regexp "You can implement step definitions for undefined steps with these snippets:" nil t))
-        (kill-region (point-min) (point))
-        (butlast (cdr (split-string (buffer-string) "\n\n")))))))
+        (if (not search-result)
+            '()
+          (kill-region (point-min) (point))
+          (butlast (cdr (split-string (buffer-string) "\n\n"))))))))
 
 (defun helm-feature-snippet-transformer (candidates _source)
   (cl-loop for i in candidates
            collect (my-fontify-using-faces (my-fontify-ruby i))))
+
+(defun insert-feature-snippet (candidates)
+  "Insert feature snippet at point."
+  (let ((keys (if (listp candidates) candidates (list candidates))))
+    (insert (s-join "\n\n" candidates))))
+
+(defmacro helm-feature-helmify-action (action name)
+  "Wraps the function ACTION in another function named NAME which
+passes the candidates marked in helm to ACTION.  Also uses
+with-helm-current-buffer such that when ACTION inserts text and
+it comes out in the right buffer."
+  `(defun ,name (_)
+     (let ((keys (helm-marked-candidates :with-wildcard t)))
+       (with-helm-current-buffer
+         (,action keys)))))
+
+(helm-feature-helmify-action insert-feature-snippet helm-feature-insert-snippet)
 
 (defvar helm-feature-pending-snippets
   `((name . "Cucumber snippets")
@@ -84,7 +107,8 @@
 ;;;###autoload
 (defun helm-feature-snippets ()
   (interactive)
-  (helm :sources (helm-build-async-source "test"
+  (helm :sources (helm-build-async-source "Cucumber snippets"
+                   :action '(("Insert snippet at point" . helm-feature-insert-snippet))
                    :candidates-process (get-feature-snippet-list)
                    :filtered-candidate-transformer #'helm-feature-snippet-transformer
                    :multiline t)

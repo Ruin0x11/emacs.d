@@ -122,7 +122,8 @@
   "tt" 'rspec-verify
   "ta" 'rspec-verify-all
   "tr" 'rspec-run-last-failed
-  "tj" 'rspec-find-spec-or-target-other-window)
+  "tj" 'rspec-find-spec-or-target-other-window
+  "th" 'helm-feature-snippets)
 
 (add-to-list 'evil-emacs-state-modes 'inf-ruby-mode)
 (ruin/window-movement-for-mode "inf-ruby" 'inf-ruby-mode-map)
