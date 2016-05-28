@@ -30,6 +30,13 @@
   "ed" 'eval-defun
   )
 
+(evil-leader/set-key-for-mode 'lisp-interaction-mode
+  "eb" 'ruin/write-and-eval-buffer
+  "es" 'eval-last-sexp
+  "eh" 'helm-eval-expression-with-eldoc
+  "ed" 'eval-defun
+  )
+
 
 (define-key smartparens-mode-map (kbd "M-l") 'sp-down-sexp)
 (define-key smartparens-mode-map (kbd "M-h") 'sp-backward-up-sexp)

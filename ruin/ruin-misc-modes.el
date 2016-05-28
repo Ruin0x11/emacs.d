@@ -95,6 +95,14 @@
 (define-key evil-normal-state-map (kbd "C-\"") 'er/contract-region)
 (define-key evil-visual-state-map (kbd "C-\"") 'er/contract-region)
 
+(defun get-lookup-entries (query)
+  (let ((query (lookup-new-query lookup-default-method query))
+        (entries '()))
+    (dolist (dict (or lookup-search-dictionaries
+                      (lookup-module-dictionaries (lookup-default-module))))
+      (setf entries (append entries (lookup-dictionary-search dict query))))
+    entries))
+
 ;; anzu
 (package-require 'anzu)
 (global-anzu-mode 1)
