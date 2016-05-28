@@ -61,24 +61,32 @@
     (kill-buffer quickrun/buffer-name)))
 
 ;; lookup
-                                        ; ;; (add-to-list 'load-path "/usr/share/emacs/site-lisp/lookup")
-                                        ; (load "lookup-autoloads")
-                                        ; (evil-leader/set-key
-                                        ;  "ll" 'lookup
-                                        ;  "lw" 'lookup-word
-                                        ;  "lp" 'lookup-pattern)
+;; (add-to-list 'load-path "/usr/share/emacs/site-lisp/lookup")
+(load "lookup-autoloads")
+(evil-leader/set-key
+  "ll" 'lookup
+  "lw" 'lookup-word
+  "lp" 'lookup-pattern)
 
-                                        ; (load "lookup-autoloads")
-                                        ; (setq lookup-mecab-coding-system 'utf-8)
-                                        ; (setq lookup-search-agents '(;;(ndmecab)
-                                        ;                              (ndict "dict.us.dict.org")
-                                        ;                              (ndsary "~/dicts")
-                                        ;                              ))
-                                        ; (add-to-list 'evil-emacs-state-modes 'lookup-select-mode)
-                                        ; (add-to-list 'evil-emacs-state-modes 'lookup-history-mode)
-                                        ; (add-to-list 'evil-emacs-state-modes 'lookup-content-mode)
-                                        ; (add-to-list 'evil-emacs-state-modes 'lookup-modules-mode)
-                                        ; (add-to-list 'evil-emacs-state-modes 'lookup-summary-mode)
+(load "lookup-autoloads")
+(setq lookup-mecab-coding-system 'utf-8)
+(setq lookup-search-agents '(;;(ndmecab)
+                             (ndict "dict.us.dict.org")
+                             (ndsary "~/dicts")
+                             ))
+(add-to-list 'evil-emacs-state-modes 'lookup-select-mode)
+(add-to-list 'evil-emacs-state-modes 'lookup-history-mode)
+(add-to-list 'evil-emacs-state-modes 'lookup-content-mode)
+(add-to-list 'evil-emacs-state-modes 'lookup-modules-mode)
+(add-to-list 'evil-emacs-state-modes 'lookup-summary-mode)
+
+;;;###autoload
+(defun lookup-region-noconfirm (beg end &optional mod)
+  "Search for the region."
+  (interactive (lookup-region-input))
+  (let* ((lookup-edit-input nil))
+    (lookup-word (buffer-substring-no-properties beg end) mod)))
+(global-set-key (kbd "C-c C-l") 'lookup-region-noconfirm)
 
 ;; expand-region
 (package-require 'expand-region)
@@ -154,7 +162,7 @@
 ;; markdown-mode
 (package-require 'markdown-mode)
 (eval-after-load "markdown-mode" #'(lambda ()
-                                (define-key markdown-mode-map (kbd "<C-return>") 'markdown-follow-thing-at-point)))
+                                     (define-key markdown-mode-map (kbd "<C-return>") 'markdown-follow-thing-at-point)))
 
 ;; cucumber
 (package-require 'feature-mode)
