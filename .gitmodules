@@ -1,0 +1,3 @@
+[submodule "site-lisp/evil-plugins"]
+	path = site-lisp/evil-plugins
+	url = https://github.com/tarao/evil-plugins

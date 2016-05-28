@@ -8,7 +8,6 @@
 
 ;; which-key
 ;; (package-require 'which-key)
-;; (require 'which-key-autoloads)
 ;; (setq which-key-idle-delay 0.2)
 ;; (require 'which-key)
 ;; (which-key-mode)

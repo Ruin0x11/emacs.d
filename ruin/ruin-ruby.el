@@ -146,18 +146,21 @@
 (package-require 'projectile-rails)
 (add-hook 'projectile-mode-hook 'projectile-rails-on)
 
-(evil-leader/set-key-for-mode 'ruby-mode
-  "mrm" 'projectile-rails-find-model
-  "mrM" 'projectile-rails-find-current-model
-  "mrc" 'projectile-rails-find-controller
-  "mrC" 'projectile-rails-find-current-controller
-  "mrv" 'projectile-rails-find-view
-  "mrV" 'projectile-rails-find-current-view
-  "mrk" 'projectile-rails-find-rake-task
-  "mrR" 'projectile-rails-server
-  "mrr" 'projectile-rails-console
-  "mrgg" 'projectile-rails-goto-gemfile
-  "mrgr" 'projectile-rails-goto-routes
-  )
+(add-hook 'projectile-rails-mode-hook
+          '(lambda ()
+             (evil-leader/set-local-key
+               "mrm" 'projectile-rails-find-model
+               "mrM" 'projectile-rails-find-current-model
+               "mrc" 'projectile-rails-find-controller
+               "mrC" 'projectile-rails-find-current-controller
+               "mrv" 'projectile-rails-find-view
+               "mrV" 'projectile-rails-find-current-view
+               "mrk" 'projectile-rails-find-rake-task
+               "mrs" 'projectile-rails-server
+               "mrr" 'projectile-rails-console
+               "mrg" 'projectile-rails-goto-gemfile
+               "mrR" 'projectile-rails-goto-routes
+               )
+             ))
 
 (provide 'ruin-ruby)
