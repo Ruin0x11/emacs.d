@@ -6,7 +6,7 @@
 (package-require 'evil)
 (package-require 'evil-commentary)
 (package-require 'evil-surround)
-(load-file (locate-user-emacs-file "site-lisp/evil-leader/evil-leader.el"))
+;(load-file (locate-user-emacs-file "site-lisp/evil-leader/evil-leader.el"))
 (package-require 'evil-leader)
 (require 'evil-little-word)
 (evil-mode 1)
