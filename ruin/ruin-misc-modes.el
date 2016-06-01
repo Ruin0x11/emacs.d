@@ -7,10 +7,10 @@
 (winner-mode)
 
 ;; which-key
-;; (package-require 'which-key)
-;; (setq which-key-idle-delay 0.2)
-;; (require 'which-key)
-;; (which-key-mode)
+(package-require 'which-key)
+(setq which-key-idle-delay 0.2)
+(require 'which-key)
+(which-key-mode)
 
 ;; desktop
 (require 'desktop)
@@ -188,6 +188,31 @@
 
 ;; YAML
 (package-require 'yaml-mode)
+
+;; kaomoji
+(package-require 'kaomoji)
+(defun my-slurp (file)
+  (with-temp-buffer
+    (insert-file-contents (locate-user-emacs-file file))
+    (goto-char (point-min))
+    (buffer-substring-no-properties
+       (point-min)
+       (point-max))))
+
+(defun facemark-kaomoji ()
+  (mapcar (lambda (st)
+            (let* ((pair (butlast (split-string st "\t" t)))
+                   (key (first pair))
+                   (value (second pair)))
+              `((,key) . ,value)))
+          (split-string (my-slurp
+                         (locate-user-emacs-file "site-lisp/list.txt")) "\n" t)))
+
+(setq kaomoji-table (append kaomoji-table (facemark-kaomoji)))
+(setq kaomoji-candidates-limit 50)
+
+(evil-leader/set-key
+  "ak" 'kaomoji)
 
 ;; diminish
 (package-require 'diminish)

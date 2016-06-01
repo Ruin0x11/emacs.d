@@ -4,8 +4,6 @@
 ;; (require 'open-junk-file)
 (popwin-mode)
 
-(defvar ruin/last-popwin-buffer nil
-  "The last buffer opened by popwin.")
 (defvar ruin/last-popwin-cookie nil
   "The last popwin modeline cookie returned by face-remap-add-relative.")
 
@@ -33,6 +31,7 @@
         ("*Completions*" :height 0.4)
         ("*compilation*" :height 0.3 :noselect t :stick t)
         ("*quickrun*" :height 0.3 :stick t)
+        (projectile-rails-server-mode :height 0.3 :stick t)
         ;; Magit/vc
         ;; (magit-status-mode :position bottom :noselect t :height 0.3 :stick t)
         ;; ("*magit-commit*" :position bottom :noselect t :height 0.3 :stick t)
@@ -71,8 +70,8 @@
         (cider-stacktrace-mode :height 0.4 :stick t)
         (yari-mode :height 0.4 :stick t :dedicated t)
         ;; Console
-        ("*shell*" :height 0.3)
-        (shell-mode :height 0.3)
+        ("*shell*" :height 0.3 :stick t)
+        (shell-mode :height 0.3 :stick t)
         ("*Async Shell Command*" :height 0.3 :stick t)
         ("\\*ansi-term.*\\*" :regexp t :height 0.3)
         ("\\*terminal.*\\*" :regexp t :height 0.3)
@@ -87,6 +86,15 @@
         )
       )
 
+(defun ruin/reopen-popwin ()
+  "Reopens popwin if possible."
+  (interactive)
+  (cond (popwin:popup-window
+         (popwin:close-popup-window))
+        (popwin:popup-last-config
+         (popwin:popup-last-buffer))
+        (t (popwin-term:multi-term))))
+
 (defun ruin/toggle-popwin ()
   "Opens multi-term if popwin closed, otherwise closes popwin."
   (interactive)
@@ -95,7 +103,8 @@
     (popwin-term:multi-term)))
 
 (evil-leader/set-key
-  "\'" 'ruin/toggle-popwin)
+  "\'" 'ruin/toggle-popwin
+  "\"" 'ruin/reopen-popwin)
 
 ;; (defun live-display-ansi ()
 ;;   (interactive)

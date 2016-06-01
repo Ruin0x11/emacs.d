@@ -29,7 +29,7 @@
   "y" 'helm-show-kill-ring
   "!" 'shell-command
   ":" 'helm-M-x
-  "\"" 'crux-visit-term-buffer
+  "T" 'crux-visit-term-buffer
   "z" 'zone
   "s" 'sos
   "F" 'flycheck-list-errors

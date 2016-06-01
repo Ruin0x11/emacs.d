@@ -29,7 +29,6 @@
 (require 'feature-mode)
 
 (defun get-feature-snippet-list ()
-  (interactive)
   (save-some-buffers
    nil (lambda ()
          (string-equal (file-name-extension (buffer-name)) "feature")
@@ -40,7 +39,6 @@
          (cucumber-command (concat (replace-regexp-in-string "{options}" opts-str
                                                              (replace-regexp-in-string "{feature}" feature-arg feature-cucumber-command) t t)))
          (cucumber-output (shell-command-to-string cucumber-command)))
-    (setq ruin/snippet-list cucumber-output)
     (with-temp-buffer
       (let (search-result)
         (insert cucumber-output)
@@ -56,7 +54,7 @@
            collect (my-fontify-using-faces (my-fontify-ruby i))))
 
 (defun insert-feature-snippet (candidates)
-  "Insert feature snippet at point."
+  "Insert feature snippets CANDIDATES at point."
   (let ((keys (if (listp candidates) candidates (list candidates))))
     (insert (s-join "\n\n" candidates))))
 
