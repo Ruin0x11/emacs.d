@@ -4,6 +4,8 @@
 (projectile-global-mode)
 (helm-projectile-on)
 
+(setq projectile-completion-system 'helm)
+
 (setq projectile-globally-ignored-directories
       (append projectile-globally-ignored-directories '(".git"
                                                         ".svn"

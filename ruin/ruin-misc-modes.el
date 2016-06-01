@@ -179,6 +179,7 @@
   "tb" 'feature-verify-all-scenarios-in-buffer
   "ta" 'feature-verify-all-scenarios-in-project
   "th" 'helm-feature-snippets
+  "tj" 'feature-goto-step-definition
   )
 (add-hook 'compilation-shell-minor-mode-hook
           #'(lambda ()

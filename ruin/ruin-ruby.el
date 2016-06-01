@@ -119,6 +119,11 @@
   "mb" 'ruby-toggle-block
   "dd" 'yari-helm
   "my" 'yari-helm
+
+  "ed" 'ruby-send-block
+  "eb" 'ruby-send-buffer
+  "es" 'ruby-send-last-sexp
+
   "mY" 'yari-helm-rehash
   "tt" 'rspec-verify
   "ta" 'rspec-verify-all
@@ -162,6 +167,7 @@
  "mra" 'projectile-rails-find-stylesheet
  "mrs" 'projectile-rails-server
  "mrr" 'projectile-rails-console
+ "mrf" 'projectile-rails-find-feature
  "mrg" 'projectile-rails-goto-gemfile
  "mrR" 'projectile-rails-goto-routes
  )
