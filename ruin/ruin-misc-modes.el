@@ -61,23 +61,23 @@
 
 ;; lookup
 ;; (add-to-list 'load-path "/usr/share/emacs/site-lisp/lookup")
-(load "lookup-autoloads")
-(evil-leader/set-key
-  "ll" 'lookup
-  "lw" 'lookup-word
-  "lp" 'lookup-pattern)
+; (load "lookup-autoloads")
+; (evil-leader/set-key
+; "ll" 'lookup
+; "lw" 'lookup-word
+; "lp" 'lookup-pattern)
 
-(load "lookup-autoloads")
-(setq lookup-mecab-coding-system 'utf-8)
-(setq lookup-search-agents '(;;(ndmecab)
-                             (ndict "dict.us.dict.org")
-                             (ndsary "~/dicts")
-                             ))
-(add-to-list 'evil-emacs-state-modes 'lookup-select-mode)
-(add-to-list 'evil-emacs-state-modes 'lookup-history-mode)
-(add-to-list 'evil-emacs-state-modes 'lookup-content-mode)
-(add-to-list 'evil-emacs-state-modes 'lookup-modules-mode)
-(add-to-list 'evil-emacs-state-modes 'lookup-summary-mode)
+;(load "lookup-autoloads")
+;(setq lookup-mecab-coding-system 'utf-8)
+;(setq lookup-search-agents '(;;(ndmecab)
+;                            (ndict "dict.us.dict.org")
+;                            (ndsary "~/dicts")
+;                            ))
+; (add-to-list 'evil-emacs-state-modes 'lookup-select-mode)
+; (add-to-list 'evil-emacs-state-modes 'lookup-history-mode)
+; (add-to-list 'evil-emacs-state-modes 'lookup-content-mode)
+; (add-to-list 'evil-emacs-state-modes 'lookup-modules-mode)
+; (add-to-list 'evil-emacs-state-modes 'lookup-summary-mode)
 
 ;;;###autoload
 (defun lookup-region-noconfirm (beg end &optional mod)

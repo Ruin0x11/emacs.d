@@ -36,7 +36,6 @@
         ;;  "* %U - %? %^g\n" :prepend t)
         )
       )
-
 ;; save at top of hour
 ;; (run-at-time "00:59" 3600 'org-save-all-org-buffers)
 

@@ -88,7 +88,6 @@
         ruin-haskell
         ruin-go
         ruin-tex
-        ; ruin-ess
         ruin-hipchat
 
         ruin-project
