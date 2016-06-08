@@ -8,12 +8,17 @@
 (package-require 'evil-surround)
 ;(load-file (locate-user-emacs-file "site-lisp/evil-leader/evil-leader.el"))
 (package-require 'evil-leader)
+(global-evil-leader-mode t)
+(load "evil-leader-minor")
 (require 'evil-little-word)
 (evil-mode 1)
 
 (global-evil-leader-mode t)
 (global-evil-surround-mode t)
 (evil-commentary-mode t)
+
+(evil-leader/set-key-for-mode 'aggressive-indent-mode
+  "ZZZ" 'zone)
 
 ;;; leader binds
 (evil-leader/set-leader "<SPC>")
