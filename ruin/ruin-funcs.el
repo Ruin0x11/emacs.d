@@ -18,6 +18,17 @@
   (save-buffer)
   (eval-buffer))
 
+
+(defun ruin/write-and-eval-defun ()
+  (interactive)
+  (save-buffer)
+  (eval-defun))
+
+(defun ruin/set-shift-width-for-mode (mode-hook width)
+  (add-hook mode-hook
+            `(lambda ()
+              (setq evil-shift-width ,width))))
+
 (require 'url)
 
 (defun download-file-and-open (&optional url download-dir download-name)
@@ -223,14 +234,14 @@ This variable can be set via .dir-locals.el to provide multi-term support.")
 
 (defun crux-start-or-switch-to (function buffer-name)
   "Invoke FUNCTION if there is no buffer with BUFFER-NAME.
-Otherwise switch to the buffer named BUFFER-NAME.  Don't clobber
+Otherwise switch to the buffer named BUFFER-NAME.  Do clobber
 the current buffer."
   (if (not (get-buffer buffer-name))
       (progn
         (split-window-sensibly (selected-window))
         (other-window 1)
         (funcall function))
-    (switch-to-buffer-other-window buffer-name)))
+    (switch-to-buffer buffer-name)))
 
 (defun crux-visit-term-buffer ()
   "Create or visit a terminal buffer."

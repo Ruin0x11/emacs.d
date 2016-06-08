@@ -19,6 +19,8 @@
 
 (add-hook 'ruby-mode-hook 'robe-mode)
 
+(add-to-list 'auto-mode-alist '("Gemfile" . enh-ruby-mode))
+(add-to-list 'auto-mode-alist '("Rakefile" . enh-ruby-mode))
 (add-to-list 'auto-mode-alist '("\\.rb$" . enh-ruby-mode))
 (add-to-list 'auto-mode-alist '("\\.rake$" . enh-ruby-mode))
 (add-to-list 'interpreter-mode-alist '("ruby" . enh-ruby-mode))
@@ -33,7 +35,11 @@
       enh-ruby-hanging-indent-level 2 
       enh-ruby-hanging-paren-deep-indent-level 0 
       enh-ruby-hanging-paren-indent-level 2 
-      enh-ruby-indent-level 2)
+      enh-ruby-indent-level 2
+
+      inf-ruby-default-implementation "pry")
+
+(setq rake-completion-system 'helm)
 
 (evil-define-key 'insert enh-ruby-mode-map (kbd "RET") 'evil-ret-and-indent)
 
@@ -113,11 +119,14 @@
   (setq yari-ruby-obarray-cache nil)
   (yari-helm))
 
+(evil-define-key 'normal yari-mode-map "q" 'quit-window)
+
 (evil-leader/set-key-for-mode 'enh-ruby-mode
   "mi" 'inf-ruby
-  "md" 'robe-doc
   "mb" 'ruby-toggle-block
-  "dd" 'yari-helm
+  "dd" 'robe-doc
+  "mm" 'robe-jump-to-module
+  "mj" 'robe-jump
   "my" 'yari-helm
 
   "ed" 'ruby-send-block
@@ -159,6 +168,8 @@
 (evil-leader/set-key
  "mrm" 'projectile-rails-find-model
  "mrM" 'projectile-rails-find-current-model
+ "mrI" 'projectile-rails-find-current-migration
+ "mri" 'projectile-rails-find-migration
  "mrc" 'projectile-rails-find-controller
  "mrC" 'projectile-rails-find-current-controller
  "mrv" 'projectile-rails-find-view
@@ -166,9 +177,16 @@
  "mrk" 'projectile-rails-find-rake-task
  "mra" 'projectile-rails-find-stylesheet
  "mrs" 'projectile-rails-server
- "mrr" 'projectile-rails-console
+ "mrS" 'projectile-rails-goto-seeds
+ "mrA" 'projectile-rails-goto-schema
+ "mro" 'projectile-rails-console
+ "mrb" 'projectile-rails-dbconsole
  "mrf" 'projectile-rails-find-feature
- "mrg" 'projectile-rails-goto-gemfile
+ "mrj" 'projectile-rails-find-javascript
+ "mry" 'projectile-rails-find-stylesheet
+ "mrG" 'projectile-rails-goto-gemfile
+ "mrg" 'projectile-rails-generate
+ "mrr" 'projectile-rails-rake
  "mrR" 'projectile-rails-goto-routes
  )
 

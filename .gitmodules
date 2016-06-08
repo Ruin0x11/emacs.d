@@ -4,3 +4,6 @@
 [submodule "snippets/ruby-mode"]
 	path = snippets/ruby-mode
 	url = https://github.com/bmaland/yasnippet-ruby-mode
+[submodule "helm-persp"]
+	path = site-lisp/helm-persp
+	url = https://gist.github.com/304ada85c9ba15013303.git

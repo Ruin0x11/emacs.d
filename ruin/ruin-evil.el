@@ -19,8 +19,8 @@
 (evil-leader/set-leader "<SPC>")
 
 (evil-leader/set-key
-  "r" (lambda () (interactive) (save-buffer) (quickrun))
-  "R" 'quickrun-shell
+  "ar" (lambda () (interactive) (save-buffer) (quickrun) (quickrun/remove-temp-files))
+  "aR" 'quickrun-shell
   "w" 'save-buffer
   "q" 'evil-quit
   "Q" 'kill-buffer-and-window
@@ -31,7 +31,7 @@
   ":" 'helm-M-x
   "T" 'crux-visit-term-buffer
   "z" 'zone
-  "s" 'sos
+  "as" 'sos
   "F" 'flycheck-list-errors
   "M" 'popwin:messages
 
@@ -56,6 +56,7 @@
   "ac" 'calc
   "ad" 'diff
   "aw" 'browse-url-at-point
+  "ap" 'package-list-packages
 
   "jr" 'helm-register
   "jb" 'helm-bookmarks
@@ -226,14 +227,17 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
                                  (define-key mu4e-headers-mode-map "K" 'mu4e-headers-prev-unread)))
 
 
-;;; normal Emacs binds
+;;; normal Emacs bindings
 (global-set-key (kbd "C-x |") 'align-regexp)
 (global-set-key (kbd "C-x =") 'eval-region)
+
+(global-set-key (kbd "<s-return>") 'toggle-frame-fullscreen)
 
 (global-set-key [f7] 'previous-error)
 (global-set-key [f8] 'next-error)
 (global-set-key [f9] 'projectile-compile-project)
 
+;; match items with %
 (package-require 'evil-matchit)
 (global-evil-matchit-mode 1)
 

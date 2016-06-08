@@ -1,4 +1,5 @@
 ;; ruin-hipchat.el
+(package-require 'request)
 (package-require 'jabber)
 (require 'jabber)
 (require 'jabber-hipchat)

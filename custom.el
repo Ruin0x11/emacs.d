@@ -12,10 +12,7 @@
  '(haskell-process-auto-import-loaded-modules t)
  '(haskell-process-log t)
  '(haskell-process-suggest-remove-import-lines t)
- '(hipchat-autojoin (quote ("370715_starmonkey@conf.hipchat.com")))
- '(org-agenda-files
-   (quote
-    ("/home/ruin/org/tracked/refile.org" "/home/ruin/org/tracked/work.org"))))
+ '(hipchat-autojoin (quote ("370715_starmonkey@conf.hipchat.com"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

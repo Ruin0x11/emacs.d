@@ -121,18 +121,19 @@
 
 (setq spaceline-workspace-numbers-unicode 't)
 
+(defun ruin/init-theme ()
+  (load-theme 'monokai t)
+  (spaceline-emacs-theme)
+  (spaceline-helm-mode)
+  (spaceline-toggle-projectile-root-on)
+  (setup-cjk-alignment))
+
 (if (daemonp)
     (add-hook 'after-make-frame-functions
               (lambda (frame)
                 (select-frame frame)
-                (load-theme 'monokai t)
-                (spaceline-emacs-theme)
-                (spaceline-helm-mode)
-                (setup-cjk-alignment)))
-  (load-theme 'monokai t)
-  (spaceline-emacs-theme)
-  (spaceline-helm-mode)
-  (setup-cjk-alignment))
+                (ruin/init-theme)))
+  (ruin/init-theme))
 
 (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
 

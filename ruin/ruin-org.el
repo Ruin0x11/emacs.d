@@ -376,10 +376,10 @@
                  (my-org-agenda-to-appt))))
 
 ;; start agenda on emacs startup
-(add-hook 'emacs-startup-hook
-          '(lambda ()
-             (setq org-agenda-files (quote ("~/org/tracked")))
-             (org-agenda nil "a")
-             (previous-window)))
+;; (add-hook 'emacs-startup-hook
+;;           '(lambda ()
+;;              (setq org-agenda-files (quote ("~/org/tracked")))
+;;              (org-agenda nil "a")
+;;              (previous-window)))
 
 (provide 'ruin-org)

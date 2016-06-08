@@ -245,7 +245,7 @@ API Reference: http://api.stackexchange.com/docs/excerpt-search"
         (select-window sos-question-list-window)
         (kill-buffer sos-question-list-buffer)
         (switch-to-buffer (concat "*sos - " query "*")))
-    (switch-to-buffer-other-window (concat "*sos - " query "*")))
+    (switch-to-buffer (concat "*sos - " query "*")))
 
   (setq sos-question-list-window (selected-window))
   (setq sos-question-list-buffer (current-buffer))

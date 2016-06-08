@@ -60,16 +60,11 @@
 (setq auto-save-file-name-transforms
       `((".*" ,(expand-file-name (concat dotfiles-dir "auto-save/\\2")) t)))
 
-;; Macro for X specific code
-(defmacro Xlaunch (&rest x)
-  (list 'if (eq window-system 'x) (cons 'progn x)))
-
 (setq evil-want-C-u-scroll t)
 
 ;; modularize separate features
 (setq ruin-pkg
-      '(linum-off
-        ruin-powerline
+      '(ruin-powerline
         ruin-theme
 
         ruin-general
@@ -95,7 +90,7 @@
         ruin-snippet
         ruin-git
         ruin-mail
-        ;; ruin-shell
+        ruin-shell
         ruin-popwin
         ruin-misc-modes
         ; ruin-home

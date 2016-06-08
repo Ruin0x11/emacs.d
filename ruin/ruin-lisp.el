@@ -5,7 +5,7 @@
 
 (setq lisp-modes
       '(scheme-mode emacs-lisp-mode lisp-mode clojure-mode
-                    lolisp-mode shen-mode bodol-mode))
+                    lisp-interaction-mode))
 
 (defun add-lisp-hook (func)
   (add-hooks lisp-modes func))

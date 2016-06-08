@@ -59,6 +59,8 @@
         ("*Compile-Log" :height 0.2 :stick t)
         ("*pytest*" :noselect t)
         (rspec-compilation-mode :height 0.4 :tail nil)
+        ("*projectile-rails-compilation*" :height 0.3 :stick t)
+        ("*projectile-rails-generate*" :height 0.3 :stick t)
         ;; Programing
         ("Django:" :regexp t :width 0.3 :position right)
         ("*Python*" :stick t)
@@ -69,6 +71,8 @@
         ("*YASnippet tables*" :height 0.4 :stick t)
         (cider-stacktrace-mode :height 0.4 :stick t)
         (yari-mode :height 0.4 :stick t :dedicated t)
+        ("*robe-doc*" :height 0.4 :stick t :dedicated t)
+        (sql-interactive-mode :height 0.4 :stick t)
         ;; Console
         ("*shell*" :height 0.3 :stick t)
         (shell-mode :height 0.3 :stick t)

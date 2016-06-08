@@ -12,27 +12,43 @@
 (require 'which-key)
 (which-key-mode)
 
-;; desktop
-(require 'desktop)
+;; ;; desktop
+;; (require 'desktop)
 
 ;; request
 (package-require 'request)
 
-; (desktop-save-mode)
+;; (desktop-save-mode)
 
-(setq desktop-dirname "~/.emacs.d"
-      desktop-base-file-name "desktop"
-      desktop-base-lock-name "desktop.lock"
-      desktop-save t
-      desktop-restore-frames t
-      desktop-restore-reuses-frames t
-      desktop-restore-in-current-display t
-      desktop-restore-forces-onscreen t)
+;; (setq desktop-dirname "~/.emacs.d"
+;;       desktop-base-file-name "desktop"
+;;       desktop-base-lock-name "desktop.lock"
+;;       desktop-save t
+;;       desktop-restore-frames t
+;;       desktop-restore-reuses-frames t
+;;       desktop-restore-in-current-display t
+;;       desktop-restore-forces-onscreen t)
 
-(defun save-desktop ()
-  (interactive)
-  (if (eq (desktop-owner) (emacs-pid))
-      (desktop-save desktop-dirname)))
+;; (defun save-desktop ()
+;;   (interactive)
+;;   (if (eq (desktop-owner) (emacs-pid))
+;;       (desktop-save desktop-dirname)))
+
+;; persp
+(package-require 'persp-mode)
+(with-eval-after-load "persp-mode"
+  (add-hook 'after-init-hook #'(lambda () (persp-mode 1))))
+(require 'persp-mode)
+
+(setq persp-interactive-completion-function)
+
+(evil-leader/set-key
+  "sn" 'persp-next
+  "sp" 'persp-prev
+  "ss" 'persp-frame-switch
+  "sk" 'persp-kill
+  "sw" 'persp-save-state-to-file
+  "sl" 'persp-load-state-from-file)
 
 ;; savehist
 (savehist-mode t)
@@ -136,18 +152,18 @@
                       :mode 'processing-mode)
 
 ;; eyebrowse
-(package-require 'eyebrowse)
-(eyebrowse-mode t)
-(global-set-key (kbd "M-0") 'eyebrowse-switch-to-window-config-0)
-(global-set-key (kbd "M-1") 'eyebrowse-switch-to-window-config-1)
-(global-set-key (kbd "M-2") 'eyebrowse-switch-to-window-config-2)
-(global-set-key (kbd "M-3") 'eyebrowse-switch-to-window-config-3)
-(global-set-key (kbd "M-4") 'eyebrowse-switch-to-window-config-4)
-(global-set-key (kbd "M-5") 'eyebrowse-switch-to-window-config-5)
-(global-set-key (kbd "M-6") 'eyebrowse-switch-to-window-config-6)
-(global-set-key (kbd "M-7") 'eyebrowse-switch-to-window-config-7)
-(global-set-key (kbd "M-8") 'eyebrowse-switch-to-window-config-8)
-(global-set-key (kbd "M-9") 'eyebrowse-switch-to-window-config-9)
+;; (package-require 'eyebrowse)
+;; (eyebrowse-mode t)
+;; (global-set-key (kbd "M-0") 'eyebrowse-switch-to-window-config-0)
+;; (global-set-key (kbd "M-1") 'eyebrowse-switch-to-window-config-1)
+;; (global-set-key (kbd "M-2") 'eyebrowse-switch-to-window-config-2)
+;; (global-set-key (kbd "M-3") 'eyebrowse-switch-to-window-config-3)
+;; (global-set-key (kbd "M-4") 'eyebrowse-switch-to-window-config-4)
+;; (global-set-key (kbd "M-5") 'eyebrowse-switch-to-window-config-5)
+;; (global-set-key (kbd "M-6") 'eyebrowse-switch-to-window-config-6)
+;; (global-set-key (kbd "M-7") 'eyebrowse-switch-to-window-config-7)
+;; (global-set-key (kbd "M-8") 'eyebrowse-switch-to-window-config-8)
+;; (global-set-key (kbd "M-9") 'eyebrowse-switch-to-window-config-9)
 
 ;; sos
 (require 'sos)
@@ -187,11 +203,17 @@
 
 (setq feature-cucumber-command "bundle exec rake cucumber CUCUMBER_OPTS=\"{options} -r features\" FEATURE=\"{feature}\"")
 
+(ruin/set-shift-width-for-mode 'feature-mode-hook 'feature-indent-offset)
+
+(add-hook 'feature-mode-hook '(lambda ()
+  (local-set-key (kbd "RET") 'newline-and-indent)))
+
 ;; YAML
 (package-require 'yaml-mode)
 
 ;; kaomoji
 (package-require 'kaomoji)
+(require 'kaomoji)
 (defun my-slurp (file)
   (with-temp-buffer
     (insert-file-contents (locate-user-emacs-file file))
@@ -215,6 +237,14 @@
 (evil-leader/set-key
   "ak" 'kaomoji)
 
+;; pivotal-tracker
+(package-require 'pivotal-tracker)
+
+(evil-leader/set-key
+  "av" 'pivotal)
+
+(load-file (locate-user-emacs-file "pivotal-key.el"))
+
 ;; diminish
 (package-require 'diminish)
 (eval-after-load "helm" '(diminish 'helm-mode))
@@ -237,5 +267,6 @@
 (eval-after-load "eldoc" '(diminish 'eldoc-mode))
 (eval-after-load "autorevert" '(diminish 'auto-revert-mode))
 (eval-after-load "ruby-block" '(diminish 'ruby-block-mode))
+(eval-after-load "persp-mode" '(diminish 'persp-mode))
 
 (provide 'ruin-misc-modes)

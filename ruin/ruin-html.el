@@ -7,6 +7,10 @@
 
 (setq web-mode-markup-indent-offset 2)
 
+(add-hook 'haml-mode-hook
+  (function (lambda ()
+          (setq evil-shift-width haml-indent-offset))))
+
 (package-require 'scss-mode)
 
 ;; (evil-define-key 'insert web-mode-map (kbd "C-e") 'web-mode-element-close)
