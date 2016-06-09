@@ -64,6 +64,9 @@
 (setq kill-buffer-query-functions
       (delq 'process-kill-buffer-query-function kill-buffer-query-functions))
 
+;; reduce scrolling speed
+(setq mouse-wheel-scroll-amount '(1 ((shift) . 1) ((control) . nil)))
+(setq mouse-wheel-progressive-speed nil)
 ;; registers
 (dolist
     (r `((?i (file . ,(concat dotfiles-dir "init.el")))

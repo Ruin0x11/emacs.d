@@ -5,6 +5,7 @@
 (package-require 'rspec-mode)
 (package-require 'chruby)
 (package-require 'yari) ;ルビヌスの槍
+(package-require 'bundler)
 ;; (require 'rcodetools)
 
 (chruby "ruby-2.3.1")
@@ -38,6 +39,8 @@
       enh-ruby-indent-level 2
 
       inf-ruby-default-implementation "pry")
+
+(ruin/set-shift-width-for-mode 'enh-ruby-mode-hook 'enh-ruby-indent-level)
 
 (setq rake-completion-system 'helm)
 
@@ -123,11 +126,14 @@
 
 (evil-leader/set-key-for-mode 'enh-ruby-mode
   "mi" 'inf-ruby
-  "mb" 'ruby-toggle-block
   "dd" 'robe-doc
   "mm" 'robe-jump-to-module
   "mj" 'robe-jump
   "my" 'yari-helm
+
+  "mbi" 'bundle-install
+  "mbe" 'bundle-exec
+  "mbs" 'bundle-show
 
   "ed" 'ruby-send-block
   "eb" 'ruby-send-buffer
@@ -189,6 +195,8 @@
  "mrr" 'projectile-rails-rake
  "mrR" 'projectile-rails-goto-routes
  )
+
+(setq projectile-rails-view-keywords (remove "response" projectile-rails-view-keywords))
 
 ;; (add-hook 'projectile-rails-mode-hook
 ;;           '(lambda ()

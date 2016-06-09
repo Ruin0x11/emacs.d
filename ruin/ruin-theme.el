@@ -50,6 +50,11 @@
 ;; Show current function in modeline
 (which-function-mode)
 
+;; Show whitespace
+(require 'whitespace)
+(setq whitespace-style '(face trailing))
+(global-whitespace-mode 1)
+
 ;; Install themes
 ;; (package-require 'ample-theme)
 ;; (package-require 'spacemacs-theme)

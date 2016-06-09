@@ -16,7 +16,7 @@ maybe terrible, but in a different way."
              (= (point)
                 (marker-position (process-mark proc))))
         (comint-send-eof)
-      (evil-scroll-down arg))))
+      (evil-scroll-down 0))))
 
 (add-hook 'comint-mode-hook
           (function (lambda ()

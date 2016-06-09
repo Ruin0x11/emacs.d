@@ -79,6 +79,7 @@
         ("*Async Shell Command*" :height 0.3 :stick t)
         ("\\*ansi-term.*\\*" :regexp t :height 0.3)
         ("\\*terminal.*\\*" :regexp t :height 0.3)
+        ("*Bundler*" :height 0.3)
         (term-mode :position :bottom :height 10 :stick t)
         ;; Org/Organized
         (diary-fancy-display-mode :position left :width 50 :stick nil)

@@ -5,21 +5,18 @@
 (setq dotfiles-dir (file-name-directory
                     (or (buffer-file-name) load-file-name)))
 (add-to-list 'load-path (concat dotfiles-dir "ruin"))
-(add-to-list 'load-path (concat dotfiles-dir "site-lisp"))
 
-(defun sanityinc/add-subdirs-to-load-path (parent-dir)
-  "Adds every non-hidden subdir of PARENT-DIR to `load-path'."
-  (let* ((default-directory parent-dir))
-    (progn
-      (setq load-path
-            (append
-             (remove-if-not
-              (lambda (dir) (file-directory-p dir))
-              (directory-files (expand-file-name parent-dir) t "^[^\\.]"))
-             load-path)))))
+(defun reload-site-lisp ()
+  "Puts site-lisp and its subdirectories into load-path."
+  (interactive)
+  (when (fboundp 'normal-top-level-add-subdirs-to-load-path)
+    (let* ((dir (locate-user-emacs-file "site-lisp"))
+           (default-directory dir))
+      (when (file-directory-p dir)
+        (add-to-list 'load-path dir)
+        (normal-top-level-add-subdirs-to-load-path)))))
 
-(sanityinc/add-subdirs-to-load-path
- (expand-file-name "site-lisp/" user-emacs-directory))
+(reload-site-lisp)
 
 ;; Set paths to custom.el and loaddefs.el
 (setq autoload-file (concat dotfiles-dir "loaddefs.el"))

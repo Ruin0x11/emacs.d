@@ -201,6 +201,12 @@ buffer is not visiting a file."
              (set-buffer-modified-p nil)
              t)))) 
 
+;;https://www.emacswiki.org/emacs/TransparentEmacs
+;; Set transparency of emacs
+(defun transparency (value)
+  "Sets the transparency of the frame window. 0=transparent/100=opaque"
+  (interactive "nTransparency Value 0 - 100 opaque:")
+  (set-frame-parameter (selected-frame) 'alpha value))
 
 ;; Bodil
 ;;https://github.com/bodil/emacs.d/blob/master/bodil/bodil-defuns.el#L17

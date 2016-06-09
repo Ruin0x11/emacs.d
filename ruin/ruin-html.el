@@ -1,6 +1,8 @@
 ;;; ruin-htnk.el --- settings for HTML/ERB
 (package-require 'web-mode)
 (package-require 'haml-mode)
+(package-require 'rainbow-mode)
+
 (require 'web-mode)
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))

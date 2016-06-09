@@ -46,7 +46,7 @@
   "sn" 'persp-next
   "sp" 'persp-prev
   "ss" 'persp-frame-switch
-  "sk" 'persp-kill
+  "sK" 'persp-kill
   "sw" 'persp-save-state-to-file
   "sl" 'persp-load-state-from-file)
 
@@ -243,6 +243,12 @@
   "av" 'pivotal)
 
 (load-file (locate-user-emacs-file "pivotal-key.el"))
+
+;; google-this
+(package-require 'google-this)
+(evil-leader/set-key
+  "ag" 'helm-google-suggest
+  "aG" (lambda () (interactive) (google-this-line nil t)))
 
 ;; diminish
 (package-require 'diminish)

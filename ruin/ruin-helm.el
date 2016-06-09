@@ -84,4 +84,6 @@ surf."
   (interactive)
   (other-window -1))
 
+(define-key minibuffer-local-map (kbd "C-c C-l") 'helm-minibuffer-history)
+
 (provide 'ruin-helm)

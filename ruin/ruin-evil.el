@@ -68,6 +68,7 @@
 
   "ff" 'helm-find-files
   "fg" 'helm-do-grep-ag
+  "fa" 'helm-do-ag
   "fr" 'helm-recentf
   "fd" 'helm-semantic-or-imenu
   "fs" 'find-function
@@ -195,8 +196,6 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 
 (ruin/window-movement-for-mode "help-mode" 'help-mode-map)
 (ruin/window-movement-for-mode "compile" 'compilation-mode-map)
-
-(evil-define-key 'normal comint-mode-map "C-d" 'evil-scroll-down)
 
 ;; j and k where it counts
 (eval-after-load "tar" #'(lambda ()

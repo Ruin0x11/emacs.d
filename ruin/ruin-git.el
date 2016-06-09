@@ -3,6 +3,7 @@
 (package-require 'magit)
 (package-require 'git-timemachine)
 (package-require 'smeargle)
+(package-require 'gitignore-mode)
 (require 'magit)
 
 (add-to-list 'evil-emacs-state-modes 'git-timemachine-mode)
@@ -23,8 +24,10 @@
         "gf" 'magit-fetch-all
         "gM" 'magit-merge
         "gd" 'magit-diff-head
-        "gp" 'magit-push-current-to-upstream
-        "gP" 'magit-pull-from-upstream
+        "gP" 'magit-push-current
+        "gp" 'magit-push
+        "gU" 'magit-pull-from-upstream
+        "gu" 'magit-pull
         "gC" 'magit-clone
         "gc" 'magit-commit
         "gR" 'magit-reset-hard)
@@ -38,5 +41,11 @@
 (setq vc-follow-symlinks t)
 
 (add-to-list 'evil-insert-state-modes 'git-commit-mode)
+
+(evil-leader/set-key-for-mode 'smerge-mode
+  "mss" 'smerge-keep-current
+  "msm" 'smerge-keep-mine
+  "mst" 'smerge-keep-other
+  "mse" 'smerge-ediff)
 
 (provide 'ruin-git)
