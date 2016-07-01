@@ -37,6 +37,7 @@
 ;; persp
 (package-require 'persp-mode)
 (with-eval-after-load "persp-mode"
+  (setq wg-morph-on nil)
   (add-hook 'after-init-hook #'(lambda () (persp-mode 1))))
 (require 'persp-mode)
 
@@ -236,14 +237,6 @@
 (evil-leader/set-key
   "ak" 'kaomoji)
 
-;; pivotal-tracker
-(package-require 'pivotal-tracker)
-
-(evil-leader/set-key
-  "av" 'pivotal)
-
-(load-file (locate-user-emacs-file "pivotal-key.el"))
-
 ;; google-this
 (package-require 'google-this)
 (evil-leader/set-key
@@ -273,5 +266,12 @@
 (eval-after-load "autorevert" '(diminish 'auto-revert-mode))
 (eval-after-load "ruby-block" '(diminish 'ruby-block-mode))
 (eval-after-load "persp-mode" '(diminish 'persp-mode))
+(eval-after-load "whitespace" '(diminish 'global-whitespace-mode))
+(eval-after-load "org-indent" '(diminish 'org-indent-mode))
+(eval-after-load "evil-org" '(diminish 'evil-org-mode))
+
+(diminish 'compilation-in-progress "㋙")
+
+(diminish 'visual-line-mode)
 
 (provide 'ruin-misc-modes)

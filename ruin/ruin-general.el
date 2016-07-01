@@ -54,7 +54,7 @@
 
 ;; registers
 (dolist
-    (r `((?i (file . ,(concat dotfiles-dir "init.el")))
+    (r `((?i (file . ,(locate-user-emacs-file "init.el")))
          (?o (file . ,(expand-file-name "~/Dropbox/org/")))
          (?r (file . ,(let* ((user user-login-name)
                              (org (expand-file-name (concat user ".org") dotfiles-dir))

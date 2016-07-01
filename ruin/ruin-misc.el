@@ -67,18 +67,24 @@
 ;; reduce scrolling speed
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1) ((control) . nil)))
 (setq mouse-wheel-progressive-speed nil)
+
+
+;; Write backup files to own directory
+(setq backup-directory-alist
+      `(("." . ,(expand-file-name (locate-user-emacs-file "bak")))))
+
+;; Write auto-save files to own directory
+;; (setq auto-save-file-name-transforms
+;;       `(("\\(?:[^/]*/\\)*\\(.*\\)" ,(expand-file-name (locate-user-emacs-file "auto-save/\\1")) t)))
+(setq auto-save-file-name-transforms
+      `((".*" ,(expand-file-name (locate-user-emacs-file "auto-save/\\2")) t)))
+
 ;; registers
 (dolist
-    (r `((?i (file . ,(concat dotfiles-dir "init.el")))
+    (r `((?i (file . ,(locate-user-emacs-file "init.el")))
          (?o (file . ,(expand-file-name "~/Dropbox/org/")))
-         (?r (file . ,(let* ((user user-login-name)
-                             (org (expand-file-name (concat user ".org") dotfiles-dir))
-                             (el  (expand-file-name (concat user ".el") dotfiles-dir))
-                             (dir (expand-file-name user dotfiles-dir)))
-                        (cond
-                         ((file-exists-p org) org)
-                         ((file-exists-p el)  el)
-                         (t dir)))))
+         (?b (file . ,(expand-file-name "~/build")))
+         
          ))
   (set-register (car r) (cadr r)))
 

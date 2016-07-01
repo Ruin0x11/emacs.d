@@ -18,7 +18,7 @@
 (setq inhibit-startup-echo-area-message "ruin")
 
 ;; This is bound to f11 in Emacs 24.4
-;; (toggle-frame-fullscreen) 
+;; (toggle-frame-fullscreen)
 ;; Who use the bar to scroll?
 (scroll-bar-mode 0)
 
@@ -131,13 +131,15 @@
   (spaceline-emacs-theme)
   (spaceline-helm-mode)
   (spaceline-toggle-projectile-root-on)
+  (spaceline-toggle-which-function-off)
   (setup-cjk-alignment))
 
 (if (daemonp)
     (add-hook 'after-make-frame-functions
               (lambda (frame)
                 (select-frame frame)
-                (ruin/init-theme)))
+                (ruin/init-theme)
+                ))
   (ruin/init-theme))
 
 (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)

@@ -63,7 +63,7 @@
   "aw" 'browse-url-at-point
   "ap" 'package-list-packages
 
-  "jr" 'helm-register
+  "jr" 'jump-to-register
   "jb" 'helm-bookmarks
 
   "ff" 'helm-find-files
@@ -75,7 +75,7 @@
   "fv" 'find-variable
   "fw" 'crux-view-url
   "fp" 'find-library
-  
+
   "hR" 'helm-regexp
   "hm" 'helm-man-woman
   "hM" 'helm-mini
@@ -83,6 +83,10 @@
   "hr" 'helm-resume
   "hc" 'helm-colors
   "hg" 'helm-google
+
+  "kc" 'compile
+  "kr" 'recompile
+  "kk" 'kill-compilation
 
   "?E" 'info-emacs-manual
   "?y" 'yas-describe-tables
@@ -108,6 +112,7 @@
   "bm"  'move-buffer-file
   "br"  'revert-buffer
   "bD"  'spacemacs/kill-other-buffers
+  "bw"  'whitespace-cleanup
   "bY"  'spacemacs/copy-whole-buffer-to-clipboard
   "b!"  'spacemacs/open-in-external-app
   "bB"  'browse-url-of-file

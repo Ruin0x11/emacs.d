@@ -196,8 +196,6 @@
  "mrR" 'projectile-rails-goto-routes
  )
 
-(setq projectile-rails-view-keywords (remove "response" projectile-rails-view-keywords))
-
 ;; (add-hook 'projectile-rails-mode-hook
 ;;           '(lambda ()
 ;;              (evil-leader/set-local-key

@@ -4,7 +4,7 @@
 ;; Add .emacs.d/ruin to load-path
 (setq dotfiles-dir (file-name-directory
                     (or (buffer-file-name) load-file-name)))
-(add-to-list 'load-path (concat dotfiles-dir "ruin"))
+(add-to-list 'load-path (locate-user-emacs-file "ruin"))
 
 (defun reload-site-lisp ()
   "Puts site-lisp and its subdirectories into load-path."
@@ -18,9 +18,12 @@
 
 (reload-site-lisp)
 
+;; recompile all .el files
+(byte-recompile-directory (expand-file-name "~/.emacs.d/elpa") 0)
+
 ;; Set paths to custom.el and loaddefs.el
-(setq autoload-file (concat dotfiles-dir "loaddefs.el"))
-(setq custom-file (concat dotfiles-dir "custom.el"))
+(setq autoload-file (locate-user-emacs-file "loaddefs.el"))
+(setq custom-file (locate-user-emacs-file "custom.el"))
 
 (defun online? ()
   (if (and (functionp 'network-interface-list)
@@ -32,7 +35,7 @@
     t))
 
 ;; ELPA
-(setq package-user-dir (concat dotfiles-dir "elpa"))
+(setq package-user-dir (locate-user-emacs-file "elpa"))
 (require 'package)
 (dolist (source '(("melpa" . "http://melpa.org/packages/")
                   ("marmalade" . "http://marmalade-repo.org/packages/")
@@ -47,26 +50,13 @@
   (when (not (package-installed-p pkg))
     (package-install pkg)))
 
-;; Write backup files to own directory
-(setq backup-directory-alist
-      `(("." . ,(expand-file-name (concat dotfiles-dir "bak")))))
-
-;; Write auto-save files to own directory
-;; (setq auto-save-file-name-transforms
-;;       `(("\\(?:[^/]*/\\)*\\(.*\\)" ,(expand-file-name (concat dotfiles-dir "auto-save/\\1")) t)))
-(setq auto-save-file-name-transforms
-      `((".*" ,(expand-file-name (concat dotfiles-dir "auto-save/\\2")) t)))
-
-(setq evil-want-C-u-scroll t)
-
 ;; modularize separate features
 (setq ruin-pkg
-      '(ruin-powerline
-        ruin-theme
+      '(ruin-theme
 
         ruin-general
         ruin-funcs
-        ruin-evil 
+        ruin-evil
         ruin-org
         ruin-helm
         ruin-ido
