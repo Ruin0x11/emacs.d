@@ -7,3 +7,6 @@
 [submodule "helm-persp"]
 	path = site-lisp/helm-persp
 	url = https://gist.github.com/304ada85c9ba15013303.git
+[submodule "themes/btcsb"]
+	path = themes/btcsb
+	url = http://git.korewanetadesu.com/BTCSB-emacs-theme.git

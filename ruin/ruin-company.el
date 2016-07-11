@@ -21,6 +21,7 @@
       company-echo-delay 0
       ;; don't complete in certain modes
       company-global-modes '(not git-commit-mode)
+      company-dabbrev-downcase nil
       ;; make sure evil uses the right completion functions
       evil-complete-next-func 'bw/company-complete-lambda
       evil-complete-previous-func 'bw/company-complete-lambda)
