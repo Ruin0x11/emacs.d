@@ -2,7 +2,7 @@
 (package-require 'org)
 (package-require 'org-bullets)
 
-(setq org-agenda-files (quote ("~/org/tracked")))
+(setq org-agenda-files (quote ("~/Dropbox/org/tracked")))
 
 (require 'org)
 (require 'org-bullets)
