@@ -15,25 +15,25 @@
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 (setq org-startup-indented t) 
 
-(setq org-directory "~/org")
-(setq org-default-notes-file "~/org/tracked/refile.org")
+(setq org-directory "~/Dropbox/org")
+(setq org-default-notes-file "~/Dropbox/org/tracked/refile.org")
 (setq org-capture-templates 
-      '(("t" "todo" entry (file "~/org/tracked/refile.org")
+      '(("t" "todo" entry (file "~/Dropbox/org/tracked/refile.org")
          "* TODO %?\n%U"
          ;:clock-in t :clock-resume t
          )
-        ("c" "todo (with context)" entry (file "~/org/tracked/refile.org")
+        ("c" "todo (with context)" entry (file "~/Dropbox/org/tracked/refile.org")
          "* TODO %?\n%U\n%a"
          ;:clock-in t :clock-resume t
          )
-        ("n" "note" entry (file "~/org/tracked/refile.org")
+        ("n" "note" entry (file "~/Dropbox/org/tracked/refile.org")
                "* %? :NOTE:\n%U\n")
-        ("e" "etc." entry (file "~/org/notes.org")
+        ("e" "etc." entry (file "~/Dropbox/org/notes.org")
                "* %? - %U\n")
-        ;; ("d" "diary" entry (file+headline "~/org/diary.org" "日記")
-        ;;  "* %U\n%?\n" :prepend t)
-        ;; ("y" "yume" entry (file+headline "~/org/yume.org" "ゆめにっき")
-        ;;  "* %U - %? %^g\n" :prepend t)
+        ("d" "diary" entry (file+headline "~/Dropbox/org/diary.org" "日記")
+        "* %U\n%?\n" :prepend t)
+        ("y" "yume" entry (file+headline "~/Dropbox/org/yume.org" "ゆめにっき")
+         "* %U - %? %^g\n" :prepend t)
         )
       )
 ;; save at top of hour
