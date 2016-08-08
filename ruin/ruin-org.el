@@ -218,10 +218,10 @@
 (evil-define-key 'normal evil-org-mode-map
   (kbd "RET") 'org-open-at-point
   "O" 'evil-open-above
-  "P" 'bh/narrow-to-project
-  "Q" 'bh/widen
-  "U" 'bh/narrow-up-one-level
-  "S" 'bh/narrow-to-subtree
+  ;; "P" 'bh/narrow-to-project
+  ;; "Q" 'bh/widen
+  ;; "U" 'bh/narrow-up-one-level
+  ;; "S" 'bh/narrow-to-subtree
   ;; avoid conflict with C-i and Tab
   ;; https://github.com/bling/evil-jumper/issues/8
   ;; [tab] 'org-cycle)

@@ -243,6 +243,20 @@
   "ag" 'helm-google-suggest
   "aG" (lambda () (interactive) (google-this-line nil t)))
 
+;; doc-mode
+(require 'doc-mode)
+(add-hook 'c-mode-common-hook 'doc-mode)
+(add-hook 'java-mode-hook 'doc-mode)
+(evil-leader/set-key-for-mode 'java-mode
+  "mdd" 'doc-mode-fix-tag-doc)
+
+;; buffer-move
+(package-require 'buffer-move)
+(global-set-key (kbd "C-S-k") 'buf-move-up)
+(global-set-key (kbd "C-S-j") 'buf-move-down)
+(global-set-key (kbd "C-S-h") 'buf-move-left)
+(global-set-key (kbd "C-S-l") 'buf-move-right)
+
 ;; diminish
 (package-require 'diminish)
 (eval-after-load "helm" '(diminish 'helm-mode))

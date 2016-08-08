@@ -12,7 +12,7 @@
 
 (smartparens-global-mode t)
 (add-lisp-hook 'smartparens-strict-mode)
-(add-lisp-hook #'evil-smartparens-mode)
+;; (add-lisp-hook #'evil-smartparens-mode)
 (add-lisp-hook 'eldoc-mode)
 
 (defun turn-on-sp-navigate-consider-stringlike ()
@@ -48,9 +48,9 @@
 (show-smartparens-global-mode t)
 
 (eval-after-load "ielm" #'(lambda ()
-                             (ruin/window-movement-for-map inferior-emacs-lisp-mode-map)
-                             (define-key inferior-emacs-lisp-mode-map (kbd "<down>") 'comint-next-input)
-                             (define-key inferior-emacs-lisp-mode-map (kbd "<up>") 'comint-previous-input)))
+                            (ruin/window-movement-for-map inferior-emacs-lisp-mode-map)
+                            (define-key inferior-emacs-lisp-mode-map (kbd "<down>") 'comint-next-input)
+                            (define-key inferior-emacs-lisp-mode-map (kbd "<up>") 'comint-previous-input)))
 (add-to-list 'evil-emacs-state-modes 'inferior-emacs-lisp-mode)
 
 ;; Clojure
@@ -59,24 +59,36 @@
 ;;(package-require 'clj-refactor)
 (require 'cider-eval-sexp-fu)
 
+(add-hook 'cider-repl-mode-hook #'company-mode)
+(add-hook 'cider-mode-hook #'company-mode)
+
 (eval-after-load "cider" #'(lambda ()
                              (ruin/window-movement-for-map cider-repl-mode-map)
                              (ruin/window-movement-for-map cider-docview-mode-map)
                              (ruin/window-movement-for-map cider-stacktrace-mode-map)
                              (define-key cider-repl-mode-map (kbd "<down>") 'cider-repl-next-input)
-                             (define-key cider-repl-mode-map (kbd "<up>") 'cider-repl-previous-input)))
+                             (define-key cider-repl-mode-map (kbd "<up>") 'cider-repl-previous-input)
+                             (define-key cider-repl-mode-map (kbd "M-n") 'cider-repl-next-input)
+                             (define-key cider-repl-mode-map (kbd "M-p") 'cider-repl-previous-input)
+                             ))
 (add-to-list 'evil-emacs-state-modes 'cider-repl-mode)
 (add-to-list 'evil-emacs-state-modes 'cider-stacktrace-mode)
 (add-to-list 'evil-emacs-state-modes 'cider-docview-mode)
+(add-to-list 'evil-emacs-state-modes 'cider-popup-buffer-mode)
 
 (evil-leader/set-key-for-mode 'clojure-mode
   "mj" 'cider-jack-in
   "ma" 'cider-apropos-documentation
+  "mr" 'cider-switch-to-repl-buffer
+  "mb" 'connect-burgundy
   "eb" 'cider-eval-buffer
   "ee" 'cider-read-and-eval
   "es" 'cider-eval-last-sexp
   "ed" 'cider-eval-defun-at-point
-  "ei" 'cider-switch-to-repl-buffer
+  "eD" 'cider-pprint-eval-defun-at-point
+  "en" 'cider-repl-set-ns
+
+  "fs" 'cider-find-var
 
   "tt" 'cider-test-run-test
   "tn" 'cider-test-run-ns-tests
@@ -85,15 +97,18 @@
   "tb" 'cider-test-show-report
   "tr" 'cider-test-rerun-tests
 
-  ;; "df" 'describe-function
-  ;; "dv" 'describe-variable
-  ;; "dm" 'describe-mode
-  ;; "dk" 'describe-key
   "dd" 'cider-doc
-  ;; "da" 'helm-apropos
   )
 
-(setq cider-show-error-buffer 'except-in-repl
+(defun connect-burgundy ()
+  (interactive)
+  (start-file-process-shell-command "burgundy"
+                                    (get-buffer-create "*burgundy*")
+                                    "lein run")
+  (sit-for 5)
+  (cider-connect "localhost" 7777))
+
+(setq cider-show-error-buffer t
       cider-prompt-for-symbol nil)
 
 (evil-define-key 'normal clojure-mode-map (kbd "<C-S-return>") 'cider-eval-defun-at-point)

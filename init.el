@@ -50,6 +50,8 @@
   (when (not (package-installed-p pkg))
     (package-install pkg)))
 
+(setq backup-directory-alist `(("." . "~/.saves")))
+
 ;; modularize separate features
 (setq ruin-pkg
       '(ruin-theme
@@ -69,6 +71,7 @@
         ruin-html
         ruin-haskell
         ruin-go
+        ruin-c
         ruin-tex
         ruin-hipchat
 
