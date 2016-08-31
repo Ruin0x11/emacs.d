@@ -33,10 +33,13 @@
         ("e" "etc." entry (file "~/Dropbox/org/notes.org")
                "* %? - %U\n")
         ("d" "diary" entry (file+headline "~/Dropbox/org/diary.org" "日記")
-         "* %U\n%?\n" :prepend t)
+        "* %U\n%?\n" :prepend t)
         ("y" "yume" entry (file+headline "~/Dropbox/org/yume.org" "ゆめにっき")
          "* %U - %? %^g\n" :prepend t)
-        ("a" "ABC" entry (file+headline "~/Dropbox/org/notes.org" "ABC") "* %U\n*A:* %?\n*B:* \n*C:* \n\n" :prepend t)))
+        ))
+;; save at top of hour
+;; (run-at-time "00:59" 3600 'org-save-all-org-buffers)
+
 
 ;;; Clocking
 ;; Resume clocking task when emacs is restarted
