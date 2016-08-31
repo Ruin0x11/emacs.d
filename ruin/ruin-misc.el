@@ -68,6 +68,8 @@
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1) ((control) . nil)))
 (setq mouse-wheel-progressive-speed nil)
 
+(setq ispell-dictionary "english")
+
 (setq
  backup-by-copying t      ; don't clobber symlinks
  backup-directory-alist

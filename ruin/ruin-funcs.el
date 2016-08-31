@@ -55,6 +55,12 @@
       (find-file file-dir))))
 ;; )
 
+(defun quit-or-kill-buffer ()
+  (interactive)
+  (if (= (count-windows) 1)
+      (kill-this-buffer)
+    (evil-quit)))
+
 (defun shell-command-on-buffer ()
   "Asks for a command and executes it in inferior shell with current buffer
 as input."
@@ -63,7 +69,14 @@ as input."
    (point-min) (point-max)
    (read-shell-command "Shell command on buffer: ")))
 
-;;; Functions from the Internet
+(defun shell-command-on-file (command)
+  "run a command on the current file and revert the buffer"
+  (interactive "sCommand: ")
+  (async-shell-command
+   (format (concat command " %s")
+       (shell-quote-argument (buffer-file-name)))))
+
+;;; from elsewhere
 
 ;;http://www.emacswiki.org/emacs/DescribeThingAtPoint#toc2
 ;;; describe this point lisp only

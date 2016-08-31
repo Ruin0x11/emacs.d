@@ -27,7 +27,7 @@
   "ar" (lambda () (interactive) (save-buffer) (quickrun) (quickrun/remove-temp-files))
   "aR" 'quickrun-shell
   "w" 'save-buffer
-  "q" 'evil-quit
+  "q" 'quit-or-kill-buffer
   "Q" 'kill-buffer-and-window
   "x" 'evil-save-and-close
   "u" 'universal-argument
@@ -115,11 +115,10 @@
   "bK"  'spacemacs/kill-other-buffers
   "bw"  'whitespace-cleanup
   "bY"  'spacemacs/copy-whole-buffer-to-clipboard
-  "b!"  'spacemacs/open-in-external-app
+  "b!"  'shell-command-on-file
   "bB"  'browse-url-of-file
   "b="  'my-diff-buffer-with-file
-  "bi"  'indent-buffer
-  )
+  "bi"  'indent-buffer)
 
 ;;; mode-based binds
 (defun copy-to-end-of-line ()
