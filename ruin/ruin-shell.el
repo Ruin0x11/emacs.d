@@ -1,21 +1,22 @@
 (package-require 'multi-term)
 
-(setq shell-file-name "/bin/zsh"
-      multi-term-program "/bin/zsh"
-      system-uses-terminfo nil
-      comint-move-point-for-output nil
-      comint-scroll-show-maximum-output nil)
+(if (not (eq system-type 'windows-nt))
+         (setq shell-file-name "/bin/zsh"
+               multi-term-program "/bin/zsh"
+               system-uses-terminfo nil
+               comint-move-point-for-output nil
+               comint-scroll-show-maximum-output nil))
 
 (defun comint-esd-or-maybe-eof (arg)
   "Like `comint-delchar-or-maybe-eof' except not terrible.  Or
-maybe terrible, but in a different way."
+  maybe terrible, but in a different way."
   (interactive "p")
   (let ((proc (get-buffer-process (current-buffer))))
     (if (and (eobp)
              proc
              (= (point)
                 (marker-position (process-mark proc))))
-        (comint-send-eof)
+      (comint-send-eof)
       (evil-scroll-down 0))))
 
 (add-hook 'comint-mode-hook

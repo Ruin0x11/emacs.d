@@ -28,6 +28,8 @@
 (auto-compression-mode t)
 
 ;; Save a list of recent files visited.
+(require 'recentf)
+(setq recentf-auto-cleanup 'never) ;; disable before we start recentf!
 (recentf-mode 1)
 (setq recentf-max-saved-items 100)
 

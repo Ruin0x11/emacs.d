@@ -41,7 +41,7 @@
   (add-hook 'after-init-hook #'(lambda () (persp-mode 1))))
 (require 'persp-mode)
 
-(setq persp-interactive-completion-function)
+(setq persp-interactive-completion-system "helm")
 
 (evil-leader/set-key
   "sn" 'persp-next

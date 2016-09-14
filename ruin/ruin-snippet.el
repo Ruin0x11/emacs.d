@@ -9,7 +9,7 @@
 
 ;; The following is optional.
 (define-key yas-minor-mode-map [backtab]     'yas-expand)
-(evil-define-minor-mode-key 'insert 'yas-minor-mode [backtab] 'yas-expand)
+;(evil-define-minor-mode-key 'insert 'yas-minor-mode [backtab] 'yas-expand)
 
 ;; Strangely, just redefining one of the variations below won't work.
 ;; All rebinds seem to be needed.

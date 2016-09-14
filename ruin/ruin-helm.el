@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t -*-
 ;;; ruin-helm.el --- helm settings
 (package-require 'helm)
 (package-require 'helm-ag)
@@ -76,7 +77,7 @@ surf."
 
 (defadvice helm-find-file (after find-file-sudo activate)
   "Find file as root if necessary."
-  (unless (and buffer-file-name
+ ;; -*- lexical-binding: t -*- (unless (and buffer-file-name
                (file-writable-p buffer-file-name))
     (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
 
@@ -85,5 +86,60 @@ surf."
   (other-window -1))
 
 (define-key minibuffer-local-map (kbd "C-c C-l") 'helm-minibuffer-history)
+
+;; please just do zsh completion
+(with-eval-after-load 'helm-files
+  ;; Let helm support zsh-like path expansion.
+  (defvar helm-ff-expand-valid-only-p t)
+  (defvar helm-ff-sort-expansions-p t)
+  (defun helm-ff-try-expand-fname (candidate)
+    (let ((dirparts (split-string candidate "/"))
+          valid-dir
+          fnames)
+      (catch 'break
+        (while dirparts
+          (if (file-directory-p (concat valid-dir (car dirparts) "/"))
+              (setq valid-dir (concat valid-dir (pop dirparts) "/"))
+            (throw 'break t))))
+      (setq fnames (cons candidate (helm-ff-try-expand-fname-1 valid-dir dirparts)))
+      (if helm-ff-sort-expansions-p
+          (sort fnames
+                (lambda (f1 f2) (or (file-directory-p f1)
+                                (not (file-directory-p f2)))))
+        fnames)))
+
+  (defun helm-ff-try-expand-fname-1 (parent children)
+    (if children
+        (if (equal children '(""))
+            (and (file-directory-p parent) `(,(concat parent "/")))
+          (when (file-directory-p parent)
+            (apply 'nconc
+                   (mapcar
+                    (lambda (f)
+                      (or (helm-ff-try-expand-fname-1 f (cdr children))
+                          (unless helm-ff-expand-valid-only-p
+                            (and (file-directory-p f)
+                                 `(,(concat f "/" (mapconcat 'identity
+                                                             (cdr children)
+                                                             "/")))))))
+                    (directory-files parent t (concat "^"
+                                                      (regexp-quote
+                                                       (car children))))))))
+      `(,(concat parent (and (file-directory-p parent) "/")))))
+
+  (defun qjp-helm-ff-try-expand-fname (orig-func &rest args)
+    (let* ((candidate (car args))
+           (collection (helm-ff-try-expand-fname candidate)))
+      (if (and (> (length collection) 1)
+               (not (file-exists-p candidate)))
+          (with-helm-alive-p
+            (when (helm-file-completion-source-p)
+              (helm-exit-and-execute-action
+               (lambda (_)
+                 (helm-find-files-1
+                  (helm-comp-read "Expand Path to: " collection))))))
+        (apply orig-func args))))
+
+  (advice-add 'helm-ff-kill-or-find-buffer-fname :around #'qjp-helm-ff-try-expand-fname))
 
 (provide 'ruin-helm)
