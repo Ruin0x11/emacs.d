@@ -46,6 +46,8 @@
   "mss" 'smerge-keep-current
   "msm" 'smerge-keep-mine
   "mst" 'smerge-keep-other
+  "msn" 'smerge-next
+  "msp" 'smerge-prev
   "mse" 'smerge-ediff)
 
 (provide 'ruin-git)

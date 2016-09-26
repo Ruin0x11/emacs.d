@@ -27,7 +27,7 @@
 (defun ruin/set-shift-width-for-mode (mode-hook width)
   (add-hook mode-hook
             `(lambda ()
-              (setq evil-shift-width ,width))))
+               (setq evil-shift-width ,width))))
 
 (require 'url)
 
@@ -55,6 +55,12 @@
       (find-file file-dir))))
 ;; )
 
+(defun quit-or-kill-buffer ()
+  (interactive)
+  (if (= (count-windows) 1)
+      (kill-this-buffer)
+    (evil-quit)))
+
 (defun shell-command-on-buffer ()
   "Asks for a command and executes it in inferior shell with current buffer
 as input."
@@ -63,7 +69,14 @@ as input."
    (point-min) (point-max)
    (read-shell-command "Shell command on buffer: ")))
 
-;;; Functions from the Internet
+(defun shell-command-on-file (command)
+  "run a command on the current file and revert the buffer"
+  (interactive "sCommand: ")
+  (async-shell-command
+   (format (concat command " %s")
+       (shell-quote-argument (buffer-file-name)))))
+
+;;; from elsewhere
 
 ;;http://www.emacswiki.org/emacs/DescribeThingAtPoint#toc2
 ;;; describe this point lisp only
@@ -135,10 +148,10 @@ buffer is not visiting a file."
     (let ((collected-lines '()))
       (while (re-search-forward trc-comment-keywords nil t)
         ;; collect lines
-        (setq collected-lines (cons 
+        (setq collected-lines (cons
                                (format "%d: %s" (line-number-at-pos) (thing-at-point 'line t))
                                collected-lines)))
-      
+
       ;; generate a new buffer
       (let ((notes-buffer (generate-new-buffer (concat (buffer-name) "-comment-notes"))))
         (set-buffer notes-buffer)
@@ -199,7 +212,26 @@ buffer is not visiting a file."
              (delete-file filename)
              (set-visited-file-name newname)
              (set-buffer-modified-p nil)
-             t)))) 
+             t))))
+
+(defun indent-buffer ()
+  (interactive)
+  (save-excursion
+    (indent-region (point-min) (point-max) nil)))
+(global-set-key [f12] 'indent-buffer)
+
+(defun delete-file-and-buffer ()
+  "Kill the current buffer and deletes the file it is visiting."
+  (interactive)
+  (if (yes-or-no-p "Delete this file? ")
+      (let ((filename (buffer-file-name)))
+        (when filename
+          (if (vc-backend filename)
+              (vc-delete-file filename)
+            (progn
+              (delete-file filename)
+              (message "Deleted file %s" filename)
+              (kill-buffer)))))))
 
 ;;https://www.emacswiki.org/emacs/TransparentEmacs
 ;; Set transparency of emacs

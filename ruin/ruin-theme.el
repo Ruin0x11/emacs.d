@@ -64,6 +64,10 @@
 (package-require 'spaceline)
 (require 'spaceline-config)
 
+(setq custom-theme-directory (locate-user-emacs-file "themes"))
+(setq custom-theme-load-path (add-to-list 'custom-theme-load-path
+                                          (locate-user-emacs-file "themes/btcsb")))
+
 ;;; Properly align CJK org-mode tables
 ;; https://github.com/kuanyui/.emacs.d/blob/master/rc/rc-basic.el#L102
 (defun setup-cjk-alignment ()

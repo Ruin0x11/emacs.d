@@ -13,11 +13,13 @@
 
 ;; Startup & Directories
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
-(setq org-startup-indented t) 
+(setq org-startup-indented t)
 
-(setq org-directory "~/Dropbox/org")
 (setq org-default-notes-file "~/Dropbox/org/tracked/refile.org")
-(setq org-capture-templates 
+      '(("t" "todo" entry (file "~/Dropbox/org/tracked/refile.org")
+
+(setq org-default-notes-file "~/Dropbox/org/tracked/refile.org")
+(setq org-capture-templates
       '(("t" "todo" entry (file "~/Dropbox/org/tracked/refile.org")
          "* TODO %?\n%U"
          ;:clock-in t :clock-resume t
@@ -27,15 +29,16 @@
          ;:clock-in t :clock-resume t
          )
         ("n" "note" entry (file "~/Dropbox/org/tracked/refile.org")
+        ("i" "class" entry (file "~/Dropbox/org/school.org")
+               "* %U\n%?\n")
                "* %? :NOTE:\n%U\n")
         ("e" "etc." entry (file "~/Dropbox/org/notes.org")
                "* %? - %U\n")
         ("d" "diary" entry (file+headline "~/Dropbox/org/diary.org" "日記")
-         "* %U\n%?\n" :prepend t)
+        "* %U\n%?\n" :prepend t)
         ("y" "yume" entry (file+headline "~/Dropbox/org/yume.org" "ゆめにっき")
          "* %U - %? %^g\n" :prepend t)
-        )
-      )
+        ))
 ;; save at top of hour
 ;; (run-at-time "00:59" 3600 'org-save-all-org-buffers)
 
@@ -218,10 +221,10 @@
 (evil-define-key 'normal evil-org-mode-map
   (kbd "RET") 'org-open-at-point
   "O" 'evil-open-above
-  "P" 'bh/narrow-to-project
-  "Q" 'bh/widen
-  "U" 'bh/narrow-up-one-level
-  "S" 'bh/narrow-to-subtree
+  ;; "P" 'bh/narrow-to-project
+  ;; "Q" 'bh/widen
+  ;; "U" 'bh/narrow-up-one-level
+  ;; "S" 'bh/narrow-to-subtree
   ;; avoid conflict with C-i and Tab
   ;; https://github.com/bling/evil-jumper/issues/8
   ;; [tab] 'org-cycle)
@@ -313,7 +316,7 @@
                     :initial-input initial-input
                     :history hist
                     :default def))
-  
+
   (setq org-completion-handler 'org-helm-completion-handler))
 
 (setq org-use-speed-commands t)
@@ -326,7 +329,7 @@
 (add-hook 'org-mode-hook 'disable-linum-mode-in-big-files)
 
 ;; improve performance on large org files by tweaking linum
-(setq linum-delay t 
+(setq linum-delay t
       linum-eager nil)
 
 ;; autosave after capture / TODO state change

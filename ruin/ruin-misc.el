@@ -68,6 +68,16 @@
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1) ((control) . nil)))
 (setq mouse-wheel-progressive-speed nil)
 
+(setq ispell-dictionary "english")
+
+(setq
+ backup-by-copying t      ; don't clobber symlinks
+ backup-directory-alist
+ '(("." . "~/.saves"))    ; don't litter my fs tree
+ delete-old-versions t
+ kept-new-versions 6
+ kept-old-versions 2
+ version-control t)       ; use versioned backups
 
 ;; Write backup files to own directory
 (setq backup-directory-alist
@@ -84,7 +94,7 @@
     (r `((?i (file . ,(locate-user-emacs-file "init.el")))
          (?o (file . ,(expand-file-name "~/Dropbox/org/")))
          (?b (file . ,(expand-file-name "~/build")))
-         
+
          ))
   (set-register (car r) (cadr r)))
 
