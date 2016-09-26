@@ -16,7 +16,7 @@
 (setq org-startup-indented t)
 
 (setq org-default-notes-file "~/Dropbox/org/tracked/refile.org")
-      '(("t" "todo" entry (file "~/Dropbox/org/tracked/refile.org")
+           
 
 (setq org-default-notes-file "~/Dropbox/org/tracked/refile.org")
 (setq org-capture-templates
@@ -29,16 +29,16 @@
          ;:clock-in t :clock-resume t
          )
         ("n" "note" entry (file "~/Dropbox/org/tracked/refile.org")
+               "* %? :NOTE:\n%U\n")
         ("i" "class" entry (file "~/Dropbox/org/school.org")
                "* %U\n%?\n")
-               "* %? :NOTE:\n%U\n")
         ("e" "etc." entry (file "~/Dropbox/org/notes.org")
                "* %? - %U\n")
         ("d" "diary" entry (file+headline "~/Dropbox/org/diary.org" "日記")
         "* %U\n%?\n" :prepend t)
         ("y" "yume" entry (file+headline "~/Dropbox/org/yume.org" "ゆめにっき")
          "* %U - %? %^g\n" :prepend t)
-        ))
+        )) 
 ;; save at top of hour
 ;; (run-at-time "00:59" 3600 'org-save-all-org-buffers)
 
