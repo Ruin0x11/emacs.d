@@ -7,4 +7,6 @@
 
 (autoload 'cmake-mode "/usr/share/cmake-3.6/editors/emacs/cmake-mode.el" t)
 
+(package-require 'csharp-mode)
+
 (provide 'ruin-c)

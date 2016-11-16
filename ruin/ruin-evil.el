@@ -17,9 +17,6 @@
 (global-evil-surround-mode t)
 (evil-commentary-mode t)
 
-(evil-leader/set-key-for-mode 'aggressive-indent-mode
-  "ZZZ" 'zone)
-
 ;;; leader binds
 (evil-leader/set-leader "<SPC>")
 
@@ -74,7 +71,7 @@
   "fs" 'find-function
   "fv" 'find-variable
   "fw" 'crux-view-url
-  "fp" 'find-library
+  "fl" 'find-library
 
   "hR" 'helm-regexp
   "hm" 'helm-man-woman
@@ -147,7 +144,11 @@
 
 (delete 'term-mode evil-insert-state-modes)
 (eval-after-load 'evil-vars '(add-to-list 'evil-emacs-state-modes 'term-mode))
-;; (evil-set-initial-state 'term-mode 'emacs)
+(eval-after-load 'evil-vars '(add-to-list 'evil-emacs-state-modes 'inferior-python-mode))
+(defadvice term-send-raw (after clear-recorded-key activate)
+  (if (string= (kbd "RET") (this-command-keys))
+      (clear-this-command-keys)))
+
 (delete 'shell-mode evil-insert-state-modes)
 (add-to-list 'evil-emacs-state-modes 'shell-mode)
 (delete 'calc-mode evil-insert-state-modes)
@@ -175,6 +176,7 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (eval-after-load "evil"
   '(progn
      (define-key evil-normal-state-map "Y" 'copy-to-end-of-line)
+     (define-key evil-normal-state-map "&" 'evil-ex-repeat-substitute-with-flags)
 
      ;; trade ctrl-h and others for faster window switching
      (ruin/window-movement-for-map evil-normal-state-map)
@@ -203,6 +205,13 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (ruin/window-movement-for-mode "help-mode" 'help-mode-map)
 (ruin/window-movement-for-mode "compile" 'compilation-mode-map)
 
+(eval-after-load "comint" #'(lambda ()
+                              (define-key comint-mode-map (kbd "<up>") 'comint-previous-input)
+                              (define-key comint-mode-map (kbd "<down>") 'comint-next-input)
+                        (define-key comint-mode-map (kbd "C-n") 'comint-next-matching-input-from-input)
+                        (define-key comint-mode-map (kbd "C-p") 'comint-previous-matching-input-from-input)))
+
+
 ;; j and k where it counts
 (eval-after-load "tar" #'(lambda ()
                         (define-key tar-mode-map "j" 'tar-next-line)
@@ -221,9 +230,7 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
                               (define-key mu4e-view-mode-map "j" 'evil-next-line)
                               (define-key mu4e-view-mode-map "k" 'evil-previous-line)
                               (define-key mu4e-view-mode-map "g" 'mu4e~headers-jump-to-maildir)
-                              (define-key mu4e-view-mode-map "u" 'mu4e-update-index)
-                              (define-key mu4e-view-mode-map "J" 'mu4e-view-headers-next-unread)
-                              (define-key mu4e-view-mode-map "K" 'mu4e-view-headers-prev-unread)))
+                              (define-key mu4e-view-mode-map "u" 'mu4e-update-index)))
 
 (eval-after-load "mu4e-headers" #'(lambda ()
                                  (ruin/window-movement-for-map mu4e-headers-mode-map)

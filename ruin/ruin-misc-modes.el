@@ -41,7 +41,7 @@
   (add-hook 'after-init-hook #'(lambda () (persp-mode 1))))
 (require 'persp-mode)
 
-(setq persp-interactive-completion-function)
+(setq persp-interactive-completion-function "helm")
 
 (evil-leader/set-key
   "sn" 'persp-next
@@ -63,7 +63,6 @@
       quickrun-focus-p nil)
 
 (add-hook 'quickrun-after-run-hook (lambda ()
-                                     (quickrun/remove-temp-files)
                                      (quickrun/recenter -5)))
 (add-hook 'quickrun/mode-hook      (lambda ()
                                      (quickrun/recenter -5)))
@@ -257,6 +256,9 @@
 (add-hook 'java-mode-hook 'doc-mode)
 (evil-leader/set-key-for-mode 'java-mode
   "mdd" 'doc-mode-fix-tag-doc)
+
+;; uim
+(require 'uim)
 
 ;; buffer-move
 (package-require 'buffer-move)
