@@ -19,7 +19,7 @@
 (reload-site-lisp)
 
 ;; recompile all .el files
-(byte-recompile-directory (expand-file-name "~/.emacs.d/elpa") 0)
+;; (byte-recompile-directory (expand-file-name "~/.emacs.d/elpa") 0)
 
 ;; Set paths to custom.el and loaddefs.el
 (setq autoload-file (locate-user-emacs-file "loaddefs.el"))

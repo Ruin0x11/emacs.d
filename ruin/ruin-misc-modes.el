@@ -42,6 +42,7 @@
 (require 'persp-mode)
 
 (setq persp-interactive-completion-function "helm")
+(setq persp-interactive-completion-system "helm")
 
 (evil-leader/set-key
   "sn" 'persp-next
