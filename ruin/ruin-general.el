@@ -55,6 +55,9 @@
 ;; save clipboard before replacing
 (setq save-interprogram-paste-before-kill t)
 
+;; open is generic url browser
+(setq browse-url-generic-program "open")
+
 ;; registers
 (dolist
     (r `((?i (file . ,(locate-user-emacs-file "init.el")))

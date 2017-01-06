@@ -28,6 +28,10 @@
          "* TODO %?\n%U\n%a"
          ;:clock-in t :clock-resume t
          )
+        ("g" "generic" entry (file "~/Dropbox/org/tracked/refile.org")
+         "* %?\n"
+         ;:clock-in t :clock-resume t
+         )
         ("n" "note" entry (file "~/Dropbox/org/tracked/refile.org")
                "* %? :NOTE:\n%U\n")
         ("i" "class" entry (file "~/Dropbox/org/school.org")
@@ -234,7 +238,6 @@
 (evil-leader/set-key-for-mode 'org-mode
   "of" 'org-capture-finalize
   "ok" 'org-capture-kill
-  "or" 'org-capture-refile
   "oI" 'org-clock-in
   "oO" 'org-clock-out
   "oid" 'org-deadline
@@ -243,7 +246,7 @@
   "ois" 'org-schedule
   "oil" 'org-insert-link
   "ot" 'org-set-tags-command
-  "oR" 'org-refile
+  "or" 'org-refile
   "ow" 'org-save-all-org-buffers
   "oh" 'helm-org-agenda-files-headings)
 

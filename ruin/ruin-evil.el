@@ -34,7 +34,6 @@
   "T" 'crux-visit-term-buffer
   "z" 'zone
   "as" 'sos
-  "F" 'flycheck-list-errors
   "M" 'popwin:messages
 
   "df" 'describe-function
@@ -59,6 +58,8 @@
   "ad" 'diff
   "aw" 'browse-url-at-point
   "ap" 'package-list-packages
+  "af" 'flycheck-list-errors
+  "ao" 'browse-url-generic
 
   "jr" 'jump-to-register
   "jb" 'helm-bookmarks
@@ -101,6 +102,9 @@
   "is" 'split-window-right-and-focus
   "iu" 'winner-undo
   "iU" 'winner-redo
+
+  "rd" 'delete-frame
+  "rn" 'make-frame
 
   "bl" 'helm-buffers-list
   "TAB" 'spacemacs/alternate-buffer

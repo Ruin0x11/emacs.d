@@ -9,4 +9,6 @@
 
 (package-require 'csharp-mode)
 
+(add-hook 'csharp-mode-hook 'electric-pair-mode)
+
 (provide 'ruin-c)

@@ -248,7 +248,7 @@
 ;; google-this
 (package-require 'google-this)
 (evil-leader/set-key
-  "ag" 'helm-google-suggest
+  "ag" 'google-this
   "aG" (lambda () (interactive) (google-this-line nil t)))
 
 ;; doc-mode
@@ -259,7 +259,8 @@
   "mdd" 'doc-mode-fix-tag-doc)
 
 ;; uim
-(require 'uim)
+(if (eq system-type 'gnu/linux)
+(require 'uim))
 
 ;; buffer-move
 (package-require 'buffer-move)
