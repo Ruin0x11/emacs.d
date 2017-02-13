@@ -1,3 +1,4 @@
+(require 'helm-imenu)
 (require 'column-marker)
 (require 'line-comment-banner)
 

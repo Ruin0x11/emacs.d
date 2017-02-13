@@ -8,7 +8,7 @@
  *      $2
  *
  * Parameters:
- *   o $3 (I/O) - $4
+ *   o $3 (I$4) - $5
  * Results:
  *     $0
  *
