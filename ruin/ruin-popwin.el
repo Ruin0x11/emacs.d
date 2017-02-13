@@ -66,6 +66,8 @@
         ("*Python*" :stick t)
         (inf-ruby-mode :stick t :height 0.3)
         ;; (haskell-interactive-mode :stick t)
+        (cargo-process-mode :stick t :height 0.4)
+        (racer-help-mode :noselect t :height 0.3)
         ("*jedi:doc*" :noselect t)
         ("*YASnippet tables*" :height 0.4 :stick t)
         (cider-docview-mode :height 0.4 :stick t)

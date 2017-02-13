@@ -1,7 +1,8 @@
 ;;;ruin-misc-modes.el --- modes too small for individual .el files
 
 ;; semantic
-(semantic-mode)
+;(semantic-mode)
+
 
 ;; winner
 (winner-mode)
@@ -51,6 +52,9 @@
   "sK" 'persp-kill
   "sw" 'persp-save-state-to-file
   "sl" 'persp-load-state-from-file)
+
+;; electric-indent
+(electric-indent-mode 1)
 
 ;; savehist
 (savehist-mode t)
@@ -268,6 +272,9 @@
 (global-set-key (kbd "C-S-j") 'buf-move-down)
 (global-set-key (kbd "C-S-h") 'buf-move-left)
 (global-set-key (kbd "C-S-l") 'buf-move-right)
+
+;; highlight-symbol
+(require 'highlight-symbol)
 
 ;; diminish
 (package-require 'diminish)

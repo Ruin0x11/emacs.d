@@ -52,9 +52,8 @@
 
 (package-require 'exec-path-from-shell)
 
-(when (memq window-system '(mac ns))
-  (exec-path-from-shell-initialize)
-  (exec-path-from-shell-copy-env "PYTHONPATH"))
+(exec-path-from-shell-initialize)
+(exec-path-from-shell-copy-env "PATH")
 
 (setq backup-directory-alist `(("." . "~/.saves")))
 
@@ -78,8 +77,9 @@
         ruin-haskell
         ruin-go
         ruin-c
+        ruin-rust
         ruin-tex
-        ruin-hipchat
+        ;ruin-hipchat
 
         ruin-project
         ruin-flycheck
