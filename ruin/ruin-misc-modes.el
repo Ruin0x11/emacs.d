@@ -238,12 +238,12 @@
 (evil-leader/set-key
   "ak" 'kaomoji)
 
-;; emojify
-(package-require 'emojify)
-(package-require 'company-emoji)
-(add-hook 'markdown-mode-hook #'emojify-mode)
-(add-to-list 'company-backends 'company-emoji)
-(setq company-emoji-insert-unicode nil)
+;; ;; emojify
+;; (package-require 'emojify)
+;; (package-require 'company-emoji)
+;; (add-hook 'markdown-mode-hook #'emojify-mode)
+;; (add-to-list 'company-backends 'company-emoji)
+;; (setq company-emoji-insert-unicode nil)
 
 ;; google-this
 (package-require 'google-this)

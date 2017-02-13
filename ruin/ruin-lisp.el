@@ -37,13 +37,17 @@
   "ed" 'eval-defun
   )
 
-
 (define-key smartparens-mode-map (kbd "M-l") 'sp-down-sexp)
 (define-key smartparens-mode-map (kbd "M-h") 'sp-backward-up-sexp)
 (define-key smartparens-mode-map (kbd "M-j") 'sp-next-sexp)
 (define-key smartparens-mode-map (kbd "M-k") 'sp-previous-sexp)
 (define-key smartparens-mode-map (kbd "C-s") 'sp-forward-slurp-sexp)
 (define-key smartparens-mode-map (kbd "C-M-s") 'sp-forward-barf-sexp)
+(define-key smartparens-mode-map (kbd "<C-S-backspace>") 'sp-splice-sexp-killing-around)
+(define-key smartparens-mode-map (kbd "C-d") 'sp-splice-sexp-killing-forward)
+(define-key smartparens-mode-map (kbd "C-M-d") 'sp-splice-sexp-killing-backward)
+(define-key smartparens-mode-map (kbd "C-M-c") 'change-sexp)
+(define-key smartparens-mode-map (kbd "M-u") 'sp-unwrap-sexp)
 
 (show-smartparens-global-mode t)
 

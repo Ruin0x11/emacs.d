@@ -251,6 +251,28 @@ buffer is not visiting a file."
   (dolist (mode modes)
     (add-hook (intern (concat (symbol-name mode) "-hook")) func)))
 
+(defun strip-text-properties(txt)
+  (set-text-properties 0 (length txt) nil txt)
+      txt)
+
+(defun re-seq (regexp string)
+  "Get a list of all regexp matches in a string"
+  (save-match-data
+    (let ((pos 0)
+          matches)
+      (while (string-match regexp string pos)
+        (push (strip-text-properties (match-string 0 string)) matches)
+        (setq pos (match-end 0)))
+      matches)))
+
+; Sample URL
+(setq urlreg "\\(?:http://\\)?ux\\(?:[./#+-_]\\w*\\)+")
+
+(defun url-list ()
+  (mapconcat 'identity
+             (re-seq urlreg (buffer-string))
+             "\n"))
+
 ;; Crux
 ;;https://github.com/bbatsov/crux/blob/master/crux.el#L258
 (defun crux-view-url ()
@@ -264,6 +286,7 @@ buffer is not visiting a file."
     (re-search-forward "^$")
     (delete-region (point-min) (point))
     (delete-blank-lines)
+    (buffer-enable-undo)
     (set-auto-mode)))
 
 (defvar crux-term-buffer-name "multi"
