@@ -15,8 +15,7 @@
        mu4e-get-mail-command    "mail-sync"
        mu4e-confirm-quit     nil
        message-cite-reply-position 'above
-       message-cite-style message-cite-style-gmail
-       )
+       message-cite-style message-cite-style-gmail)
 
       (setq mu4e-html2text-command "/usr/bin/w3m -T text/html")
 
@@ -34,20 +33,31 @@
        ;;  "http://www.example.com\n")
        )
       (setq mu4e-contexts
-            `( ,(make-mu4e-context
-                 :name "School"
-                 :enter-func (lambda () (mu4e-message "Switch to the School context"))
-                 ;; leave-func not defined
-                 :match-func (lambda (msg)
-                               (when msg
-                                 (mu4e-message-contact-field-matches msg
-                                                                     :to "(.*)@illinois.edu")))
-                 :vars '((user-mail-address . "ipicker2@illinois.edu")
-                         (user-full-name . "Ian Pickering")
-                         (smtpmail-default-smtp-server . "smtp.illinois.edu")
-                         (mu4e-compose-signature . (concat
-                                                    "Ian Pickering\n"
-                                                    "University of Illinois\n"))))))
+            `(
+              ,(make-mu4e-context
+                :name "Main"
+                :enter-func (lambda () (mu4e-message "Switch to the School context"))
+                ;; leave-func not defined
+                :match-func (lambda (msg)
+                              (when msg
+                                (mu4e-message-contact-field-matches msg
+                                                                    :to "(.*)@illinois.edu")))
+                :vars '((message-cite-style . message-cite-style-gmail))
+                )
+              ,(make-mu4e-context
+                :name "School"
+                :enter-func (lambda () (mu4e-message "Switch to the School context"))
+                ;; leave-func not defined
+                :match-func (lambda (msg)
+                              (when msg
+                                (mu4e-message-contact-field-matches msg
+                                                                    :to "(.*)@illinois.edu")))
+                :vars '((user-mail-address . "ipicker2@illinois.edu")
+                        (user-full-name . "Ian Pickering")
+                        (smtpmail-default-smtp-server . "smtp.illinois.edu")
+                        (mu4e-compose-signature . (concat
+                                                   "Ian Pickering\n"
+                                                   "University of Illinois\n"))))))
 
       (setq message-citation-line-format "On %a, %b %d %Y, %N wrote:")
 

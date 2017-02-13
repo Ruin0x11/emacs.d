@@ -46,6 +46,7 @@
   "mss" 'smerge-keep-current
   "msm" 'smerge-keep-mine
   "mst" 'smerge-keep-other
+  "msa" 'smerge-keep-all
   "msn" 'smerge-next
   "msp" 'smerge-prev
   "mse" 'smerge-ediff)

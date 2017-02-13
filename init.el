@@ -50,6 +50,12 @@
   (when (not (package-installed-p pkg))
     (package-install pkg)))
 
+(package-require 'exec-path-from-shell)
+
+(when (memq window-system '(mac ns))
+  (exec-path-from-shell-initialize)
+  (exec-path-from-shell-copy-env "PYTHONPATH"))
+
 (setq backup-directory-alist `(("." . "~/.saves")))
 
 ;; modularize separate features

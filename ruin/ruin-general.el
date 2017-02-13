@@ -31,7 +31,8 @@
 (require 'recentf)
 (setq recentf-auto-cleanup 'never) ;; disable before we start recentf!
 (recentf-mode 1)
-(setq recentf-max-saved-items 100)
+(setq recentf-max-saved-items 1000)
+(run-with-idle-timer 30 t 'recentf-save-list)
 
 ;; Highlight matching parentheses when the point is on them.
 (show-paren-mode 1)
@@ -53,6 +54,9 @@
 
 ;; save clipboard before replacing
 (setq save-interprogram-paste-before-kill t)
+
+;; open is generic url browser
+(setq browse-url-generic-program "open")
 
 ;; registers
 (dolist

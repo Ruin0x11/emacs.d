@@ -8,7 +8,7 @@
 (package-require 'bundler)
 ;; (require 'rcodetools)
 
-(chruby "ruby-2.3.1")
+(chruby "ruby-2.3.3")
 
 (setq ruby-align-to-stmt-keywords '(def case)) ;; indent "case" as per ruby style guide
 
@@ -18,7 +18,7 @@
       ruby-block-highlight-toggle 'minibuffer ;; display to minibuffer
       ruby-block-highlight-toggle t)          ;; display to minibuffer and do overlay
 
-(add-hook 'ruby-mode-hook 'robe-mode)
+;; (add-hook 'ruby-mode-hook 'robe-mode)
 
 (add-to-list 'auto-mode-alist '("Gemfile" . enh-ruby-mode))
 (add-to-list 'auto-mode-alist '("Rakefile" . enh-ruby-mode))
@@ -48,7 +48,7 @@
 
 (remove-hook 'enh-ruby-mode-hook 'erm-define-faces)
 
-(add-hook 'enh-ruby-mode-hook 'robe-mode)
+;; (add-hook 'enh-ruby-mode-hook 'robe-mode)
 
 (add-hook 'enh-ruby-mode-hook
           #'(lambda ()
@@ -153,19 +153,19 @@
 (add-to-list 'evil-emacs-state-modes 'inf-ruby-mode)
 (ruin/window-movement-for-mode "inf-ruby" 'inf-ruby-mode-map)
 
-;; autostart inf-ruby and robe
-(dolist (hook (list
-               'enh-ruby-mode-hook
-               ))
-  (add-hook hook (lambda ()
-                   (robe-mode)
-                   (save-excursion
-                     (window-configuration-to-register 'a)
-                     (inf-ruby)
-                     (robe-start)
-                     (jump-to-register 'a)
-                     )
-                   )))
+;; ;; autostart inf-ruby and robe
+;; (dolist (hook (list
+;;                'enh-ruby-mode-hook
+;;                ))
+;;   (add-hook hook (lambda ()
+;;                    (robe-mode)
+;;                    (save-excursion
+;;                      (window-configuration-to-register 'a)
+;;                      (inf-ruby)
+;;                      (robe-start)
+;;                      (jump-to-register 'a)
+;;                      )
+;;                    )))
 
 ;;; Rails
 (package-require 'projectile-rails)
