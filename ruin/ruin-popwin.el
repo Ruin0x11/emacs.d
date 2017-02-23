@@ -19,6 +19,7 @@
         ("*Compile-Log*" :position bottom :height 0.3 )
         ("*Shell Command Output*" :position bottom :height 0.3 )
         (".*overtone.log" :regexp t :height 0.3)
+        ("project.org.*" :regexp t :position top :noselect t :height 15)
         ("collected.org" :position top :height 15)
         (flycheck-error-list-mode :position bottom :height 0.3 :stick t)
         ;; (compilation-mode :position bottom :height 0.3 :noselect t)

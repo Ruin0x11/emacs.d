@@ -122,6 +122,19 @@
   (setq yari-ruby-obarray-cache nil)
   (yari-helm))
 
+(defvar yari-helm-source-ri-pages
+  '((name . "RI documentation")
+    (candidates . (lambda () (yari-ruby-obarray)))
+    (action  ("Show with Yari" . yari))
+    (candidate-number-limit . 300)
+    (requires-pattern . 2)
+    "Source for completing RI documentation."))
+
+(defun yari-helm (&optional rehash)
+  (interactive (list current-prefix-arg))
+  (when current-prefix-arg (yari-ruby-obarray rehash))
+  (helm :sources 'yari-helm-source-ri-pages :buffer "*yari*"))
+
 (evil-define-key 'normal yari-mode-map "q" 'quit-window)
 
 (evil-leader/set-key-for-mode 'enh-ruby-mode

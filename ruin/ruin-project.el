@@ -28,6 +28,17 @@
   "pr" 'projectile-replace
   )
 
+(defun ruin/open-project-info ()
+  "Opens this projectile project's information, todos, etc.
+
+   I like keeping this information around to stay organized."
+  (let ((filename (expand-file-name
+                   "project.org" (projectile-project-root))))
+    (when (file-exists-p filename)
+      (popwin:popup-buffer (find-file-noselect filename) :position 'top :height 15 :stick t :noselect t))))
+
+(advice-add 'helm-projectile-switch-project :after 'ruin/open-project-info)
+
 ;; (eval-after-load "helm" (helm-add-action-to-source "Ag in projects" 'helm-projectile-ag helm-source-projectile-projects))
 
 
