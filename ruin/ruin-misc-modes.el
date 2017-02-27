@@ -263,8 +263,7 @@
   "mdd" 'doc-mode-fix-tag-doc)
 
 ;; uim
-(if (eq system-type 'gnu/linux)
-(require 'uim))
+(if (locate-library "uim") (require 'uim))
 
 ;; buffer-move
 (package-require 'buffer-move)

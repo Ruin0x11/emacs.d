@@ -2,8 +2,6 @@
 (package-require 'org)
 (package-require 'org-bullets)
 
-(setq org-agenda-files (quote ("~/Dropbox/org/tracked")))
-
 (require 'org)
 (require 'org-bullets)
 
@@ -14,6 +12,10 @@
 ;; Startup & Directories
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 (setq org-startup-indented t)
+
+(when (file-exists-p "~/Dropbox/org")
+
+(setq org-agenda-files (quote ("~/Dropbox/org/tracked")))
 
 (setq org-default-notes-file "~/Dropbox/org/tracked/refile.org")
            
@@ -45,7 +47,7 @@
         )) 
 ;; save at top of hour
 ;; (run-at-time "00:59" 3600 'org-save-all-org-buffers)
-
+)
 
 ;;; Clocking
 ;; Resume clocking task when emacs is restarted

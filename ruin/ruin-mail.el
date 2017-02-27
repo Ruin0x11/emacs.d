@@ -1,6 +1,6 @@
 ;;; ruin-mail.el --- mail
 
-(if (eq system-type 'gnu/linux)
+(if (and (eq system-type 'gnu/linux) (locate-library "mu4e"))
     (progn
       (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e")
       (require 'mu4e)
