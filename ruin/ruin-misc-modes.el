@@ -193,6 +193,34 @@
                                      (define-key markdown-mode-map (kbd "<C-return>") 'markdown-follow-thing-at-point)))
 (add-hook 'markdown-mode-hook #'flyspell-mode)
 
+(package-require 'mmm-mode)
+(setq mmm-global-mode 'maybe)
+
+(mmm-add-classes
+ '((markdown-lisp
+    :submode lisp-mode
+    :front "^```lisp[\n\r]+"
+    :back "^```$")))
+
+(mmm-add-mode-ext-class 'markdown-mode nil 'markdown-lisp)
+
+(defun my-mmm-markdown-auto-class (lang &optional submode)
+  "Define a mmm-mode class for LANG in `markdown-mode' using SUBMODE.
+If SUBMODE is not provided, use `LANG-mode' by default."
+  (let ((class (intern (concat "markdown-" lang)))
+        (submode (or submode (intern (concat lang "-mode"))))
+        (front (concat "^```" lang "[\n\r]+"))
+        (back "^```"))
+    (mmm-add-classes (list (list class :submode submode :front front :back back)))
+    (mmm-add-mode-ext-class 'markdown-mode nil class)))
+
+;; Mode names that derive directly from the language name
+(mapc 'my-mmm-markdown-auto-class
+      '("awk" "bibtex" "c" "cpp" "css" "html" "latex" "lisp" "makefile"
+        "markdown" "python" "r" "ruby" "rust" "sql" "stata" "xml"))
+
+(setq mmm-parse-when-idle 't)
+
 ;; cucumber
 (package-require 'feature-mode)
 (require 'helm-feature)
@@ -262,9 +290,12 @@
 (evil-leader/set-key-for-mode 'java-mode
   "mdd" 'doc-mode-fix-tag-doc)
 
+;; hsp-mode
+(require 'hsp-mode)
+
 ;; uim
 (if (eq system-type 'gnu/linux)
-(require 'uim))
+    (require 'uim))
 
 ;; buffer-move
 (package-require 'buffer-move)

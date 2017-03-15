@@ -19,6 +19,8 @@
   "dd" 'racer-describe
   "df" 'racer-find-definition
 
+  "fs" 'racer-find-definition
+
   "kr" 'cargo-process-run
   "kc" 'cargo-process-build
   "kk" 'cargo-process-clean

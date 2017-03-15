@@ -148,6 +148,18 @@
 
 (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
 
+(package-require 'fill-column-indicator)
+(setq fill-column 80)
+(fci-mode)
+
+(defun ruin/enable-filling ()
+  (interactive)
+  (setq fill-column 80)
+  (auto-fill-mode)
+  (fci-mode))
+
+(add-hook 'rust-mode-hook 'ruin/enable-filling)
+
 ;; ;; Calculate default font size
 ;; (setq default-frame-font-size 9)
 ;; (setq presentation-frame-font-size
