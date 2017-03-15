@@ -160,6 +160,21 @@ buffer is not visiting a file."
           (insert a-line)
           (insert "\n"))))))
 
+;http://emacs.stackexchange.com/a/7150
+(defun re-seq (regexp string)
+  "Get a list of all regexp matches in a string"
+  (save-match-data
+    (let ((pos 0)
+          matches)
+      (while (string-match regexp string pos)
+        (push (match-string 0 string) matches)
+        (setq pos (match-end 0)))
+      matches)))
+; Sample URL
+;(setq urlreg "\\(?:http://\\)?www\\(?:[./#\+-]\\w*\\)+")
+; Sample invocation
+;(re-seq urlreg (buffer-string))
+
 (defun save-defaults ()
   (desktop-save desktop-dirname)
   (savehist-save)

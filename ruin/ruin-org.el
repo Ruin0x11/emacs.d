@@ -225,6 +225,7 @@
 (evil-define-key 'normal evil-org-mode-map
   (kbd "RET") 'org-open-at-point
   "O" 'evil-open-above
+  "J" 'evil-join
   ;; "P" 'bh/narrow-to-project
   ;; "Q" 'bh/widen
   ;; "U" 'bh/narrow-up-one-level

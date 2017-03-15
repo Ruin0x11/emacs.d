@@ -1,7 +1,8 @@
 ;;;ruin-misc-modes.el --- modes too small for individual .el files
 
 ;; semantic
-(semantic-mode)
+;(semantic-mode)
+
 
 ;; winner
 (winner-mode)
@@ -41,6 +42,7 @@
   (add-hook 'after-init-hook #'(lambda () (persp-mode 1))))
 (require 'persp-mode)
 
+(setq persp-interactive-completion-function "helm")
 (setq persp-interactive-completion-system "helm")
 
 (evil-leader/set-key
@@ -50,6 +52,9 @@
   "sK" 'persp-kill
   "sw" 'persp-save-state-to-file
   "sl" 'persp-load-state-from-file)
+
+;; electric-indent
+(electric-indent-mode 1)
 
 ;; savehist
 (savehist-mode t)
@@ -63,7 +68,6 @@
       quickrun-focus-p nil)
 
 (add-hook 'quickrun-after-run-hook (lambda ()
-                                     (quickrun/remove-temp-files)
                                      (quickrun/recenter -5)))
 (add-hook 'quickrun/mode-hook      (lambda ()
                                      (quickrun/recenter -5)))
@@ -248,7 +252,7 @@
 ;; google-this
 (package-require 'google-this)
 (evil-leader/set-key
-  "ag" 'helm-google-suggest
+  "ag" 'google-this
   "aG" (lambda () (interactive) (google-this-line nil t)))
 
 ;; doc-mode
@@ -258,12 +262,19 @@
 (evil-leader/set-key-for-mode 'java-mode
   "mdd" 'doc-mode-fix-tag-doc)
 
+;; uim
+(if (eq system-type 'gnu/linux)
+(require 'uim))
+
 ;; buffer-move
 (package-require 'buffer-move)
 (global-set-key (kbd "C-S-k") 'buf-move-up)
 (global-set-key (kbd "C-S-j") 'buf-move-down)
 (global-set-key (kbd "C-S-h") 'buf-move-left)
 (global-set-key (kbd "C-S-l") 'buf-move-right)
+
+;; highlight-symbol
+(require 'highlight-symbol)
 
 ;; diminish
 (package-require 'diminish)
