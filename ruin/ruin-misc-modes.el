@@ -294,8 +294,7 @@ If SUBMODE is not provided, use `LANG-mode' by default."
 (require 'hsp-mode)
 
 ;; uim
-(if (eq system-type 'gnu/linux)
-    (require 'uim))
+(if (locate-library "uim") (require 'uim))
 
 ;; buffer-move
 (package-require 'buffer-move)
