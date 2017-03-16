@@ -289,6 +289,9 @@
 (evil-leader/set-key-for-mode 'java-mode
   "mdd" 'doc-mode-fix-tag-doc)
 
+;; hsp-mode
+(require 'hsp-mode)
+
 ;; uim
 (if (locate-library "uim") (require 'uim))
 
