@@ -6,7 +6,7 @@
 
 (setq
  racer-cmd "~/.cargo/bin/racer"
- racer-rust-src-path "/Users/ruin/build/rust/src")
+ racer-rust-src-path "/home/nuko/build/rust/src")
 
 (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)
 (add-hook 'rust-mode-hook 'cargo-minor-mode)
@@ -19,18 +19,22 @@
   "dd" 'racer-describe
   "df" 'racer-find-definition
 
-  "kr" 'cargo-process-run
-  "kc" 'cargo-process-build
+  "kR" 'cargo-process-run
+  "kb" 'cargo-process-build
   "kk" 'cargo-process-clean
-  "tt" 'cargo-process-test)
+  "ta" 'cargo-process-test
+  "tt" 'cargo-process-current-test
+  "tf" 'cargo-process-current-file-tests
+  )
 
 (evil-leader/set-key-for-mode 'toml-mode
-  "kr" 'cargo-process-run
+  "kR" 'cargo-process-run
   "kb" 'cargo-process-build
-  "kc" 'cargo-process-clean
-  "tt" 'cargo-process-test)
+  "kk" 'cargo-process-clean
+  "ta" 'cargo-process-test
+  "tf" 'cargo-process-current-file-tests
+  )
 
-;; automatically indent braces
 (sp-local-pair 'rust-mode "{" nil :post-handlers '((my-create-newline-and-enter-sexp "RET")))
 
 (defun my-create-newline-and-enter-sexp (&rest _ignored)

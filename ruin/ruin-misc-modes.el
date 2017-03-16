@@ -39,11 +39,11 @@
 (package-require 'persp-mode)
 (with-eval-after-load "persp-mode"
   (setq wg-morph-on nil)
+
   (add-hook 'after-init-hook #'(lambda () (persp-mode 1))))
 (require 'persp-mode)
 
-(setq persp-interactive-completion-function "helm")
-(setq persp-interactive-completion-system "helm")
+(setq persp-auto-resume-time 0)
 
 (evil-leader/set-key
   "sn" 'persp-next
@@ -193,6 +193,33 @@
                                      (define-key markdown-mode-map (kbd "<C-return>") 'markdown-follow-thing-at-point)))
 (add-hook 'markdown-mode-hook #'flyspell-mode)
 
+(package-require 'mmm-mode)
+(setq mmm-global-mode 'maybe)
+
+(mmm-add-classes
+ '((markdown-lisp
+         :submode lisp-mode
+         :front "^```lisp[\n\r]+"
+         :back "^```$")))
+(mmm-add-mode-ext-class 'markdown-mode nil 'markdown-lisp)
+
+ (defun my-mmm-markdown-auto-class (lang &optional submode)
+   "Define a mmm-mode class for LANG in `markdown-mode' using SUBMODE.
+ If SUBMODE is not provided, use `LANG-mode' by default."
+   (let ((class (intern (concat "markdown-" lang)))
+         (submode (or submode (intern (concat lang "-mode"))))
+         (front (concat "^```" lang "[\n\r]+"))
+         (back "^```"))
+     (mmm-add-classes (list (list class :submode submode :front front :back back)))
+     (mmm-add-mode-ext-class 'markdown-mode nil class)))
+
+ ;; Mode names that derive directly from the language name
+ (mapc 'my-mmm-markdown-auto-class
+       '("awk" "bibtex" "c" "cpp" "css" "html" "latex" "lisp" "makefile"
+         "markdown" "python" "r" "ruby" "rust" "sql" "stata" "xml"))
+
+ (setq mmm-parse-when-idle 't)
+
 ;; cucumber
 (package-require 'feature-mode)
 (require 'helm-feature)
@@ -245,7 +272,7 @@
 ;; emojify
 (package-require 'emojify)
 (package-require 'company-emoji)
-(add-hook 'markdown-mode-hook #'emojify-mode)
+;(add-hook 'markdown-mode-hook #'emojify-mode)
 (add-to-list 'company-backends 'company-emoji)
 (setq company-emoji-insert-unicode nil)
 

@@ -255,6 +255,15 @@ buffer is not visiting a file."
   (interactive "nTransparency Value 0 - 100 opaque:")
   (set-frame-parameter (selected-frame) 'alpha value))
 
+(defun toggle-maximize-buffer ()
+  "Maximize buffer."
+  (interactive)
+  (if (= 1 (length (window-list)))
+      (jump-to-register '_)
+    (progn
+      (window-configuration-to-register '_)
+      (delete-other-windows))))
+
 ;; Bodil
 ;;https://github.com/bodil/emacs.d/blob/master/bodil/bodil-defuns.el#L17
 (defun font-lock-replace-symbol (mode reg sym)

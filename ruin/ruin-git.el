@@ -24,10 +24,10 @@
         "gf" 'magit-fetch-all
         "gM" 'magit-merge
         "gd" 'magit-diff-head
-        "gP" 'magit-push-current
-        "gp" 'magit-push
-        "gU" 'magit-pull-from-upstream
-        "gu" 'magit-pull
+        "gp" 'magit-push-current
+        "gP" 'magit-push
+        "gu" 'magit-pull-from-upstream
+        "gU" 'magit-pull
         "gC" 'magit-clone
         "gc" 'magit-commit
         "gR" 'magit-reset-hard)
