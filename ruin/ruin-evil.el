@@ -33,6 +33,7 @@
   ":" 'helm-M-x
   "T" 'crux-visit-term-buffer
   "zz" 'toggle-maximize-buffer
+  "ZZZ" 'save-buffers-kill-emacs
   "as" 'sos
   "M" 'popwin:messages
 

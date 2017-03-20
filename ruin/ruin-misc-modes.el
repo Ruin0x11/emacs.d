@@ -51,7 +51,8 @@
   "ss" 'persp-frame-switch
   "sK" 'persp-kill
   "sw" 'persp-save-state-to-file
-  "sl" 'persp-load-state-from-file)
+  "sl" 'persp-load-state-from-file
+  "sr" 'persp-rename)
 
 ;; electric-indent
 (electric-indent-mode 1)
