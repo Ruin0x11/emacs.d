@@ -29,6 +29,18 @@
             `(lambda ()
                (setq evil-shift-width ,width))))
 
+(defun ruin/refactor-name (&optional newsym)
+  "Refactors the name at point in the current buffer unconditionally."
+  (interactive)
+  (let* ((sym (symbol-name (symbol-at-point)))
+        (newsym (or newsym
+                    (read-string (concat "Replace \"" sym "\" with: "))))
+        (regexp (concat "\\_<\\(" (regexp-quote sym) "\\)\\_>")))
+    (save-excursion
+      (goto-char (point-min))
+      (while (re-search-forward regexp nil t)
+        (replace-match newsym nil nil)))))
+
 (require 'url)
 
 (defun download-file-and-open (&optional url download-dir download-name)
