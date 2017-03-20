@@ -32,7 +32,8 @@
   "!" 'shell-command
   ":" 'helm-M-x
   "T" 'crux-visit-term-buffer
-  "z" 'zone
+  "zz" 'toggle-maximize-buffer
+  "ZZZ" 'save-buffers-kill-emacs
   "as" 'sos
   "M" 'popwin:messages
 
@@ -61,8 +62,9 @@
   "af" 'flycheck-list-errors
   "ao" 'browse-url-generic
 
-  "jr" 'jump-to-register
-  "jb" 'helm-bookmarks
+  "js" 'bookmark-set
+  "jj" 'bookmark-jump
+  "jd" 'bookmark-delete
 
   "ff" 'helm-find-files
   "fg" 'helm-do-grep-ag

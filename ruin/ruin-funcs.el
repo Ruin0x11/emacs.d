@@ -41,6 +41,17 @@
       (while (re-search-forward regexp nil t)
         (replace-match newsym nil nil)))))
 
+(defun ruin/evil-block-size ()
+  "Gives the size of the block area delimited by an evil '%' at point.
+
+   Useful for seeing the size of large functions."
+  (interactive)
+  (let ((current-line (line-number-at-pos)))
+    (save-excursion
+      (evil-jump-item)
+      (message (int-to-string
+        (abs (- current-line (line-number-at-pos))))))))
+
 (require 'url)
 
 (defun download-file-and-open (&optional url download-dir download-name)
@@ -86,7 +97,7 @@ as input."
   (interactive "sCommand: ")
   (async-shell-command
    (format (concat command " %s")
-       (shell-quote-argument (buffer-file-name)))))
+           (shell-quote-argument (buffer-file-name)))))
 
 ;;; from elsewhere
 
@@ -142,7 +153,7 @@ buffer is not visiting a file."
 
 
 ;;https://news.ycombinator.com/item?id=11488417
-(defconst trc-comment-keywords "\\<\\(FIXME\\|TODO\\|BUG\\|HACK\\|NOTE\\|WARNING\\|ERROR\\)")
+(defconst trc-comment-keywords "\\<\\(FIXME\\|TODO\\|BUG\\|HACK\\|NOTE\\|WARNING\\|ERROR\\|IMPLEMENT\\|TEMP\\)")
 
 ;; Install the word coloring
 (defun add-comment-keywords ()
@@ -171,6 +182,40 @@ buffer is not visiting a file."
         (dolist (a-line collected-lines)
           (insert a-line)
           (insert "\n"))))))
+
+(defun helm-project-comments--collect ()
+  (let ((files (projectile-current-project-files))
+        matches)
+    (dolist (file files)
+      (let ((filename (concat (projectile-project-root) file)))
+        (when (file-exists-p filename)
+          (save-excursion
+            (with-current-buffer (find-file-noselect filename t nil t)
+              (let ((results (re-seq-lines trc-comment-keywords (buffer-string))))
+                (setq matches (append matches results))))))))
+    matches))
+
+(defvar helm-source-project-comments
+  (helm-build-async-source "Project Comments"
+    :candidates-process 'helm-project-comments--collect
+    :nohighlight t))
+
+(defun helm-list-project-comments ()
+  (interactive)
+  (require 'helm-mode)
+  (helm :sources '(helm-source-project-comments) :buffer "*helm-project-comments*"))
+
+(defun re-seq-lines (regexp string)
+  "Get a list of all lines matching regexes in a string"
+  (save-match-data
+    (let ((case-fold-search nil)
+          (pos 0)
+          matches)
+      (while (string-match regexp string pos)
+        (goto-char (match-beginning 0))
+        (push (thing-at-point 'line) matches)
+        (setq pos (match-end 0)))
+      matches)))
 
 ;http://emacs.stackexchange.com/a/7150
 (defun re-seq (regexp string)
@@ -266,6 +311,15 @@ buffer is not visiting a file."
   "Sets the transparency of the frame window. 0=transparent/100=opaque"
   (interactive "nTransparency Value 0 - 100 opaque:")
   (set-frame-parameter (selected-frame) 'alpha value))
+
+(defun toggle-maximize-buffer ()
+  "Maximize buffer."
+  (interactive)
+  (if (= 1 (length (window-list)))
+      (jump-to-register '_)
+    (progn
+      (window-configuration-to-register '_)
+      (delete-other-windows))))
 
 ;; Bodil
 ;;https://github.com/bodil/emacs.d/blob/master/bodil/bodil-defuns.el#L17

@@ -25,6 +25,9 @@
 (tool-bar-mode 0)
 (menu-bar-mode 0)
 
+;; Set frame title
+;;(setq frame-title-format (multiple-frames "%b" ("" invocation-name "@" system-name)))
+
 ;; You can also set the initial frame parameters
 ;; (setq initial-frame-alist
 ;;       '((menu-bar-lines . 0)
@@ -131,7 +134,8 @@
 (setq spaceline-workspace-numbers-unicode 't)
 
 (defun ruin/init-theme ()
-  (load-theme 'monokai t)
+  ;(load-theme 'monokai t)
+  (load-theme 'solarized-dark t)
   (spaceline-emacs-theme)
   (spaceline-helm-mode)
   (spaceline-toggle-projectile-root-on)
