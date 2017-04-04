@@ -15,6 +15,8 @@
 (add-hook 'racer-mode-hook #'eldoc-mode)
 (add-hook 'racer-mode-hook #'company-mode)
 
+(add-hook 'cargo-process-mode-hook #'turn-on-visual-line-mode)
+
 (evil-leader/set-key-for-mode 'rust-mode
   "dd" 'racer-describe
   "df" 'racer-find-definition
@@ -45,5 +47,14 @@
   (indent-according-to-mode)
   (forward-line -1)
   (indent-according-to-mode))
+
+(defun ruin/rust-scratch-buffer ()
+  (interactive)
+  (let ((filename (make-temp-file "scratch.rs")))
+    (find-file filename)
+    (rust-mode)
+    (insert-file-contents "~/.emacs.d/misc/scrach-template.rs")
+    (setq-local compile-command (concat "rustc " filename " -o /tmp/a.out && /tmp/a.out"))
+    (message "Compile and run with M-x 'compile'")))
 
 (provide 'ruin-rust)

@@ -75,9 +75,9 @@
 ;; https://github.com/kuanyui/.emacs.d/blob/master/rc/rc-basic.el#L102
 (defun setup-cjk-alignment ()
   (when (display-graphic-p)
-    (defvar emacs-english-font "Menlo for Powerline"
+    (defvar emacs-english-font "Iosevka Light"
       "The font name of English.")
-
+ 
     (defvar emacs-cjk-font "東風ゴシック" "The font name for CJK.")
 
     (defvar emacs-font-size-pair '(12 . 14)
@@ -133,9 +133,30 @@
 
 (setq spaceline-workspace-numbers-unicode 't)
 
+(defun ruin/init-textmode-theme()
+  (load-theme 'monokai t)
+
+  (set-face-background 'default "black")
+  (set-face-background 'mode-line "black")
+  (set-face-foreground 'font-lock-comment-face "yellow")
+  (set-face-foreground 'font-lock-comment-delimiter-face "yellow")
+  (set-face-foreground 'font-lock-doc-face "magenta")
+  (set-face-background 'linum "black")
+  (set-face-background 'powerline-active1 "black")
+  (set-face-background 'powerline-active2 "black")
+  (set-face-foreground 'spaceline-flycheck-info "blue")
+  (set-face-foreground 'spaceline-flycheck-warning "yellow")
+  (set-face-foreground 'spaceline-flycheck-error "red")
+  (set-face-background 'spaceline-flycheck-info "black")
+  (set-face-background 'spaceline-flycheck-warning "black")
+  (set-face-background 'spaceline-flycheck-error "black")
+  (set-face-background 'helm-selection "blue")
+  )
+
 (defun ruin/init-theme ()
-  ;(load-theme 'monokai t)
-  (load-theme 'solarized-dark t)
+  (if (not window-system)
+      (ruin/init-textmode-theme)
+    (load-theme 'monokai t))
   (spaceline-emacs-theme)
   (spaceline-helm-mode)
   (spaceline-toggle-projectile-root-on)

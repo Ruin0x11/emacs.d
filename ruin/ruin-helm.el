@@ -48,6 +48,9 @@
   "?l" 'helm-info-elisp
   "?c" 'helm-info-calc)
 
+(setq browse-url-text-browser "links"
+      browse-url-browser-function 'browse-url-surf)
+
 
 (defcustom browse-url-surf-arguments nil
   "A list of strings to pass to surf as arguments."

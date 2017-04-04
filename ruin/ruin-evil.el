@@ -23,6 +23,7 @@
 (evil-leader/set-key
   "ar" (lambda () (interactive) (save-buffer) (quickrun) (quickrun/remove-temp-files))
   "aR" 'quickrun-shell
+  "au" 'undo-tree-visualize
   "w" 'save-buffer
   "q" 'quit-or-kill-buffer
   "Q" 'kill-buffer-and-window
@@ -68,7 +69,8 @@
 
   "ff" 'helm-find-files
   "fg" 'helm-do-grep-ag
-  "fa" 'helm-do-ag
+  "fA" 'helm-do-ag
+  "fa" 'helm-do-ag-this-file
   "fr" 'helm-recentf
   "fd" 'helm-semantic-or-imenu
   "fs" 'find-function

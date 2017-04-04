@@ -89,6 +89,7 @@
         ruin-shell
         ruin-popwin
         ruin-misc-modes
+        ;ruin-x11
         ; ruin-home
         ))
 

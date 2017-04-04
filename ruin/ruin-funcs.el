@@ -171,6 +171,8 @@ buffer is not visiting a file."
           (insert a-line)
           (insert "\n"))))))
 
+(require 'helm-mode)
+
 (defun helm-project-comments--collect ()
   (let ((files (projectile-current-project-files))
         matches)
@@ -190,7 +192,6 @@ buffer is not visiting a file."
 
 (defun helm-list-project-comments ()
   (interactive)
-  (require 'helm-mode)
   (helm :sources '(helm-source-project-comments) :buffer "*helm-project-comments*"))
 
 (defun re-seq-lines (regexp string)
