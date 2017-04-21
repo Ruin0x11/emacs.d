@@ -153,15 +153,26 @@
   (set-face-background 'helm-selection "blue")
   )
 
+(defun ruin/classic-theme ()
+  (set-frame-font "SGI Screen:style=Regular:pixelsize=14" t)
+  (load-theme 'the-stars t)
+  ;; (scroll-bar-mode)
+  ;; (tool-bar-mode)
+  ;; (menu-bar-mode)
+  )
+
+(defun ruin/normal-theme ()
+  (load-theme 'monokai t))
+
 (defun ruin/init-theme ()
+  (setup-cjk-alignment)
   (if (not window-system)
       (ruin/init-textmode-theme)
-    (load-theme 'monokai t))
+    (ruin/classic-theme))
   (spaceline-emacs-theme)
   (spaceline-helm-mode)
   (spaceline-toggle-projectile-root-on)
-  (spaceline-toggle-which-function-off)
-  (setup-cjk-alignment))
+  (spaceline-toggle-which-function-off))
 
 (if (daemonp)
     (add-hook 'after-make-frame-functions
