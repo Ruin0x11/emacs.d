@@ -26,7 +26,7 @@
 (menu-bar-mode 0)
 
 ;; Set frame title
-;;(setq frame-title-format (multiple-frames "%b" ("" invocation-name "@" system-name)))
+(setq frame-title-format '(multiple-frames "%b" ("" invocation-name "@" system-name ": Stand By Me 2.0" )))
 
 ;; You can also set the initial frame parameters
 ;; (setq initial-frame-alist
@@ -128,8 +128,9 @@
       "Increase emacs's font-size acording emacs-font-size-pair-list."
       (interactive) (emacs-step-font-size -1))
 
-    (global-set-key (kbd "C-=") 'increase-emacs-font-size)
-    (global-set-key (kbd "C--") 'decrease-emacs-font-size)))
+    ;; (global-set-key (kbd "C-=") 'increase-emacs-font-size)
+    ;; (global-set-key (kbd "C--") 'decrease-emacs-font-size)
+    ))
 
 (setq spaceline-workspace-numbers-unicode 't)
 

@@ -49,6 +49,8 @@
   ;; (run-at-time "00:59" 3600 'org-save-all-org-buffers)
   )
 
+(setq org-src-fontify-natively t)
+
 ;;; Clocking
 ;; Resume clocking task when emacs is restarted
 (org-clock-persistence-insinuate)
@@ -391,4 +393,7 @@
 ;;              (org-agenda nil "a")
 ;;              (previous-window)))
 
+
+;; autosave org buffers
+(add-hook 'org-capture-after-finalize-hook #'org-save-all-org-buffers)
 (provide 'ruin-org)

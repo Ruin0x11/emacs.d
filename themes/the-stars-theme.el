@@ -78,7 +78,7 @@
    `(font-lock-string-face ((,class (:foreground "burlywood"))))
    `(font-lock-type-face ((,class (:foreground "CadetBlue1"))))
    `(font-lock-variable-name-face ((,class (:foreground "SeaGreen2"))))
-   `(fringe ((,class (:background "black"))))
+   `(fringe ((,class (:background "#121620"))))
    `(highlight ((,class (:background "DodgerBlue4"))))
    `(ido-first-match ((,class (:weight normal :foreground "orange"))))
    `(ido-only-match ((,class (:foreground "green"))))
@@ -112,6 +112,7 @@
    `(helm-selection ((,class (:background "Orange" :foreground "Black"))))
    `(helm-selection ((,class (:background "Orange" :foreground "Black"))))
    `(helm-source-header (( t (:foreground "White" :background "#22083397778B"))))
+   `(powerline-active1 (( t (:background "grey22" :foreground "grey70"))))
 
    ))
 

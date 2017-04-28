@@ -32,6 +32,7 @@
   "Opens this projectile project's information, todos, etc.
 
    I like keeping this information around to stay organized."
+  (interactive)
   (let ((filename (expand-file-name
                    "project.org" (projectile-project-root))))
     (when (file-exists-p filename)

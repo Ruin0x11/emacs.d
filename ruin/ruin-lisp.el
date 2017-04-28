@@ -118,46 +118,4 @@
 (evil-define-key 'insert clojure-mode-map (kbd "<C-return>") 'cider-eval-last-sexp)
 (evil-define-key 'visual clojure-mode-map (kbd "<C-return>") 'cider-eval-region)
 
-;; Common Lisp
-(package-require 'slime-company)
-
-;; In my case /path/to/quicklisp is ~/quicklisp
-(defvar quicklisp-path "~/quicklisp")
-;;
-;; Load slime-helper, this sets up various autoloads:
-;;
-(load (concat quicklisp-path "/slime-helper"))
-;;
-;; Set up slime with whatever modules you decide to use:
-;;
-(slime-setup '(slime-fancy slime-mrepl slime-banner slime-tramp
-	       slime-xref-browser slime-highlight-edits
-	       slime-sprof slime-company))
-;;
-;; Decide where to put a slime scratch file, if you want one, and set
-;; it up with:
-;;
-(setf slime-scratch-file "/tmp/.slime-scratch.lisp")
-;;
-;; Unfortunately there is no hook for the slime-scratch mode so if you
-;; want to automatically enable/disable various minor modes in the
-;; slime scratch buffer you must do something like:
-;;
-;; (defadvice slime-scratch
-;;     (after slime-scratch-adjust-modes () activate compile)
-;;   (turn-some-mode-off)
-;;   (turn-some-other-mode-on))
-
-(add-to-list 'evil-emacs-state-modes 'slime-repl-mode)
-(ruin/window-movement-for-mode "slime-repl" 'slime-repl-mode-map)
-(evil-leader/set-key-for-mode 'lisp-mode
-  "mc" 'slime-connect
-  "md" 'slime-disconnect
-  "eb" 'slime-eval-buffer
-  "ee" 'slime-eval
-  "es" 'slime-eval-last-expression
-  "ed" 'slime-eval-defun
-
-  "dd" 'slime-documentation)
-
 (provide 'ruin-lisp)

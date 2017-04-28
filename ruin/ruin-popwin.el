@@ -71,7 +71,7 @@
         ("*Python*" :stick t)
         (inf-ruby-mode :stick t :height 0.3)
         ;; (haskell-interactive-mode :stick t)
-        (cargo-process-mode :stick t :noselect t :width 0.4 :position right)
+        (cargo-process-mode :stick t :noselect t :width 0.25 :position right)
         (racer-help-mode :noselect t :height 0.3)
         ("*jedi:doc*" :noselect t)
         ("*YASnippet tables*" :height 0.4 :stick t)

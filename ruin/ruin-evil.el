@@ -46,6 +46,7 @@
   "da" 'helm-apropos
 
   "eD" 'toggle-debug-on-error
+  "eQ" 'toggle-debug-on-quit
   "ee" 'eval-expression
   "ei" 'ielm
   "enn" 'debug-on-entry
@@ -258,6 +259,8 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 
 (global-set-key (kbd "<s-return>") 'toggle-frame-fullscreen)
 
+(global-set-key [f5] 'previous-buffer)
+(global-set-key [f6] 'next-buffer)
 (global-set-key [f7] 'previous-error)
 (global-set-key [f8] 'next-error)
 (global-set-key [f9] 'projectile-compile-project)

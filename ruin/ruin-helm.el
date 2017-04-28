@@ -140,4 +140,26 @@ surf."
 
   (advice-add 'helm-ff-kill-or-find-buffer-fname :around #'qjp-helm-ff-try-expand-fname))
 
+(defun helm-project-comments--collect ()
+  (let ((files (projectile-current-project-files))
+        matches)
+    (dolist (file files)
+      (let ((filename (concat (projectile-project-root) file)))
+        (when (file-exists-p filename)
+          (save-excursion
+            (with-current-buffer (find-file-noselect filename t nil t)
+              (let ((results (re-seq-lines trc-comment-keywords (buffer-string))))
+                (setq matches (append matches results))))))))
+    matches))
+
+(defvar helm-source-project-comments
+  (helm-build-async-source "Project Comments"
+    :candidates-process 'helm-project-comments--collect
+    :nohighlight t))
+
+(defun helm-list-project-comments ()
+  (interactive)
+  (helm :sources '(helm-source-project-comments) :buffer "*helm-project-comments*"))
+
+
 (provide 'ruin-helm)

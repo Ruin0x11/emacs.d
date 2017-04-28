@@ -73,4 +73,16 @@
          ))
   (set-register (car r) (cadr r)))
 
+;; all buffers, try to reuse windows across all frames
+(add-to-list 'display-buffer-alist
+           '(".*". (display-buffer-reuse-window .
+                                  ((reusable-frames . t)))))
+
+;; except for compilation buffers where you want new and dedicated frames when necessary
+(add-to-list 'display-buffer-alist
+         '("^\\*Compile-Log\\*". ((display-buffer-reuse-window
+                                   display-buffer-pop-up-frame) .
+                                  ((reusable-frames . t)
+                                  (inhibit-same-window . t)))))
+
 (provide 'ruin-general)
