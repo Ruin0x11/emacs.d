@@ -26,6 +26,7 @@
   "p!" 'projectile-run-async-shell-command-in-root
   "pc" 'projectile-compile-project
   "pr" 'projectile-replace
+  "pi" 'ruin/open-project-info
   )
 
 (defun ruin/open-project-info (&rest r)

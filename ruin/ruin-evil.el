@@ -164,6 +164,10 @@
 (add-to-list 'evil-emacs-state-modes 'calc-mode)
 (ruin/window-movement-for-mode "calc" 'calc-mode-map)
 
+(add-to-list 'evil-emacs-state-modes 'gud-mode)
+(add-to-list 'evil-emacs-state-modes 'gud-tooltip-mode)
+(add-to-list 'evil-emacs-state-modes 'debugger-mode)
+
 (add-to-list 'evil-emacs-state-modes 'mpc-mode)
 (add-to-list 'evil-emacs-state-modes 'mpc-songs-mode)
 (add-to-list 'evil-emacs-state-modes 'mpc-status-mode)

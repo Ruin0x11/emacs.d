@@ -49,7 +49,7 @@
   "?c" 'helm-info-calc)
 
 (setq browse-url-text-browser "links"
-      browse-url-browser-function 'browse-url-surf)
+      browse-url-browser-function 'browse-url-chromium)
 
 
 (defcustom browse-url-surf-arguments nil

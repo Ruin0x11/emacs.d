@@ -217,4 +217,6 @@
 ;; (set-frame-font (default-frame-font))
 ;; (add-to-list 'default-frame-alist '(font . "Menlo\ for\ Powerline-9"))
 
+;; (require 'iosevka-ligatures)
+
 (provide 'ruin-theme)
