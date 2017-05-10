@@ -48,6 +48,9 @@
   "?l" 'helm-info-elisp
   "?c" 'helm-info-calc)
 
+(setq browse-url-text-browser "links"
+      browse-url-browser-function 'browse-url-chromium)
+
 
 (defcustom browse-url-surf-arguments nil
   "A list of strings to pass to surf as arguments."
@@ -136,5 +139,27 @@ surf."
         (apply orig-func args))))
 
   (advice-add 'helm-ff-kill-or-find-buffer-fname :around #'qjp-helm-ff-try-expand-fname))
+
+(defun helm-project-comments--collect ()
+  (let ((files (projectile-current-project-files))
+        matches)
+    (dolist (file files)
+      (let ((filename (concat (projectile-project-root) file)))
+        (when (file-exists-p filename)
+          (save-excursion
+            (with-current-buffer (find-file-noselect filename t nil t)
+              (let ((results (re-seq-lines trc-comment-keywords (buffer-string))))
+                (setq matches (append matches results))))))))
+    matches))
+
+(defvar helm-source-project-comments
+  (helm-build-async-source "Project Comments"
+    :candidates-process 'helm-project-comments--collect
+    :nohighlight t))
+
+(defun helm-list-project-comments ()
+  (interactive)
+  (helm :sources '(helm-source-project-comments) :buffer "*helm-project-comments*"))
+
 
 (provide 'ruin-helm)

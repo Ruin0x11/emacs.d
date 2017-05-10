@@ -100,10 +100,19 @@ regardless of where in the line point is when the TAB command is used.")
     0 font-lock-preprocessor-face)
    ;; obsolate
    ("\\(system\\|hspver\\|cnt\\|err\\|stat\\|dispx\\|dispy\\|gmode\\|mousex\\|mousey\\|rval\\|gval\\|bval\\|cmdline\\|winx\\|winy\\|strsize\\|csrx\\|csry\\|windir\\|curdir\\|refstr\\)"
-    0 font-lock-variable-name-face))
+    0 font-lock-variable-name-face)
+   ("\\(#func\\|#defcfunc\\|#deffunc\\)"
+    0 font-lock-keyword-face)
+   ("^\\s *#def[c]?func\\s +\\(?:[^( \t\n.]*\\.\\)?\\([^( \t\n]+\\)"
+   1 font-lock-function-name-face)
+   )
  "Additional expressions to highlight in HSP mode.")
 
 (put 'hsp-mode 'font-lock-defaults '(hsp-font-lock-keywords nil t))
+
+(defvar hsp-imenu-generic-expression
+  '(("Function"  "^\\s *#def[c]?func\\s +\\(?:[^( \t\n.]*\\.\\)?\\([^( \t\n]+\\)" 1)
+    ))
 
 (defvar hsp-mode-syntax-table nil
   "Syntax table used while in HSP mode.")
@@ -127,6 +136,15 @@ regardless of where in the line point is when the TAB command is used.")
 (defvar hsp-code-level-empty-comment-pattern nil)
 (defvar hsp-flush-left-empty-comment-pattern nil)
 (defvar hsp-inline-empty-comment-pattern nil)
+
+
+(defun hsp-set-imenu-generic-expression ()
+  (make-local-variable 'imenu-generic-expression)
+  (make-local-variable 'imenu-create-index-function)
+  (setq imenu-create-index-function 'imenu-default-create-index-function)
+  (setq imenu-generic-expression hsp-imenu-generic-expression))
+
+(add-hook 'hsp-mode-hook 'hsp-set-imenu-generic-expression)
 
 (defun hsp-line-matches (pattern &optional withcomment)
   (save-excursion
@@ -176,13 +194,13 @@ repeatedly until you are satisfied with the kind of comment."
     (insert hsp-comment-char))
 
    ;; Empty code-level comment already present?
-   ;; Then start flush-left comment, on line above if this one is nonempty. 
+   ;; Then start flush-left comment, on line above if this one is nonempty.
    ((hsp-line-matches hsp-code-level-empty-comment-pattern)
     (hsp-pop-comment-level)
     (insert hsp-comment-char hsp-comment-char comment-start))
 
    ;; Empty comment ends line?
-   ;; Then make code-level comment, on line above if this one is nonempty. 
+   ;; Then make code-level comment, on line above if this one is nonempty.
    ((hsp-line-matches hsp-inline-empty-comment-pattern)
     (hsp-pop-comment-level)
     (tab-to-tab-stop)
@@ -206,7 +224,7 @@ repeatedly until you are satisfied with the kind of comment."
 	(tab-to-tab-stop)
       (skip-chars-forward "\t"))
     (hsp-indent-line)))
-  
+
 (defun hsp-indent-line ()
   "Indent current line as HSP code.
 Return the amount the indentation changed by."
@@ -243,7 +261,7 @@ Return the amount the indentation changed by."
   (let (p beg end command command-prefix help-file)
     (save-excursion
       ;; Get command name
-      (setq p (point))			; Remember current position. 
+      (setq p (point))			; Remember current position.
       ;; !!!
       (if (forward-word -1)
 	  (setq beg (point)))
@@ -300,5 +318,8 @@ Return the amount the indentation changed by."
   (setq require-final-newline t)
   (setq abbrev-all-caps t)
   (run-hooks 'hsp-mode-hook))
+
+;;;###autoload
+(add-to-list 'auto-mode-alist '("\\.hsp\\'" . hsp-mode))
 
 ;;; hsp-mode.el ends here

@@ -2,8 +2,6 @@
 (package-require 'org)
 (package-require 'org-bullets)
 
-(setq org-agenda-files (quote ("~/Dropbox/org/tracked")))
-
 (require 'org)
 (require 'org-bullets)
 
@@ -15,37 +13,43 @@
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 (setq org-startup-indented t)
 
-(setq org-default-notes-file "~/Dropbox/org/tracked/refile.org")
-           
+(when (file-exists-p "~/Dropbox/org")
 
-(setq org-default-notes-file "~/Dropbox/org/tracked/refile.org")
-(setq org-capture-templates
-      '(("t" "todo" entry (file "~/Dropbox/org/tracked/refile.org")
-         "* TODO %?\n%U"
-         ;:clock-in t :clock-resume t
-         )
-        ("c" "todo (with context)" entry (file "~/Dropbox/org/tracked/refile.org")
-         "* TODO %?\n%U\n%a"
-         ;:clock-in t :clock-resume t
-         )
-        ("g" "generic" entry (file "~/Dropbox/org/tracked/refile.org")
-         "* %?\n"
-         ;:clock-in t :clock-resume t
-         )
-        ("n" "note" entry (file "~/Dropbox/org/tracked/refile.org")
-               "* %? :NOTE:\n%U\n")
-        ("i" "class" entry (file "~/Dropbox/org/school.org")
-               "* %U\n%?\n")
-        ("e" "etc." entry (file "~/Dropbox/org/notes.org")
-               "* %? - %U\n")
-        ("d" "diary" entry (file+headline "~/Dropbox/org/diary.org" "日記")
-        "* %U\n%?\n" :prepend t)
-        ("y" "yume" entry (file+headline "~/Dropbox/org/yume.org" "ゆめにっき")
-         "* %U - %? %^g\n" :prepend t)
-        )) 
-;; save at top of hour
-;; (run-at-time "00:59" 3600 'org-save-all-org-buffers)
+  (setq org-agenda-files (quote ("~/Dropbox/org/tracked")))
 
+  (setq org-default-notes-file "~/Dropbox/org/tracked/refile.org")
+  
+
+  (setq org-default-notes-file "~/Dropbox/org/tracked/refile.org")
+  (setq org-capture-templates
+        '(("t" "todo" entry (file "~/Dropbox/org/tracked/refile.org")
+           "* TODO %?\n%U"
+                                        ;:clock-in t :clock-resume t
+           )
+          ("c" "todo (with context)" entry (file "~/Dropbox/org/tracked/refile.org")
+           "* TODO %?\n%U\n%a"
+                                        ;:clock-in t :clock-resume t
+           )
+          ("g" "generic" entry (file "~/Dropbox/org/tracked/refile.org")
+           "* %?\n"
+                                        ;:clock-in t :clock-resume t
+           )
+          ("n" "note" entry (file "~/Dropbox/org/tracked/refile.org")
+           "* %? :NOTE:\n%U\n")
+          ("i" "class" entry (file "~/Dropbox/org/school.org")
+           "* %U\n%?\n")
+          ("e" "etc." entry (file "~/Dropbox/org/notes.org")
+           "* %? - %U\n")
+          ("d" "diary" entry (file+headline "~/Dropbox/org/diary.org" "日記")
+           "* %U\n%?\n" :prepend t)
+          ("y" "yume" entry (file+headline "~/Dropbox/org/yume.org" "ゆめにっき")
+           "* %U - %? %^g\n" :prepend t)
+          )) 
+  ;; save at top of hour
+  ;; (run-at-time "00:59" 3600 'org-save-all-org-buffers)
+  )
+
+(setq org-src-fontify-natively t)
 
 ;;; Clocking
 ;; Resume clocking task when emacs is restarted
@@ -56,16 +60,16 @@
 (setq org-drawers (quote ("PROPERTIES" "LOGBOOK")))
 ;; Save clock data and state changes and notes in the LOGBOOK drawer
 (setq org-clock-into-drawer t)
-; Targets include this file and any file contributing to the agenda - up to 9 levels deep
+                                        ; Targets include this file and any file contributing to the agenda - up to 9 levels deep
 (setq org-refile-targets (quote ((nil :maxlevel . 9)
                                  (org-agenda-files :maxlevel . 9))))
-; Use full outline paths for refile targets - we file directly with IDO
+                                        ; Use full outline paths for refile targets - we file directly with IDO
 (setq org-refile-use-outline-path t)
 ;; Sometimes I change tasks I'm clocking quickly - this removes clocked tasks with 0:00 duration
 (setq org-clock-out-remove-zero-time-clocks t)
-; Targets complete directly with IDO
+                                        ; Targets complete directly with IDO
 (setq org-outline-path-complete-in-steps nil)
-; Allow refile to create parent tasks with confirmation
+                                        ; Allow refile to create parent tasks with confirmation
 (setq org-refile-allow-creating-parent-nodes (quote confirm))
 ;; Save the running clock and all clock history when exiting Emacs, load it on startup
 (setq org-clock-persist t)
@@ -75,7 +79,7 @@
 (setq org-clock-auto-clock-resolution (quote when-no-clock-is-running))
 ;; Include current clocking task in clock reports
 (setq org-clock-report-include-clocking-task t)
-; Use the current window for indirect buffer display
+                                        ; Use the current window for indirect buffer display
 (setq org-indirect-buffer-display 'current-window)
 
 
@@ -389,4 +393,7 @@
 ;;              (org-agenda nil "a")
 ;;              (previous-window)))
 
+
+;; autosave org buffers
+(add-hook 'org-capture-after-finalize-hook #'org-save-all-org-buffers)
 (provide 'ruin-org)

@@ -4,7 +4,7 @@
 (require 'cl)
 
 (setq lisp-modes
-      '(scheme-mode emacs-lisp-mode lisp-mode clojure-mode
+      '(scheme-mode emacs-lisp-mode lisp-mode clojure-mode common-lisp-mode
                     lisp-interaction-mode))
 
 (defun add-lisp-hook (func)
@@ -121,4 +121,5 @@
 (evil-define-key 'normal clojure-mode-map (kbd "<C-return>") 'cider-eval-last-sexp)
 (evil-define-key 'insert clojure-mode-map (kbd "<C-return>") 'cider-eval-last-sexp)
 (evil-define-key 'visual clojure-mode-map (kbd "<C-return>") 'cider-eval-region)
+
 (provide 'ruin-lisp)

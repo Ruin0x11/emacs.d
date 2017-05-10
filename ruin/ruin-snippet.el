@@ -8,14 +8,14 @@
 (yas-global-mode 1)
 
 ;; The following is optional.
-(define-key yas-minor-mode-map [backtab]     'yas-expand)
+;; (define-key yas-minor-mode-map [backtab]     'yas-expand)
 ;(evil-define-minor-mode-key 'insert 'yas-minor-mode [backtab] 'yas-expand)
 
 ;; Strangely, just redefining one of the variations below won't work.
 ;; All rebinds seem to be needed.
-(define-key yas-minor-mode-map [(tab)]        nil)
-(define-key yas-minor-mode-map (kbd "TAB")    nil)
-(define-key yas-minor-mode-map (kbd "<tab>")  nil)
+(define-key yas-minor-mode-map [(tab)]        'yas-expand)
+(define-key yas-minor-mode-map (kbd "TAB")    'yas-expand)
+(define-key yas-minor-mode-map (kbd "<tab>")  'yas-expand)
 
 (add-hook 'term-mode-hook
 	  (lambda() (setq yas-dont-activate t)))

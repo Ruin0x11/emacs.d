@@ -3,6 +3,7 @@
 (require 'line-comment-banner)
 (require 'google-c-style)
 
+(require 'google-c-style)
 ; Add cmake listfile names to the mode list.
 (setq auto-mode-alist
 	  (append
@@ -71,5 +72,10 @@
 (advice-add 'c-indent-new-comment-line :around #'my-prettify-c-block-comment)
 
 
+
+(package-require 'csharp-mode)
+(add-hook 'csharp-mode-hook 'electric-pair-mode)
+
+(autoload 'cmake-mode "/usr/share/cmake-3.6/editors/emacs/cmake-mode.el" t)
 
 (provide 'ruin-c)

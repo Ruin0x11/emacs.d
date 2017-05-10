@@ -23,6 +23,7 @@
 (evil-leader/set-key
   "ar" (lambda () (interactive) (save-buffer) (quickrun) (quickrun/remove-temp-files))
   "aR" 'quickrun-shell
+  "au" 'undo-tree-visualize
   "w" 'save-buffer
   "q" 'quit-or-kill-buffer
   "Q" 'kill-buffer-and-window
@@ -32,7 +33,8 @@
   "!" 'shell-command
   ":" 'helm-M-x
   "T" 'crux-visit-term-buffer
-  "z" 'zone
+  "zz" 'toggle-maximize-buffer
+  "ZZZ" 'save-buffers-kill-emacs
   "as" 'sos
   "M" 'popwin:messages
 
@@ -44,6 +46,7 @@
   "da" 'helm-apropos
 
   "eD" 'toggle-debug-on-error
+  "eQ" 'toggle-debug-on-quit
   "ee" 'eval-expression
   "ei" 'ielm
   "enn" 'debug-on-entry
@@ -61,12 +64,14 @@
   "af" 'flycheck-list-errors
   "ao" 'browse-url-generic
 
-  "jr" 'jump-to-register
-  "jb" 'helm-bookmarks
+  "js" 'bookmark-set
+  "jj" 'bookmark-jump
+  "jd" 'bookmark-delete
 
   "ff" 'helm-find-files
   "fg" 'helm-do-grep-ag
-  "fa" 'helm-do-ag
+  "fA" 'helm-do-ag
+  "fa" 'helm-do-ag-this-file
   "fr" 'helm-recentf
   "fd" 'helm-semantic-or-imenu
   "fs" 'find-function
@@ -158,6 +163,10 @@
 (delete 'calc-mode evil-insert-state-modes)
 (add-to-list 'evil-emacs-state-modes 'calc-mode)
 (ruin/window-movement-for-mode "calc" 'calc-mode-map)
+
+(add-to-list 'evil-emacs-state-modes 'gud-mode)
+(add-to-list 'evil-emacs-state-modes 'gud-tooltip-mode)
+(add-to-list 'evil-emacs-state-modes 'debugger-mode)
 
 (add-to-list 'evil-emacs-state-modes 'mpc-mode)
 (add-to-list 'evil-emacs-state-modes 'mpc-songs-mode)
@@ -254,6 +263,8 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 
 (global-set-key (kbd "<s-return>") 'toggle-frame-fullscreen)
 
+(global-set-key [f5] 'previous-buffer)
+(global-set-key [f6] 'next-buffer)
 (global-set-key [f7] 'previous-error)
 (global-set-key [f8] 'next-error)
 (global-set-key [f9] 'projectile-compile-project)

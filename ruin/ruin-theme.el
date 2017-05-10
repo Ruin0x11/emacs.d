@@ -25,6 +25,9 @@
 (tool-bar-mode 0)
 (menu-bar-mode 0)
 
+;; Set frame title
+(setq frame-title-format '(multiple-frames "%b" ("" invocation-name "@" system-name ": Stand By Me 2.0" )))
+
 ;; You can also set the initial frame parameters
 ;; (setq initial-frame-alist
 ;;       '((menu-bar-lines . 0)
@@ -72,9 +75,9 @@
 ;; https://github.com/kuanyui/.emacs.d/blob/master/rc/rc-basic.el#L102
 (defun setup-cjk-alignment ()
   (when (display-graphic-p)
-    (defvar emacs-english-font "Menlo for Powerline"
+    (defvar emacs-english-font "Iosevka Light"
       "The font name of English.")
-
+ 
     (defvar emacs-cjk-font "東風ゴシック" "The font name for CJK.")
 
     (defvar emacs-font-size-pair '(12 . 14)
@@ -125,18 +128,52 @@
       "Increase emacs's font-size acording emacs-font-size-pair-list."
       (interactive) (emacs-step-font-size -1))
 
-    (global-set-key (kbd "C-=") 'increase-emacs-font-size)
-    (global-set-key (kbd "C--") 'decrease-emacs-font-size)))
+    ;; (global-set-key (kbd "C-=") 'increase-emacs-font-size)
+    ;; (global-set-key (kbd "C--") 'decrease-emacs-font-size)
+    ))
 
 (setq spaceline-workspace-numbers-unicode 't)
 
-(defun ruin/init-theme ()
+(defun ruin/init-textmode-theme()
   (load-theme 'monokai t)
+
+  (set-face-background 'default "black")
+  (set-face-background 'mode-line "black")
+  (set-face-foreground 'font-lock-comment-face "yellow")
+  (set-face-foreground 'font-lock-comment-delimiter-face "yellow")
+  (set-face-foreground 'font-lock-doc-face "magenta")
+  (set-face-background 'linum "black")
+  (set-face-background 'powerline-active1 "black")
+  (set-face-background 'powerline-active2 "black")
+  (set-face-foreground 'spaceline-flycheck-info "blue")
+  (set-face-foreground 'spaceline-flycheck-warning "yellow")
+  (set-face-foreground 'spaceline-flycheck-error "red")
+  (set-face-background 'spaceline-flycheck-info "black")
+  (set-face-background 'spaceline-flycheck-warning "black")
+  (set-face-background 'spaceline-flycheck-error "black")
+  (set-face-background 'helm-selection "blue")
+  )
+
+(defun ruin/classic-theme ()
+  (set-frame-font "SGI Screen:style=Regular:pixelsize=14" t)
+  (load-theme 'the-stars t)
+  ;; (scroll-bar-mode)
+  ;; (tool-bar-mode)
+  ;; (menu-bar-mode)
+  )
+
+(defun ruin/normal-theme ()
+  (load-theme 'monokai t))
+
+(defun ruin/init-theme ()
+  (setup-cjk-alignment)
+  (if (not window-system)
+      (ruin/init-textmode-theme)
+    (ruin/classic-theme))
   (spaceline-emacs-theme)
   (spaceline-helm-mode)
   (spaceline-toggle-projectile-root-on)
-  (spaceline-toggle-which-function-off)
-  (setup-cjk-alignment))
+  (spaceline-toggle-which-function-off))
 
 (if (daemonp)
     (add-hook 'after-make-frame-functions
@@ -147,6 +184,18 @@
   (ruin/init-theme))
 
 (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
+
+(package-require 'fill-column-indicator)
+(setq fill-column 80)
+(fci-mode)
+
+(defun ruin/enable-filling ()
+  (interactive)
+  (setq fill-column 80)
+  (auto-fill-mode)
+  (fci-mode))
+
+(add-hook 'rust-mode-hook 'ruin/enable-filling)
 
 ;; ;; Calculate default font size
 ;; (setq default-frame-font-size 9)
@@ -167,5 +216,7 @@
 ;;   (font-desc "Menlo for Powerline" presentation-frame-font-size))
 ;; (set-frame-font (default-frame-font))
 ;; (add-to-list 'default-frame-alist '(font . "Menlo\ for\ Powerline-9"))
+
+;; (require 'iosevka-ligatures)
 
 (provide 'ruin-theme)

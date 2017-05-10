@@ -21,6 +21,7 @@
   '(evil-leader/set-key-for-mode 'flycheck-mode
      "he" 'helm-flycheck))
 
-(setq-default flycheck-disabled-checkers '(processing))
+(setq-default flycheck-disabled-checkers '(markdown processing))
+(add-hook 'mmm-major-mode-hook (lambda () (flycheck-mode nil)))
 
 (provide 'ruin-flycheck)
