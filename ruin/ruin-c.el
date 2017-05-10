@@ -1,6 +1,7 @@
 (require 'helm-imenu)
 (require 'column-marker)
 (require 'line-comment-banner)
+(require 'google-c-style)
 
 ; Add cmake listfile names to the mode list.
 (setq auto-mode-alist
@@ -9,9 +10,24 @@
 	   '(("\\.cmake\\'" . cmake-mode))
 	   auto-mode-alist))
 
+(add-hook 'c-mode-common-hook 'google-set-c-style)
+(add-hook 'c-mode-common-hook 'google-make-newline-indent)
+
 (add-hook 'c-mode-common-hook
              (lambda () (make-local-variable 'comment-fill)
                         (setq comment-fill "*")))
+
+(add-hook 'asm-mode-hook
+             (lambda () (make-local-variable 'comment-fill)
+                        (setq comment-fill "-")))
+
+(defun my-asm-mode-hook ()
+  ;; you can use `comment-dwim' (M-;) for this kind of behaviour anyway
+  (local-unset-key (vector asm-comment-char))
+  ;; asm-mode sets it locally to nil, to "stay closer to the old TAB behaviour".
+  (setq tab-always-indent (default-value 'tab-always-indent)))
+
+(add-hook 'asm-mode-hook #'my-asm-mode-hook)
 
 (global-set-key (kbd "C-;") 'line-comment-banner)
 
