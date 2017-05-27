@@ -56,7 +56,15 @@
 (exec-path-from-shell-initialize)
 (exec-path-from-shell-copy-env "PATH"))
 
-(setq backup-directory-alist `(("." . "~/.saves")))
+(setq backup-save-directory (locate-user-emacs-file "saves"))
+
+(when (not (file-exists-p backup-save-directory))
+  (make-directory backup-save-directory))
+
+(setq backup-directory-alist
+      `((".*" . ,backup-save-directory)))
+(setq auto-save-file-name-transforms
+      `((".*" ,backup-save-directory t)))
 
 ;; modularize separate features
 (setq ruin-pkg

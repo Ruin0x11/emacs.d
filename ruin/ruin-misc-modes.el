@@ -307,6 +307,14 @@
 ;; highlight-symbol
 (require 'highlight-symbol)
 
+;; glsl-mode
+(package-require 'glsl-mode)
+(defun ruin/open-this-file-in-shader-view ()
+  (interactive)
+  (shell-command-on-file "glslViewer"))
+
+(define-key glsl-mode-map (kbd "C-c C-v") 'ruin/open-this-file-in-shader-view)
+
 ;; diminish
 (package-require 'diminish)
 (eval-after-load "helm" '(diminish 'helm-mode))
@@ -337,5 +345,18 @@
 (diminish 'compilation-in-progress "㋙")
 
 (diminish 'visual-line-mode)
+
+(defun my-create-newline-and-enter-sexp (&rest _ignored)
+  "Open a new brace or bracket expression, with relevant newlines and indent. "
+  (newline)
+  (indent-according-to-mode)
+  (forward-line -1)
+  (indent-according-to-mode))
+
+(setq open-paren-modes
+      '(rust-mode glsl-mode c-mode))
+
+(dolist (mode open-paren-modes)
+  (sp-local-pair mode "{" nil :post-handlers '((my-create-newline-and-enter-sexp "RET"))))
 
 (provide 'ruin-misc-modes)

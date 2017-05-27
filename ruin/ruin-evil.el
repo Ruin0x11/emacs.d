@@ -256,8 +256,8 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
                                  (define-key mu4e-headers-mode-map "J" 'mu4e-headers-next-unread)
                                  (define-key mu4e-headers-mode-map "K" 'mu4e-headers-prev-unread)))
 
-
 ;;; normal Emacs bindings
+(global-set-key (kbd "C-x C-u") 'universal-argument)
 (global-set-key (kbd "C-x |") 'align-regexp)
 (global-set-key (kbd "C-x =") 'eval-region)
 

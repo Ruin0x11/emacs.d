@@ -4,7 +4,11 @@
 (package-require 'helm-ag)
 (package-require 'helm-swoop)
 (package-require 'helm-flx)
+(package-require 'wgrep)
+
 (require 'helm-config)
+(require 'wgrep)
+
 (eval-after-load "helm-net" '(require 'helm-google))
 
 (setq helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
