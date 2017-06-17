@@ -9,8 +9,7 @@
 
 ;; popwin settings
 (setq popwin:special-display-config
-      '(
-        ("*Help*" :height 0.4 :stick t)
+      '(("*Help*" :height 0.4 :stick t)
         (Man-mode :height 0.4 :stick t)
         ("\\*Man*" :regexp t :height 0.4 :stick t)
         ;; Debug
@@ -87,7 +86,7 @@
         ;; Console
         ("*shell*" :height 0.3 :stick t)
         (shell-mode :height 0.3 :stick t)
-        ;("*Async Shell Command*" :height 0.3 :stick t)
+                                        ;("*Async Shell Command*" :height 0.3 :stick t)
         ("\\*ansi-term.*\\*" :regexp t :height 0.3)
         ("\\*terminal.*\\*" :regexp t :height 0.3)
         ("*Bundler*" :height 0.3)

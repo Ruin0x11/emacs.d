@@ -191,7 +191,8 @@
 
 (defun ruin/enable-filling ()
   (interactive)
-  (setq fill-column 80)
+  ; for Rust
+  (setq fill-column 99)
   (auto-fill-mode)
   (fci-mode))
 

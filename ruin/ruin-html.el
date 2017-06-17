@@ -2,6 +2,7 @@
 (package-require 'web-mode)
 (package-require 'haml-mode)
 (package-require 'rainbow-mode)
+(package-require 'coffee-mode)
 
 (require 'web-mode)
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
@@ -28,5 +29,7 @@
 (package-require 'scss-mode)
 
 ;; (evil-define-key 'insert web-mode-map (kbd "C-e") 'web-mode-element-close)
+
+(setq coffee-tab-width 2)
 
 (provide 'ruin-html)

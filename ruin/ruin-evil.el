@@ -234,8 +234,29 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
                             (define-key tar-mode-map "l" 'quit-window)
                           (define-key tar-mode-map "l" 'tar-quit))))
 
+(eval-after-load "mu4e-view" #'(lambda ()
+                              (ruin/window-movement-for-map 'mu4e-view-mode-map)
+                              (define-key mu4e-view-mode-map (kbd "C-u") 'evil-scroll-up)
+                              (define-key mu4e-view-mode-map (kbd "C-d") 'evil-scroll-down)
+                              (define-key mu4e-view-mode-map "j" 'evil-next-line)
+                              (define-key mu4e-view-mode-map "k" 'evil-previous-line)
+                              (define-key mu4e-view-mode-map "g" 'mu4e~headers-jump-to-maildir)
+                              (define-key mu4e-view-mode-map "u" 'mu4e-update-index)))
+
+(eval-after-load "mu4e-headers" #'(lambda ()
+                                 (ruin/window-movement-for-map mu4e-headers-mode-map)
+                                 (define-key mu4e-headers-mode-map (kbd "C-u") 'evil-scroll-up)
+                                 (define-key mu4e-headers-mode-map (kbd "C-d") 'evil-scroll-down)
+                                 (define-key mu4e-headers-mode-map "j" 'evil-next-line)
+                                 (define-key mu4e-headers-mode-map "k" 'evil-previous-line)
+                                 (define-key mu4e-headers-mode-map "g" 'mu4e~headers-jump-to-maildir)
+                                 (define-key mu4e-headers-mode-map "u" 'mu4e-update-index)
+                                 (define-key mu4e-headers-mode-map "J" 'mu4e-headers-next-unread)
+                                 (define-key mu4e-headers-mode-map "K" 'mu4e-headers-prev-unread)))
+
 ;;; normal Emacs bindings
 (global-set-key (kbd "C-x C-u") 'universal-argument)
+(global-set-key (kbd "C-x C-s") 'sort-lines)
 (global-set-key (kbd "C-x |") 'align-regexp)
 (global-set-key (kbd "C-x =") 'eval-region)
 
