@@ -7,6 +7,8 @@
 (global-set-key (kbd "M-n") 'flycheck-next-error)
 (global-set-key (kbd "M-p") 'flycheck-previous-error)
 
+(setq flycheck-standard-error-navigation nil)
+
 (eval-after-load "flycheck"
   '(progn
      (setq flycheck-highlighting-mode 'symbols)

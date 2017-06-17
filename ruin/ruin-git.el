@@ -38,7 +38,8 @@
         (magit-diff "HEAD"))
 
 ;; always open symlinks as actual file
-(setq vc-follow-symlinks t)
+(setq vc-follow-symlinks t
+      magit-commit-show-diff nil)
 
 (add-to-list 'evil-insert-state-modes 'git-commit-mode)
 

@@ -52,9 +52,11 @@
   "?l" 'helm-info-elisp
   "?c" 'helm-info-calc)
 
-(setq browse-url-text-browser "links"
-      browse-url-browser-function 'browse-url-chromium)
+(setq browse-url-text-browser "links")
 
+(case system-type
+  (gnu/linux (setq browse-url-browser-function 'browse-url-chromium))
+  (darwin (setq browse-url-browser-function 'browse-url-chrome)))
 
 (defcustom browse-url-surf-arguments nil
   "A list of strings to pass to surf as arguments."

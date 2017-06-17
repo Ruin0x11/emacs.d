@@ -258,6 +258,7 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 
 ;;; normal Emacs bindings
 (global-set-key (kbd "C-x C-u") 'universal-argument)
+(global-set-key (kbd "C-x C-s") 'sort-lines)
 (global-set-key (kbd "C-x |") 'align-regexp)
 (global-set-key (kbd "C-x =") 'eval-region)
 

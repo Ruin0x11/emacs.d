@@ -3,6 +3,7 @@
 (package-require 'flycheck-rust)
 (package-require 'cargo)
 (package-require 'racer)
+(package-require 'lsp-rust)
 
 (setq
  racer-cmd "~/.cargo/bin/racer"
@@ -23,16 +24,13 @@
 
   "fs" 'racer-find-definition
 
-  "kr" 'cargo-process-run
-  "kc" 'cargo-process-build
-  "kk" 'cargo-process-clean
-  "ku" 'cargo-process-update
   "kg" 'ruin/rust-gdb
 
   "mu" 'ruin/use-missing-imports
+  "mk" 'cargo-process-clippy
 
   "ta" 'cargo-process-test
-  "tt" 'cargo-process-current-test
+  "tt" 'ruin/my-cargo-process-current-test
   "tf" 'ruin/cargo-test-current-mod-or-file
   )
 
@@ -46,7 +44,11 @@
   "ta" 'cargo-process-test
   )
 
-(define-key rust-mode-map [f9] 'cargo-process-run)
+(eval-after-load "rust-mode"
+  '(progn
+     (setq-default rust-format-on-save t)
+     (define-key rust-mode-map [f9] 'cargo-process-run)
+     ))
 
 (defun ruin/rust-scratch-buffer ()
   (interactive)
@@ -71,11 +73,20 @@
   "If the file is named mod.rs, run cargo test using parent directory as name. Otherwise use file name."
   (interactive)
   (let* ((dirname (file-name-nondirectory (directory-file-name default-directory)))
-        (arg (if (string= (file-name-base) "mod")
-                 dirname
-               (format "%s::%s" dirname (file-name-base)))))
+         (arg (if (string= (file-name-base) "mod")
+                  dirname
+                (format "%s::%s" dirname (file-name-base)))))
     (cargo-process--start "Test" (format "cargo test %s"
                                          arg))))
+
+(defun ruin/my-cargo-process-current-test ()
+  "Run the Cargo test command for the current test.
+With the prefix argument, modify the command's invocation.
+Cargo: Run the tests."
+  (interactive)
+  (cargo-process--start "Test" (format "cargo test %s"
+                                       (cargo-process--get-current-test))))
+
 
 (defun ruin/use-missing-imports ()
   (interactive)
@@ -102,5 +113,23 @@
              (import (when (string-match use-rx err-string) (match-string 1 err-string))))
       import
     nil))
+
+;; prevent flycheck from blocking cargo subprocesses
+(defun kill-flycheck ()
+  (when (flycheck-running-p)
+    (flycheck-stop)))
+
+(dolist (func '(cargo-process-test
+                ruin/cargo-test-current-mod-or-file
+                ruin/my-cargo-process-current-test
+                cargo-process-run
+                cargo-process-build))
+  (advice-add func :after #'kill-flycheck))
+
+(with-eval-after-load 'lsp-mode
+  (require 'lsp-flycheck))
+(require 'lsp-mode)
+(require 'lsp-rust)
+;; (add-hook 'rust-mode-hook #'lsp-mode)
 
 (provide 'ruin-rust)

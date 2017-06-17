@@ -152,10 +152,10 @@
 
 ;; Quickrun for processing-mode
 (quickrun-add-command "processing"
-                      '((:command . "/usr/bin/processing-java")
-                        (:exec    . "%c --force --sketch=%d --run --output=%d/output")
-                        (:tempfile . nil))
-                      :mode 'processing-mode)
+  '((:command . "/usr/bin/processing-java")
+    (:exec    . "%c --force --sketch=%d --run --output=%d/output")
+    (:tempfile . nil))
+  :mode 'processing-mode)
 
 ;; eyebrowse
 ;; (package-require 'eyebrowse)
@@ -195,31 +195,32 @@
 (add-hook 'markdown-mode-hook #'flyspell-mode)
 
 (package-require 'mmm-mode)
+(require 'mmm-mode)
 (setq mmm-global-mode 'maybe)
 
 (mmm-add-classes
  '((markdown-lisp
-         :submode lisp-mode
-         :front "^```lisp[\n\r]+"
-         :back "^```$")))
+    :submode lisp-mode
+    :front "^```lisp[\n\r]+"
+    :back "^```$")))
 (mmm-add-mode-ext-class 'markdown-mode nil 'markdown-lisp)
 
- (defun my-mmm-markdown-auto-class (lang &optional submode)
-   "Define a mmm-mode class for LANG in `markdown-mode' using SUBMODE.
+(defun my-mmm-markdown-auto-class (lang &optional submode)
+  "Define a mmm-mode class for LANG in `markdown-mode' using SUBMODE.
  If SUBMODE is not provided, use `LANG-mode' by default."
-   (let ((class (intern (concat "markdown-" lang)))
-         (submode (or submode (intern (concat lang "-mode"))))
-         (front (concat "^```" lang "[\n\r]+"))
-         (back "^```"))
-     (mmm-add-classes (list (list class :submode submode :front front :back back)))
-     (mmm-add-mode-ext-class 'markdown-mode nil class)))
+  (let ((class (intern (concat "markdown-" lang)))
+        (submode (or submode (intern (concat lang "-mode"))))
+        (front (concat "^```" lang "[\n\r]+"))
+        (back "^```"))
+    (mmm-add-classes (list (list class :submode submode :front front :back back)))
+    (mmm-add-mode-ext-class 'markdown-mode nil class)))
 
- ;; Mode names that derive directly from the language name
- (mapc 'my-mmm-markdown-auto-class
-       '("awk" "bibtex" "c" "cpp" "css" "html" "latex" "lisp" "makefile"
-         "markdown" "python" "r" "ruby" "rust" "sql" "stata" "xml"))
+;; Mode names that derive directly from the language name
+(mapc 'my-mmm-markdown-auto-class
+      '("awk" "bibtex" "c" "cpp" "css" "html" "latex" "lisp" "makefile"
+        "markdown" "python" "r" "ruby" "rust" "sql" "stata" "xml"))
 
- (setq mmm-parse-when-idle 't)
+(setq mmm-parse-when-idle 't)
 
 ;; cucumber
 (package-require 'feature-mode)
@@ -230,9 +231,10 @@
   "ta" 'feature-verify-all-scenarios-in-project
   "th" 'helm-feature-snippets
   "tj" 'feature-goto-step-definition)
-(add-hook 'compilation-shell-minor-mode-hook
-          #'(lambda ()
-              (setq compilation-scroll-output nil)))
+
+;; (add-hook 'compilation-shell-minor-mode-hook
+;;           #'(lambda ()
+;;               (setq compilation-scroll-output nil)))
 
 (setq feature-cucumber-command "bundle exec rake cucumber CUCUMBER_OPTS=\"{options} -r features\" FEATURE=\"{feature}\"")
 
@@ -274,7 +276,7 @@
 (when (not (eq system-type 'windows-nt))
   (package-require 'emojify)
   (package-require 'company-emoji)
-; (add-hook 'markdown-mode-hook #'emojify-mode)
+                                        ; (add-hook 'markdown-mode-hook #'emojify-mode)
   (add-to-list 'company-backends 'company-emoji)
   (setq company-emoji-insert-unicode nil))
 
@@ -313,7 +315,29 @@
   (interactive)
   (shell-command-on-file "glslViewer"))
 
-(define-key glsl-mode-map (kbd "C-c C-v") 'ruin/open-this-file-in-shader-view)
+;; compilation-shell-minor-mode
+;; Can't be without it.
+(add-hook 'compilation-mode-hook 'compilation-shell-minor-mode)
+(add-hook 'shell-hook 'compilation-shell-minor-mode)
+
+;; dumb-jump
+(package-require 'dumb-jump)
+(dumb-jump-mode)
+(evil-leader/set-key "fj" 'dumb-jump-go
+  "fp" 'dumb-jump-back)
+
+;; mpc
+(require 'mpc)
+
+;; firestarter
+(package-require 'firestarter)
+(firestarter-mode)
+(setq firestarter-default-type 'finished)
+
+(put 'firestarter 'safe-local-variable 'identity)
+
+;; (eval-after-load "glsl-mode"
+;;   (define-key glsl-mode-map (kbd "C-c C-v") 'ruin/open-this-file-in-shader-view))
 
 ;; diminish
 (package-require 'diminish)

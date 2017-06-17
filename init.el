@@ -29,8 +29,8 @@
   (if (and (functionp 'network-interface-list)
            (network-interface-list))
       (some (lambda (iface) (unless (equal "lo" (car iface))
-                         (member 'up (first (last (network-interface-info
-                                                   (car iface)))))))
+                              (member 'up (first (last (network-interface-info
+                                                        (car iface)))))))
             (network-interface-list))
     t))
 
@@ -52,9 +52,9 @@
 
 (package-require 'exec-path-from-shell)
 
-(when (memq window-system '(mac ns)) 
-(exec-path-from-shell-initialize)
-(exec-path-from-shell-copy-env "PATH"))
+(when (memq system-type '(darwin))
+  (exec-path-from-shell-initialize)
+  (exec-path-from-shell-copy-env "PATH"))
 
 (setq backup-save-directory (locate-user-emacs-file "saves"))
 
@@ -88,7 +88,7 @@
         ruin-c
         ruin-rust
         ruin-tex
-        ;ruin-hipchat
+                                        ;ruin-hipchat
 
         ruin-project
         ruin-flycheck
@@ -98,8 +98,8 @@
         ruin-shell
         ruin-popwin
         ruin-misc-modes
-        ;ruin-x11
-        ; ruin-home
+                                        ;ruin-x11
+                                        ; ruin-home
         ))
 
 ;; load modularized features
@@ -108,3 +108,4 @@
 
 (load custom-file 'noerror)
 (put 'downcase-region 'disabled nil)
+(put 'dired-find-alternate-file 'disabled nil)

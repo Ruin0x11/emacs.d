@@ -32,7 +32,7 @@
 (setq recentf-auto-cleanup 'never) ;; disable before we start recentf!
 (recentf-mode 1)
 (setq recentf-max-saved-items 1000)
-(run-with-idle-timer 30 t 'recentf-save-list)
+(run-with-idle-timer 30 t (lambda () (let ((inhibit-message t)) (recentf-save-list))))
 
 ;; Highlight matching parentheses when the point is on them.
 (show-paren-mode 1)

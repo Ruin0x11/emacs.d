@@ -6,7 +6,6 @@
 (require 'org-bullets)
 
 (require 'ob-ruby)
-(require 'ob-R)
 (require 'ob-sh)
 
 ;; Startup & Directories
@@ -18,7 +17,7 @@
   (setq org-agenda-files (quote ("~/Dropbox/org/tracked")))
 
   (setq org-default-notes-file "~/Dropbox/org/tracked/refile.org")
-  
+
 
   (setq org-default-notes-file "~/Dropbox/org/tracked/refile.org")
   (setq org-capture-templates
@@ -44,7 +43,7 @@
            "* %U\n%?\n" :prepend t)
           ("y" "yume" entry (file+headline "~/Dropbox/org/yume.org" "ゆめにっき")
            "* %U - %? %^g\n" :prepend t)
-          )) 
+          ))
   ;; save at top of hour
   ;; (run-at-time "00:59" 3600 'org-save-all-org-buffers)
   )
@@ -396,4 +395,21 @@
 
 ;; autosave org buffers
 (add-hook 'org-capture-after-finalize-hook #'org-save-all-org-buffers)
+
+(defun org-insert-code-block (name language)
+  "Asks name, language, switches, header. Inserts org-mode source code snippet"
+  (interactive "sname? \nslanguage? ")
+  (insert
+   (if (string= name "")
+       ""
+     (concat "#+NAME: " name) )
+   (format "
+#+BEGIN_SRC %s
+
+#+END_SRC" language))
+  (forward-line -1)
+  (goto-char (line-end-position)))
+
+(add-hook 'org-mode-hook (lambda () (yas-minor-mode 0)))
+
 (provide 'ruin-org)
