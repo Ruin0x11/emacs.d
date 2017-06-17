@@ -80,7 +80,7 @@
  
     (defvar emacs-cjk-font "東風ゴシック" "The font name for CJK.")
 
-    (defvar emacs-font-size-pair '(12 . 14)
+    (defvar emacs-font-size-pair '(14 . 14)
       "Default font size pair for (english . chinese)")
 
     (defvar emacs-font-size-pair-list
@@ -169,7 +169,7 @@
   (setup-cjk-alignment)
   (if (not window-system)
       (ruin/init-textmode-theme)
-    (ruin/classic-theme))
+    (ruin/normal-theme))
   (spaceline-emacs-theme)
   (spaceline-helm-mode)
   (spaceline-toggle-projectile-root-on)

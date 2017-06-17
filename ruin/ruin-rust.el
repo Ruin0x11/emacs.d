@@ -46,6 +46,9 @@
   "ta" 'cargo-process-test
   )
 
+(eval-after-load "rust-mode"
+  '(define-key rust-mode-map [f9] 'cargo-process-run))
+
 (sp-local-pair 'rust-mode "{" nil :post-handlers '((my-create-newline-and-enter-sexp "RET")))
 
 (defun my-create-newline-and-enter-sexp (&rest _ignored)

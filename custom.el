@@ -10,7 +10,7 @@
  '(haskell-process-suggest-remove-import-lines t)
  '(package-selected-packages
    (quote
-    (fvwm-mode fill-column-indicator spaceline monokai-theme solarized-theme exec-path-from-shell))))
+    (glsl-mode highlight-symbol keyfreq fvwm-mode fill-column-indicator spaceline monokai-theme solarized-theme exec-path-from-shell))))
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.

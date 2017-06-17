@@ -35,6 +35,7 @@
         ("*compilation*" :height 0.3 :noselect t :stick t)
         ("*quickrun*" :height 0.3 :stick t)
         (projectile-rails-server-mode :height 0.3 :stick t)
+        (semantic-symref-results-mode :position right :width 0.3)
         ;; Magit/vc
         ;; (magit-status-mode :position bottom :noselect t :height 0.3 :stick t)
         ;; ("*magit-commit*" :position bottom :noselect t :height 0.3 :stick t)

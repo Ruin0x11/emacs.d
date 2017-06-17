@@ -245,6 +245,8 @@
   "ok" 'org-capture-kill
   "oI" 'org-clock-in
   "oO" 'org-clock-out
+  "ol" 'org-store-link
+  "oL" 'org-insert-link
   "oid" 'org-deadline
   "oit" 'org-time-stamp-inactive
   "oiT" 'org-time-stamp
