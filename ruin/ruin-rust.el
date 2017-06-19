@@ -45,10 +45,16 @@
   )
 
 (eval-after-load "rust-mode"
-  '(progn
-     (setq-default rust-format-on-save t)
-     (define-key rust-mode-map [f9] 'cargo-process-run)
-     ))
+  '(define-key rust-mode-map [f9] 'cargo-process-run))
+
+(sp-local-pair 'rust-mode "{" nil :post-handlers '((my-create-newline-and-enter-sexp "RET")))
+
+(defun my-create-newline-and-enter-sexp (&rest _ignored)
+  "Open a new brace or bracket expression, with relevant newlines and indent. "
+  (newline)
+  (indent-according-to-mode)
+  (forward-line -1)
+  (indent-according-to-mode))
 
 (defun ruin/rust-scratch-buffer ()
   (interactive)

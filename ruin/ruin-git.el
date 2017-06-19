@@ -6,6 +6,8 @@
 (package-require 'gitignore-mode)
 (require 'magit)
 
+(setq magit-remote-add-set-remote.pushDefault "origin")
+
 (add-to-list 'evil-emacs-state-modes 'git-timemachine-mode)
 
 (evil-leader/set-key

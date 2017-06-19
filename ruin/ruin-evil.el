@@ -1,7 +1,6 @@
 ;;; ruin-evil.el --- evil settings and non-package mappings
 
 (setq evil-want-C-u-scroll t)
-(global-set-key (kbd "C-S-u") 'universal-argument)
 
 (package-require 'evil)
 (package-require 'evil-commentary)
@@ -61,7 +60,6 @@
   "ad" 'diff
   "aw" 'browse-url-at-point
   "ap" 'package-list-packages
-  "af" 'flycheck-list-errors
   "ao" 'browse-url-generic
 
   "js" 'bookmark-set

@@ -1,7 +1,24 @@
 ;;;ruin-misc-modes.el --- modes too small for individual .el files
 
 ;; semantic
-;(semantic-mode)
+(semantic-mode)
+(global-semantic-decoration-mode)
+(global-semantic-idle-scheduler-mode)
+(global-semantic-stickyfunc-mode)
+(global-semantic-highlight-func-mode)
+(global-semantic-show-parser-state-mode)
+(global-semantic-highlight-edits-mode)
+
+(evil-leader/set-key
+  "fj" 'semantic-ia-fast-jump
+  "fu" 'senator-go-to-up-reference
+  "fy" 'semantic-symref-symbol)
+(add-to-list 'evil-emacs-state-modes 'semantic-symref-results-mode)
+(eval-after-load "semantic/list" #'(lambda ()
+                              (define-key semantic-symref-results-mode-map (kbd "C-u") 'evil-scroll-up)
+                              (define-key semantic-symref-results-mode-map (kbd "C-d") 'evil-scroll-down)
+                              (define-key semantic-symref-results-mode-map "j" 'evil-next-line)
+                              (define-key semantic-symref-results-mode-map "k" 'evil-previous-line)))
 
 
 ;; winner
@@ -309,6 +326,17 @@
 ;; highlight-symbol
 (require 'highlight-symbol)
 
+;; command-frequency
+(package-require 'keyfreq)
+(keyfreq-mode)
+(keyfreq-autosave-mode)
+(evil-leader/set-key "af" 'keyfreq-show)
+
+;; highlight-symbol
+(package-require 'highlight-symbol)
+(evil-leader/set-key
+  "HH" 'highlight-symbol-at-point
+  "Hr" 'highlight-symbol-remove-all)
 ;; glsl-mode
 (package-require 'glsl-mode)
 (defun ruin/open-this-file-in-shader-view ()
