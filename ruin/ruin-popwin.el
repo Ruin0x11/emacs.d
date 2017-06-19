@@ -74,6 +74,7 @@
         (racer-help-mode :noselect t :height 0.3)
         ("*jedi:doc*" :noselect t)
         ("*YASnippet tables*" :height 0.4 :stick t)
+        (cider-repl-mode :height 0.3 :stick t :noselect t)
         (cider-docview-mode :height 0.4 :stick t)
         (cider-stacktrace-mode :height 0.4 :stick t)
         (cider-popup-buffer-mode :height 0.3 :stick t)

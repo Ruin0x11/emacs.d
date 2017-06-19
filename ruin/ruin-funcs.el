@@ -52,6 +52,24 @@
       (message (int-to-string
         (abs (- current-line (line-number-at-pos))))))))
 
+(defun ruin/scroll-down-or-next-buffer ()
+  (interactive)
+  (let ((count (/ (1- (window-height)) 2)))
+    (if (pos-visible-in-window-p (point-max))
+        (progn
+          (next-buffer)
+          (goto-char (point-min)))
+      (scroll-up count))))
+
+(defun ruin/scroll-up-or-prev-buffer ()
+  (interactive)
+  (let ((count (/ (1- (window-height)) 2)))
+    (if (pos-visible-in-window-p (point-min))
+        (progn
+          (previous-buffer)
+          (goto-char (point-max)))
+      (scroll-down count))))
+
 (require 'url)
 
 (defun download-file-and-open (&optional url download-dir download-name)

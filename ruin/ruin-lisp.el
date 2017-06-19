@@ -75,6 +75,7 @@
                              (define-key cider-repl-mode-map (kbd "M-n") 'cider-repl-next-input)
                              (define-key cider-repl-mode-map (kbd "M-p") 'cider-repl-previous-input)
                              ))
+
 (add-to-list 'evil-emacs-state-modes 'cider-repl-mode)
 (add-to-list 'evil-emacs-state-modes 'cider-stacktrace-mode)
 (add-to-list 'evil-emacs-state-modes 'cider-docview-mode)
@@ -101,8 +102,32 @@
   "tb" 'cider-test-show-report
   "tr" 'cider-test-rerun-tests
 
-  "dd" 'cider-doc
-  )
+  "dd" 'cider-doc)
+
+(evil-leader/set-key-for-mode 'clojurescript-mode
+  "mj" 'cider-jack-in
+  "ma" 'cider-apropos-documentation
+  "mr" 'cider-switch-to-repl-buffer
+  "mc" 'cider-connect
+  "ms" 'cider-create-sibling-cljs-repl
+
+  "eb" 'cider-eval-buffer
+  "ee" 'cider-read-and-eval
+  "es" 'cider-eval-last-sexp
+  "ed" 'cider-eval-defun-at-point
+  "eD" 'cider-pprint-eval-defun-at-point
+  "en" 'cider-repl-set-ns
+
+  "fs" 'cider-find-var
+
+  "tt" 'cider-test-run-test
+  "tn" 'cider-test-run-ns-tests
+  "ta" 'cider-test-run-project-tests
+  "td" 'cider-test-ediff
+  "tb" 'cider-test-show-report
+  "tr" 'cider-test-rerun-tests
+
+  "dd" 'cider-doc)
 
 (defun connect-burgundy ()
   (interactive)
@@ -113,13 +138,14 @@
   (cider-connect "localhost" 7777))
 
 (setq cider-show-error-buffer t
-      cider-prompt-for-symbol nil)
+      cider-prompt-for-symbol nil
+      cider-cljs-lein-repl "(do (use 'figwheel-sidecar.repl-api) (start-figwheel!) (cljs-repl))")
 
-(evil-define-key 'normal clojure-mode-map (kbd "<C-S-return>") 'cider-eval-defun-at-point)
-(evil-define-key 'insert clojure-mode-map (kbd "<C-S-return>") 'cider-eval-defun-at-point)
+;; (evil-define-key 'normal clojure-mode-map (kbd "<C-S-return>") 'cider-eval-defun-at-point)
+;; (evil-define-key 'insert clojure-mode-map (kbd "<C-S-return>") 'cider-eval-defun-at-point)
 
-(evil-define-key 'normal clojure-mode-map (kbd "<C-return>") 'cider-eval-last-sexp)
-(evil-define-key 'insert clojure-mode-map (kbd "<C-return>") 'cider-eval-last-sexp)
-(evil-define-key 'visual clojure-mode-map (kbd "<C-return>") 'cider-eval-region)
+;; (evil-define-key 'normal clojure-mode-map (kbd "<C-return>") 'cider-eval-last-sexp)
+;; (evil-define-key 'insert clojure-mode-map (kbd "<C-return>") 'cider-eval-last-sexp)
+;; (evil-define-key 'visual clojure-mode-map (kbd "<C-return>") 'cider-eval-region)
 
 (provide 'ruin-lisp)
