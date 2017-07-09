@@ -19,7 +19,19 @@
       helm-imenu-fuzzy-match    t
       helm-candidate-number-limit 50
       helm-input-idle-delay 0.1
-      )
+      helm-ag-base-command "rg --vimgrep --no-heading")
+
+;; dumb redefinition for ripgrep
+(defun helm-projectile-ag (&optional options)
+  "Helm version of projectile-ag."
+  (interactive (if current-prefix-arg (list (read-string "option: " "" 'helm-ag--extra-options-history))))
+  (if (require 'helm-ag nil  'noerror)
+      (if (projectile-project-p)
+          (let ((helm-ag-command-option options)
+                (current-prefix-arg nil))
+            (helm-do-ag (projectile-project-root) (car (projectile-parse-dirconfig-file))))
+        (error "You're not in a project"))
+    (error "helm-ag not available")))
 
 (global-set-key (kbd "M-x") 'helm-M-x)
 (helm-mode t)

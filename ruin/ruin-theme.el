@@ -26,7 +26,7 @@
 (menu-bar-mode 0)
 
 ;; Set frame title
-(setq frame-title-format '(multiple-frames "%b" ("" invocation-name "@" system-name ": Stand By Me 2.0" )))
+(setq frame-title-format '(multiple-frames "%b" ("" invocation-name "@" system-name ": Grow a world." )))
 
 ;; You can also set the initial frame parameters
 ;; (setq initial-frame-alist
@@ -151,8 +151,7 @@
   (set-face-background 'spaceline-flycheck-info "black")
   (set-face-background 'spaceline-flycheck-warning "black")
   (set-face-background 'spaceline-flycheck-error "black")
-  (set-face-background 'helm-selection "blue")
-  )
+  (set-face-background 'helm-selection "blue"))
 
 (defun ruin/classic-theme ()
   (set-frame-font "SGI Screen:style=Regular:pixelsize=14" t)
@@ -163,13 +162,21 @@
   )
 
 (defun ruin/normal-theme ()
+  (interactive)
   (load-theme 'monokai t))
+
+(defun ruin/growth-theme ()
+  (interactive)
+  (when (eq system-type 'windows-nt)
+    (set-frame-font "y-outline-ＭＳ ゴシック-normal-normal-normal-mono-14-*-*-*-c-*-iso10646-1"))
+  (load-theme 'consonance t)
+  (transparency 95))
 
 (defun ruin/init-theme ()
   (setup-cjk-alignment)
   (if (not window-system)
       (ruin/init-textmode-theme)
-    (ruin/classic-theme))
+    (ruin/growth-theme))
   (spaceline-emacs-theme)
   (spaceline-helm-mode)
   (spaceline-toggle-projectile-root-on)

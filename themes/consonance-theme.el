@@ -1,6 +1,6 @@
-;;; the-stars-theme.el --- Custom theme for faces
+;;; consonance-theme --- Custom theme for faces
 
-;; Copyright (C) 2011-2016 Free Software Foundation, Inc.
+;; Copyright (C) 2011-2017 Free Software Foundation, Inc.
 
 ;; Author: Ian Pickering <ipickering2@gmail.com>
 
@@ -21,25 +21,29 @@
 
 ;;; Code:
 
-(deftheme the-stars
-  "Face colors using a deep blue background.")
+(deftheme consonance
+  "Face colors.")
 
 (let ((class '((class color) (min-colors 89))))
   (custom-theme-set-faces
-   'the-stars
+   'consonance
    `(Info-title-1-face ((,class (:family "helv" :weight bold :height 1.728))))
    `(Info-title-2-face ((,class (:family "helv" :weight bold :height 1.44))))
    `(Info-title-3-face ((,class (:family "helv" :weight bold :height 1.2))))
    `(Info-title-4-face ((,class (:family "helv" :weight bold))))
+
    `(compilation-column-number ((,class (:foreground "LightGreen"))))
    `(compilation-error ((,class (:foreground "Red1"))))
    `(compilation-info ((,class (:weight normal :foreground "LightSkyBlue"))))
    `(compilation-line-number ((,class (:foreground "LightGreen"))))
    `(compilation-mode-line-exit ((,class (:foreground "blue4"))))
+
    `(cperl-array-face ((,class (:foreground "yellow2"))))
    `(cperl-hash-face ((,class (:foreground "coral1"))))
+
    `(cursor ((,class (:background "orange"))))
-   `(default ((,class (:background "#181a26" :foreground "gray80"))))
+   `(default ((,class (:background "#322A22" :foreground "gray90"))))
+
    ;; `(diff-added ((,class (nil))))
    ;; `(diff-changed ((,class (nil))))
    `(diff-context ((,class (:foreground "seashell4"))))
@@ -53,6 +57,7 @@
    `(diff-indicator-removed ((,class (:foreground "white" :background "indianred4"))))
    `(diff-refine-change ((,class (:background "skyblue4"))))
    ;; `(diff-removed ((,class (nil))))
+
    `(dired-marked ((,class (:background "dodgerblue3" :foreground "white"))))
    `(ediff-current-diff-A ((,class (:background "green4" :foreground "white"))))
    `(ediff-current-diff-B ((,class (:background "darkorange3" :foreground "white"))))
@@ -60,26 +65,29 @@
    `(ediff-fine-diff-A ((,class (:background "skyblue4" :foreground "white"))))
    `(ediff-fine-diff-B ((,class (:background "cyan4" :foreground "white"))))
    `(ediff-odd-diff-A ((,class (:background "Grey50" :foreground "White"))))
+
    `(error ((,class (:foreground "red"))))
    `(flymake-errline ((,class (:background nil :underline "red"))))
    `(flymake-warnline ((,class (:background nil :underline "magenta3"))))
-   `(font-lock-builtin-face ((,class (:foreground "LightCoral"))))
+
+   `(font-lock-builtin-face ((,class (:foreground "#D25032"))))
    `(font-lock-comment-delimiter-face ((,class (:foreground "gray50"))))
-   `(font-lock-comment-face ((,class (:foreground "gray50"))))
-   `(font-lock-constant-face ((,class (:foreground "DarkOliveGreen3"))))
-   `(font-lock-doc-face ((,class (:foreground "moccasin"))))
-   `(font-lock-doc-string-face ((,class (:foreground "moccasin"))))
+   `(font-lock-comment-face ((,class (:foreground "#666666"))))
+   `(font-lock-constant-face ((,class (:foreground "#EBEBB9"))))
+   `(font-lock-doc-face ((,class (:foreground "#FFC5F3"))))
+   `(font-lock-doc-string-face ((,class (:foreground "#FFC5F3"))))
    `(font-lock-function-name-face ((,class (:foreground "goldenrod"))))
-   `(font-lock-keyword-face ((,class (:foreground "DeepSkyBlue1"))))
-   `(font-lock-preprocessor-face ((,class (:foreground "gold"))))
+   `(font-lock-keyword-face ((,class (:foreground "#9dd600"))))
+   `(font-lock-preprocessor-face ((,class (:foreground "#df077e"))))
    `(font-lock-reference-face ((,class (:foreground "LightCoral"))))
    `(font-lock-regexp-grouping-backslash ((,class (:weight bold))))
    `(font-lock-regexp-grouping-construct ((,class (:weight bold))))
-   `(font-lock-string-face ((,class (:foreground "burlywood"))))
-   `(font-lock-type-face ((,class (:foreground "CadetBlue1"))))
-   `(font-lock-variable-name-face ((,class (:foreground "SeaGreen2"))))
-   `(fringe ((,class (:background "#121620"))))
-   `(highlight ((,class (:background "DodgerBlue4"))))
+   `(font-lock-string-face ((,class (:foreground "#69D200"))))
+   `(font-lock-type-face ((,class (:foreground "Cadetblue2"))))
+   `(font-lock-variable-name-face ((,class (:foreground "#ff7f00"))))
+
+   `(fringe ((,class (:background "grey30"))))
+   `(highlight ((,class (:background "E1AD32"))))
    `(ido-first-match ((,class (:weight normal :foreground "orange"))))
    `(ido-only-match ((,class (:foreground "green"))))
    `(ido-subdir ((,class (:foreground nil :inherit font-lock-keyword-face))))
@@ -90,33 +98,35 @@
    `(info-xref ((,class (:foreground "SeaGreen2"))))
    `(isearch ((,class (:background "coral2" :foreground "white"))))
    `(isearch-lazy-highlight-face ((,class (:background "coral4" :foreground "white"))))
-   `(lazy-highlight ((,class (:background "cadetblue" :foreground "white"))))
+   `(lazy-highlight ((,class (:background "yellow3" :foreground "white"))))
    `(match ((,class (:background "DeepPink4"))))
    `(minibuffer-prompt ((,class (:foreground "CadetBlue1"))))
+
    `(mode-line ((,class (:background "gray75" :foreground "black" :box (:line-width 1 :style released-button)))))
-   `(mode-line-buffer-id ((,class (:weight bold :background nil :foreground "blue4"))))
+   `(mode-line-buffer-id ((,class (:weight bold :background nil :foreground "gray20"))))
    `(mode-line-inactive ((,class (:background "gray40" :foreground "black" :box (:line-width 1 :color "gray40" :style nil)))))
+
    `(outline-1 ((,class (:foreground "SkyBlue1"))))
    `(outline-2 ((,class (:foreground "CadetBlue1"))))
    `(outline-3 ((,class (:foreground "LightSteelBlue1"))))
    `(outline-4 ((,class (:foreground "turquoise2"))))
    `(outline-5 ((,class (:foreground "aquamarine1"))))
+
    `(primary-selection ((,class (:background "blue3"))))
-   `(region ((,class (:background "#103050"))))
-   `(show-paren-match-face ((,class (:background "dodgerblue1" :foreground "white"))))
+   `(region ((,class (:background "#E1AD32"))))
+
+   `(show-paren-match-face ((,class (:background "orange3" :foreground "white"))))
    `(show-paren-mismatch-face ((,class (:background "red1" :foreground "white"))))
    `(success ((,class (:foreground "SeaGreen2"))))
    `(warning ((,class (:foreground "Yellow"))))
 
    ;; Helm
-   `(helm-selection ((,class (:background "Orange" :foreground "Black"))))
-   `(helm-selection ((,class (:background "Orange" :foreground "Black"))))
-   `(helm-source-header (( t (:foreground "White" :background "#22083397778B"))))
+   `(helm-selection ((,class (:background "#E1AD32" :foreground "Black"))))
+   `(helm-source-header (( t (:foreground "White" :background "#7C7C61"))))
    `(powerline-active1 (( t (:background "grey22" :foreground "grey70"))))
-
    ))
 
-(provide-theme 'the-stars)
+(provide-theme 'consonance)
 
 ;; Local Variables:
 ;; no-byte-compile: t

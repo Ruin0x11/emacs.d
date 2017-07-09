@@ -60,10 +60,10 @@
 
 ;; modularize separate features
 (setq ruin-pkg
-      '(ruin-theme
+      '(ruin-funcs
+        ruin-theme
 
         ruin-general
-        ruin-funcs
         ruin-evil
         ruin-org
         ruin-helm
