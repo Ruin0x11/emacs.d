@@ -9,8 +9,7 @@
 
 ;; popwin settings
 (setq popwin:special-display-config
-      '(
-        ("*Help*" :height 0.4 :stick t)
+      '(("*Help*" :height 0.4 :stick t)
         (Man-mode :height 0.4 :stick t)
         ("\\*Man*" :regexp t :height 0.4 :stick t)
         ;; Debug
@@ -35,6 +34,7 @@
         ("*compilation*" :height 0.3 :noselect t :stick t)
         ("*quickrun*" :height 0.3 :stick t)
         (projectile-rails-server-mode :height 0.3 :stick t)
+        (semantic-symref-results-mode :position right :width 0.3)
         ;; Magit/vc
         ;; (magit-status-mode :position bottom :noselect t :height 0.3 :stick t)
         ;; ("*magit-commit*" :position bottom :noselect t :height 0.3 :stick t)
@@ -86,7 +86,7 @@
         ;; Console
         ("*shell*" :height 0.3 :stick t)
         (shell-mode :height 0.3 :stick t)
-        ;("*Async Shell Command*" :height 0.3 :stick t)
+                                        ;("*Async Shell Command*" :height 0.3 :stick t)
         ("\\*ansi-term.*\\*" :regexp t :height 0.3)
         ("\\*terminal.*\\*" :regexp t :height 0.3)
         ("*Bundler*" :height 0.3)

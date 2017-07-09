@@ -4,7 +4,11 @@
 (package-require 'helm-ag)
 (package-require 'helm-swoop)
 (package-require 'helm-flx)
+(package-require 'wgrep)
+
 (require 'helm-config)
+(require 'wgrep)
+
 (eval-after-load "helm-net" '(require 'helm-google))
 
 (setq helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
@@ -60,9 +64,11 @@
   "?l" 'helm-info-elisp
   "?c" 'helm-info-calc)
 
-(setq browse-url-text-browser "links"
-      browse-url-browser-function 'browse-url-chromium)
+(setq browse-url-text-browser "links")
 
+(case system-type
+  (gnu/linux (setq browse-url-browser-function 'browse-url-chromium))
+  (darwin (setq browse-url-browser-function 'browse-url-chrome)))
 
 (defcustom browse-url-surf-arguments nil
   "A list of strings to pass to surf as arguments."

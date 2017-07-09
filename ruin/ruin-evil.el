@@ -1,7 +1,6 @@
 ;;; ruin-evil.el --- evil settings and non-package mappings
 
 (setq evil-want-C-u-scroll t)
-(global-set-key (kbd "C-S-u") 'universal-argument)
 
 (package-require 'evil)
 (package-require 'evil-commentary)
@@ -61,7 +60,6 @@
   "ad" 'diff
   "aw" 'browse-url-at-point
   "ap" 'package-list-packages
-  "af" 'flycheck-list-errors
   "ao" 'browse-url-generic
 
   "js" 'bookmark-set
@@ -256,8 +254,9 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
                                  (define-key mu4e-headers-mode-map "J" 'mu4e-headers-next-unread)
                                  (define-key mu4e-headers-mode-map "K" 'mu4e-headers-prev-unread)))
 
-
 ;;; normal Emacs bindings
+(global-set-key (kbd "C-x C-u") 'universal-argument)
+(global-set-key (kbd "C-x C-s") 'sort-lines)
 (global-set-key (kbd "C-x |") 'align-regexp)
 (global-set-key (kbd "C-x =") 'eval-region)
 

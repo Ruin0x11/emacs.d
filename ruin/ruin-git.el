@@ -6,6 +6,8 @@
 (package-require 'gitignore-mode)
 (require 'magit)
 
+(setq magit-remote-add-set-remote.pushDefault "origin")
+
 (add-to-list 'evil-emacs-state-modes 'git-timemachine-mode)
 
 (evil-leader/set-key
@@ -38,7 +40,8 @@
         (magit-diff "HEAD"))
 
 ;; always open symlinks as actual file
-(setq vc-follow-symlinks t)
+(setq vc-follow-symlinks t
+      magit-commit-show-diff nil)
 
 (add-to-list 'evil-insert-state-modes 'git-commit-mode)
 
