@@ -259,6 +259,7 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (global-set-key (kbd "C-x C-s") 'sort-lines)
 (global-set-key (kbd "C-x |") 'align-regexp)
 (global-set-key (kbd "C-x =") 'eval-region)
+(global-set-key (kbd "M-{") 'xah-insert-brace)
 
 (global-set-key (kbd "<s-return>") 'toggle-frame-fullscreen)
 

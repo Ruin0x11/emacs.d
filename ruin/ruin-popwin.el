@@ -22,6 +22,7 @@
         ("project.org.*" :regexp t :position top :noselect t :height 15)
         ("collected.org" :position top :height 15)
         (flycheck-error-list-mode :position bottom :height 0.3 :stick t)
+        ("*m4-output*" :position right :stick t :width 80 :noselect t)
         ;; (compilation-mode :position bottom :height 0.3 :noselect t)
         ;; Utils
         ;; ("helm" :regexp t :height 0.3)
@@ -93,12 +94,12 @@
         ("*Bundler*" :height 0.3)
         (term-mode :position :bottom :height 10 :stick t)
         ;; Org/Organized
-        (diary-fancy-display-mode :position left :width 50 :stick nil)
-        (diary-mode :position bottom :height 15 :stick t)
-        (calendar-mode :position bottom :height 15 :stick nil)
-        (org-agenda-mode :position bottom :height 15 :stick t)
-        ("*Org Agenda.*\\*" :regexp t :position bottom :height 15 :stick t)
-        (org-capture-mode :position right :stick t)
+        ;; (diary-fancy-display-mode :position left :width 50 :stick nil)
+        ;; (diary-mode :position bottom :height 15 :stick t)
+        ;; (calendar-mode :position bottom :height 15 :stick nil)
+        ;; (org-agenda-mode :position bottom :height 15 :stick t)
+        ;; ("*Org Agenda.*\\*" :regexp t :position bottom :height 15 :stick t)
+        ;; (org-capture-mode :position right :stick t)
         )
       )
 

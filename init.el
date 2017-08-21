@@ -60,6 +60,14 @@
 
 (setq backup-save-directory (locate-user-emacs-file "saves"))
 
+(when (memq system-type '(windows-nt))
+  (setenv "PATH"
+          (concat
+           "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319" ";"
+           (getenv "PATH")
+           )))
+
+
 (when (not (file-exists-p backup-save-directory))
   (make-directory backup-save-directory))
 
@@ -70,10 +78,10 @@
 
 ;; modularize separate features
 (setq ruin-pkg
-      '(ruin-theme
+      '(ruin-funcs
+        ruin-theme
 
         ruin-general
-        ruin-funcs
         ruin-evil
         ruin-org
         ruin-helm

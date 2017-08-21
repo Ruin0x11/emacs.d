@@ -1,6 +1,7 @@
 ;;; ruin-git.el --- git/magit settings
 
 (package-require 'magit)
+(package-require 'evil-magit)
 (package-require 'git-timemachine)
 (package-require 'smeargle)
 (package-require 'gitignore-mode)

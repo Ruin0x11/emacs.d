@@ -26,7 +26,7 @@
 (menu-bar-mode 0)
 
 ;; Set frame title
-(setq frame-title-format '(multiple-frames "%b" ("" invocation-name "@" system-name ": Stand By Me 2.0" )))
+(setq frame-title-format '(multiple-frames "%b" ("" invocation-name "@" system-name ": Grow a world." )))
 
 ;; You can also set the initial frame parameters
 ;; (setq initial-frame-alist
@@ -134,6 +134,28 @@
 
 (setq spaceline-workspace-numbers-unicode 't)
 
+(defface ruin/warning-face '((t (:foreground "white" :background "cadetblue")))
+  "Face for a warning.")
+
+(spaceline-define-segment org-clock
+  "Show information about the current org clock task.  Configure
+`spaceline-org-clock-format-function' to configure. Requires a currently running
+org clock.
+
+This segment overrides the modeline functionality of `org-mode-line-string'."
+  (if (and (fboundp 'org-clocking-p)
+             (org-clocking-p))
+      (substring-no-properties (funcall spaceline-org-clock-format-function))
+    "Not clocking!")
+  :global-override org-mode-line-string
+  :face ruin/warning-face)
+
+(spaceline-define-segment org-clock-not
+  "Show when not clocking."
+  (concat "asd" "zxc")
+  :enabled t
+  )
+
 (defun ruin/init-textmode-theme()
   (load-theme 'monokai t)
 
@@ -151,8 +173,7 @@
   (set-face-background 'spaceline-flycheck-info "black")
   (set-face-background 'spaceline-flycheck-warning "black")
   (set-face-background 'spaceline-flycheck-error "black")
-  (set-face-background 'helm-selection "blue")
-  )
+  (set-face-background 'helm-selection "blue"))
 
 (defun ruin/classic-theme ()
   (set-frame-font "SGI Screen:style=Regular:pixelsize=14" t)
@@ -163,13 +184,25 @@
   )
 
 (defun ruin/normal-theme ()
+  (interactive)
   (load-theme 'monokai t))
+
+(defun ruin/growth-theme ()
+  (interactive)
+  (when (eq system-type 'windows-nt)
+    (set-frame-font "y-outline-ＭＳ ゴシック-normal-normal-normal-mono-14-*-*-*-c-*-iso10646-1"))
+  (load-theme 'consonance t)
+  (transparency 95)
+  (toggle-frame-fullscreen))
 
 (defun ruin/init-theme ()
   (setup-cjk-alignment)
+  (spaceline-compile)
+  (spaceline-toggle-org-clock-on)
+  (spaceline-toggle-org-clock-not-on)
   (if (not window-system)
       (ruin/init-textmode-theme)
-    (ruin/normal-theme))
+    (ruin/growth-theme))
   (spaceline-emacs-theme)
   (spaceline-helm-mode)
   (spaceline-toggle-projectile-root-on)
