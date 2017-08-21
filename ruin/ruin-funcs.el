@@ -299,7 +299,35 @@ buffer is not visiting a file."
       (window-configuration-to-register '_)
       (delete-other-windows))))
 
-;; Bodil
+;; http://whattheemacsd.com/buffer-defuns.el-03.html
+(defun toggle-window-split ()
+  (interactive)
+  (if (= (count-windows) 2)
+      (let* ((this-win-buffer (window-buffer))
+             (next-win-buffer (window-buffer (next-window)))
+             (this-win-edges (window-edges (selected-window)))
+             (next-win-edges (window-edges (next-window)))
+             (this-win-2nd (not (and (<= (car this-win-edges)
+                                         (car next-win-edges))
+                                     (<= (cadr this-win-edges)
+                                         (cadr next-win-edges)))))
+             (splitter
+              (if (= (car this-win-edges)
+                     (car (window-edges (next-window))))
+                  'split-window-horizontally
+                'split-window-vertically)))
+        (delete-other-windows)
+        (let ((first-win (selected-window)))
+          (funcall splitter)
+          (if this-win-2nd (other-window 1))
+          (set-window-buffer (selected-window) this-win-buffer)
+          (set-window-buffer (next-window) next-win-buffer)
+          (select-window first-win)
+          (if this-win-2nd (other-window 1))))))
+
+
+;;; Bodil
+
 ;;https://github.com/bodil/emacs.d/blob/master/bodil/bodil-defuns.el#L17
 (defun font-lock-replace-symbol (mode reg sym)
   (font-lock-add-keywords
@@ -450,6 +478,49 @@ current window."
     (error (message "Invalid expression")
            (insert (current-kill 0)))))
 
+;; https://www.reddit.com/r/emacs/comments/4531i9/how_to_efficiently_insert_quotes_parens_or/
+(defun xah-insert-bracket-pair (φleft-bracket φright-bracket)
+  "Wrap or Insert a matching bracket and place cursor in between.
+
+If there's a text selection, wrap brackets around it. Else, smartly decide wrap or insert. (basically, if there's no char after cursor, just insert bracket pair.)
+
+φleft-bracket ＆ φright-bracket are strings.
+
+URL `http://ergoemacs.org/emacs/elisp_insert_brackets_by_pair.html'
+Version 2015-04-19"
+  (if (use-region-p)
+      (progn
+        (let (
+              (ξp1 (region-beginning))
+              (ξp2 (region-end)))
+          (goto-char ξp2)
+          (insert φright-bracket)
+          (goto-char ξp1)
+          (insert φleft-bracket)
+          (goto-char (+ ξp2 2))
+          (indent-region ξp1 ξp2)))
+    (progn ; no text selection
+      (if
+          (or
+           (looking-at "[^-_[:alnum:]]")
+           (eq (point) (point-max)))
+          (progn
+            (insert φleft-bracket φright-bracket)
+            (search-backward φright-bracket ))
+        (progn
+          (let (ξp1 ξp2)
+            ;; basically, want all alphanumeric, plus hyphen and underscore, but don't want space or punctuations. Also want chinese.
+            ;; 我有一帘幽梦，不知与谁能共。多少秘密在其中，欲诉无人能懂。
+            (skip-chars-backward "-_[:alnum:]")
+            (setq ξp1 (point))
+            (skip-chars-forward "-_[:alnum:]")
+            (setq ξp2 (point))
+            (goto-char ξp2)
+            (insert φright-bracket)
+            (goto-char ξp1)
+            (insert φleft-bracket)
+            (goto-char (+ ξp2 (length φleft-bracket)))))))))
+(defun xah-insert-brace () (interactive) (xah-insert-bracket-pair "{\n" "\n}") )
 
 ;; Norang
 (defun bh/set-agenda-restriction-lock (arg)

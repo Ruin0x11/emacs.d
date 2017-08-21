@@ -132,4 +132,4 @@
 ;; no-byte-compile: t
 ;; End:
 
-;;; the-stars-theme.el ends here
+;;; consonance-theme.el ends here

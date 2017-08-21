@@ -3,7 +3,6 @@
 (package-require 'flycheck-rust)
 (package-require 'cargo)
 (package-require 'racer)
-(package-require 'lsp-rust)
 
 (setq
  racer-cmd "~/.cargo/bin/racer"
@@ -132,10 +131,10 @@ Cargo: Run the tests."
                 cargo-process-build))
   (advice-add func :after #'kill-flycheck))
 
-(with-eval-after-load 'lsp-mode
-  (require 'lsp-flycheck))
-(require 'lsp-mode)
-(require 'lsp-rust)
+;; (with-eval-after-load 'lsp-mode
+;;   (require 'lsp-flycheck))
+;; (require 'lsp-mode)
+;; (require 'lsp-rust)
 ;; (add-hook 'rust-mode-hook #'lsp-mode)
 
 (provide 'ruin-rust)

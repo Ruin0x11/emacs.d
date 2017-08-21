@@ -134,6 +134,28 @@
 
 (setq spaceline-workspace-numbers-unicode 't)
 
+(defface ruin/warning-face '((t (:foreground "white" :background "cadetblue")))
+  "Face for a warning.")
+
+(spaceline-define-segment org-clock
+  "Show information about the current org clock task.  Configure
+`spaceline-org-clock-format-function' to configure. Requires a currently running
+org clock.
+
+This segment overrides the modeline functionality of `org-mode-line-string'."
+  (if (and (fboundp 'org-clocking-p)
+             (org-clocking-p))
+      (substring-no-properties (funcall spaceline-org-clock-format-function))
+    "Not clocking!")
+  :global-override org-mode-line-string
+  :face ruin/warning-face)
+
+(spaceline-define-segment org-clock-not
+  "Show when not clocking."
+  (concat "asd" "zxc")
+  :enabled t
+  )
+
 (defun ruin/init-textmode-theme()
   (load-theme 'monokai t)
 
@@ -170,10 +192,14 @@
   (when (eq system-type 'windows-nt)
     (set-frame-font "y-outline-ＭＳ ゴシック-normal-normal-normal-mono-14-*-*-*-c-*-iso10646-1"))
   (load-theme 'consonance t)
-  (transparency 95))
+  (transparency 95)
+  (toggle-frame-fullscreen))
 
 (defun ruin/init-theme ()
   (setup-cjk-alignment)
+  (spaceline-compile)
+  (spaceline-toggle-org-clock-on)
+  (spaceline-toggle-org-clock-not-on)
   (if (not window-system)
       (ruin/init-textmode-theme)
     (ruin/growth-theme))
