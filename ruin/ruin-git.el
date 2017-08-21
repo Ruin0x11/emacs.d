@@ -28,8 +28,8 @@
         "gd" 'magit-diff-head
         "gp" 'magit-push-current
         "gP" 'magit-push
-        "gu" 'magit-pull-from-upstream
-        "gU" 'magit-pull
+        "gU" 'magit-pull-from-upstream
+        "gu" 'magit-pull
         "gC" 'magit-clone
         "gc" 'magit-commit
         "gR" 'magit-reset-hard)

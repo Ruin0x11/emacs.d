@@ -33,7 +33,8 @@
 
 (evil-define-key 'insert company-active-map (kbd "TAB") 'company-complete)
 
-(eval-after-load 'company
-  '(push 'company-semantic company-backends))
+; (eval-after-load 'company
+;   '(push 'company-files company-backends)
+;   '(push 'company-semantic company-backends))
 
 (provide 'ruin-company)

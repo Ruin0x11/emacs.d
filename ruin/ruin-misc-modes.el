@@ -146,12 +146,6 @@
 (global-anzu-mode 1)
 (setq anzu-cons-mode-line-p nil)
 
-;; aggressive-indent
-(package-require 'aggressive-indent)
-(add-hook 'emacs-lisp-hook #'aggressive-indent-mode)
-(add-hook 'go-mode-hook #'aggressive-indent-mode)
-(add-hook 'enh-ruby-mode-hook #'aggressive-indent-mode)
-
 ;; arduino-mode
 (package-require 'arduino-mode)
 (setq auto-mode-alist (remove (rassoc 'arduino-mode auto-mode-alist) auto-mode-alist))

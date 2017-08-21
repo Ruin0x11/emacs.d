@@ -1,9 +1,7 @@
 (package-require 'rust-mode)
 (package-require 'toml-mode)
-(package-require 'flycheck-rust)
-(package-require 'cargo)
+(package-require 'flycheck-rust) (package-require 'cargo)
 (package-require 'racer)
-(package-require 'lsp-rust)
 
 (setq
  racer-cmd "~/.cargo/bin/racer"
@@ -11,6 +9,7 @@
 
 (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)
 (add-hook 'rust-mode-hook 'cargo-minor-mode)
+(add-hook 'rust-mode-hook #'rust-enable-format-on-save)
 
 ;; (add-hook 'rust-mode-hook #'racer-mode)
 ;; (add-hook 'racer-mode-hook #'eldoc-mode)
@@ -22,6 +21,8 @@
   "dd" 'racer-describe
   "df" 'racer-find-definition
 
+  "bi" 'rust-format-buffer
+
   "fs" 'racer-find-definition
 
   "kg" 'ruin/rust-gdb
@@ -32,6 +33,7 @@
   "ta" 'cargo-process-test
   "tt" 'ruin/my-cargo-process-current-test
   "tf" 'ruin/cargo-test-current-mod-or-file
+  "ts" 'ruin/cargo-test-tests
   )
 
 (evil-leader/set-key-for-mode 'toml-mode
@@ -45,7 +47,7 @@
   )
 
 (eval-after-load "rust-mode"
-  '(define-key rust-mode-map [f9] 'cargo-process-run))
+  '(define-key rust-mode-map [f9] 'cargo-process-check))
 
 (sp-local-pair 'rust-mode "{" nil :post-handlers '((my-create-newline-and-enter-sexp "RET")))
 
@@ -74,6 +76,11 @@
          (selected (completing-read "Debug target: " targets nil t))
          (gdb-args (concat "rust-gdb -i=mi " target-dir "/" selected)))
     (gdb gdb-args)))
+
+(defun ruin/cargo-test-tests ()
+  "Test all cargo tests."
+  (interactive)
+  (cargo-process--start "Test" "cargo test --tests"))
 
 (defun ruin/cargo-test-current-mod-or-file ()
   "If the file is named mod.rs, run cargo test using parent directory as name. Otherwise use file name."
@@ -131,11 +138,5 @@ Cargo: Run the tests."
                 cargo-process-run
                 cargo-process-build))
   (advice-add func :after #'kill-flycheck))
-
-(with-eval-after-load 'lsp-mode
-  (require 'lsp-flycheck))
-(require 'lsp-mode)
-(require 'lsp-rust)
-;; (add-hook 'rust-mode-hook #'lsp-mode)
 
 (provide 'ruin-rust)

@@ -10,3 +10,9 @@
 [submodule "themes/btcsb"]
 	path = themes/btcsb
 	url = http://git.korewanetadesu.com/BTCSB-emacs-theme.git
+[submodule "site-lisp/kq-mode"]
+	path = site-lisp/kq-mode
+	url = https://github.com/geocar/kq-mode
+[submodule "site-lisp/org-web-tools"]
+	path = site-lisp/org-web-tools
+	url = https://github.com/alphapapa/org-web-tools

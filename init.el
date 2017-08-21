@@ -56,6 +56,8 @@
   (exec-path-from-shell-initialize)
   (exec-path-from-shell-copy-env "PATH"))
 
+(setq create-lockfiles nil)
+
 (setq backup-save-directory (locate-user-emacs-file "saves"))
 
 (when (not (file-exists-p backup-save-directory))

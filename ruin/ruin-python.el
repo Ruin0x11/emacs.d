@@ -1,7 +1,10 @@
-;; (package-require 'python-mode)
-;; (require 'python-mode)
-;; ;; (add-hook 'python-mode-hook
-;; ;;           '(lambda () (eldoc-mode 1)) t)
+(require 'package)
+(add-to-list 'package-archives
+             '("elpy" . "https://jorgenschaefer.github.io/packages/"))
+
+(package-require 'elpy)
+(package-initialize)
+(elpy-enable)
 
 (setq python-shell-interpreter "python3")
 
@@ -12,5 +15,6 @@
 (evil-leader/set-key-for-mode 'python-mode
   "mpr" 'run-python
   "mpz" 'python-shell-switch-to-shell)
+
 
 (provide 'ruin-python)

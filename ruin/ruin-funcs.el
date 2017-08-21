@@ -33,9 +33,9 @@
   "Refactors the name at point in the current buffer unconditionally."
   (interactive)
   (let* ((sym (symbol-name (symbol-at-point)))
-        (newsym (or newsym
-                    (read-string (concat "Replace \"" sym "\" with: "))))
-        (regexp (concat "\\_<\\(" (regexp-quote sym) "\\)\\_>")))
+         (newsym (or newsym
+                     (read-string (concat "Replace \"" sym "\" with: "))))
+         (regexp (concat "\\_<\\(" (regexp-quote sym) "\\)\\_>")))
     (save-excursion
       (goto-char (point-min))
       (while (re-search-forward regexp nil t)
@@ -50,7 +50,7 @@
     (save-excursion
       (evil-jump-item)
       (message (int-to-string
-        (abs (- current-line (line-number-at-pos))))))))
+                (abs (- current-line (line-number-at-pos))))))))
 
 (defun ruin/scroll-down-or-next-buffer ()
   (interactive)
@@ -213,7 +213,7 @@ buffer is not visiting a file."
         (setq pos (match-end 0)))
       matches)))
 
-;http://emacs.stackexchange.com/a/7150
+                                        ;http://emacs.stackexchange.com/a/7150
 (defun re-seq (regexp string)
   "Get a list of all regexp matches in a string"
   (save-match-data
@@ -257,13 +257,13 @@ buffer is not visiting a file."
         (filename (buffer-file-name)))
     (if (not filename)
         (message "Buffer '%s' is not visiting a file!" name)
-      (if (get-buffer new-name)
-          (message "A buffer named '%s' already exists!" new-name)
-        (progn
-          (rename-file filename new-name 1)
-          (rename-buffer new-name)
-          (set-visited-file-name new-name)
-          (set-buffer-modified-p nil))))))
+      (progn
+        (when (get-buffer new-name)
+          (kill-buffer new-name))
+        (rename-file filename new-name 1)
+        (rename-buffer new-name)
+        (set-visited-file-name new-name)
+        (set-buffer-modified-p nil)))))
 
 (defun move-buffer-file (dir)
   "Moves both current buffer and file it's visiting to DIR."
@@ -330,7 +330,7 @@ buffer is not visiting a file."
 
 (defun strip-text-properties(txt)
   (set-text-properties 0 (length txt) nil txt)
-      txt)
+  txt)
 
 (defun re-seq (regexp string)
   "Get a list of all regexp matches in a string"
@@ -342,7 +342,7 @@ buffer is not visiting a file."
         (setq pos (match-end 0)))
       matches)))
 
-; Sample URL
+                                        ; Sample URL
 (setq urlreg "\\(?:http://\\)?ux\\(?:[./#+-_]\\w*\\)+")
 
 (defun url-list ()

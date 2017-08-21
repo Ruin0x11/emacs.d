@@ -166,6 +166,12 @@
 (add-to-list 'evil-emacs-state-modes 'inf-ruby-mode)
 (ruin/window-movement-for-mode "inf-ruby" 'inf-ruby-mode-map)
 
+;;;###autoload
+(defun ruby-indent-enable-on-save ()
+  "Indent when saving buffer."
+  (interactive)
+  (add-hook 'before-save-hook #'indent-buffer nil t))
+
 ;; ;; autostart inf-ruby and robe
 ;; (dolist (hook (list
 ;;                'enh-ruby-mode-hook
@@ -185,29 +191,29 @@
 (add-hook 'projectile-mode-hook 'projectile-rails-on)
 
 (evil-leader/set-key
- "mrm" 'projectile-rails-find-model
- "mrM" 'projectile-rails-find-current-model
- "mrI" 'projectile-rails-find-current-migration
- "mri" 'projectile-rails-find-migration
- "mrc" 'projectile-rails-find-controller
- "mrC" 'projectile-rails-find-current-controller
- "mrv" 'projectile-rails-find-view
- "mrV" 'projectile-rails-find-current-view
- "mrk" 'projectile-rails-find-rake-task
- "mra" 'projectile-rails-find-stylesheet
- "mrs" 'projectile-rails-server
- "mrS" 'projectile-rails-goto-seeds
- "mrA" 'projectile-rails-goto-schema
- "mro" 'projectile-rails-console
- "mrb" 'projectile-rails-dbconsole
- "mrf" 'projectile-rails-find-feature
- "mrj" 'projectile-rails-find-javascript
- "mry" 'projectile-rails-find-stylesheet
- "mrG" 'projectile-rails-goto-gemfile
- "mrg" 'projectile-rails-generate
- "mrr" 'projectile-rails-rake
- "mrR" 'projectile-rails-goto-routes
- )
+  "mrm" 'projectile-rails-find-model
+  "mrM" 'projectile-rails-find-current-model
+  "mrI" 'projectile-rails-find-current-migration
+  "mri" 'projectile-rails-find-migration
+  "mrc" 'projectile-rails-find-controller
+  "mrC" 'projectile-rails-find-current-controller
+  "mrv" 'projectile-rails-find-view
+  "mrV" 'projectile-rails-find-current-view
+  "mrk" 'projectile-rails-find-rake-task
+  "mra" 'projectile-rails-find-stylesheet
+  "mrs" 'projectile-rails-server
+  "mrS" 'projectile-rails-goto-seeds
+  "mrA" 'projectile-rails-goto-schema
+  "mro" 'projectile-rails-console
+  "mrb" 'projectile-rails-dbconsole
+  "mrf" 'projectile-rails-find-feature
+  "mrj" 'projectile-rails-find-javascript
+  "mry" 'projectile-rails-find-stylesheet
+  "mrG" 'projectile-rails-goto-gemfile
+  "mrg" 'projectile-rails-generate
+  "mrr" 'projectile-rails-rake
+  "mrR" 'projectile-rails-goto-routes
+  )
 
 ;; (add-hook 'projectile-rails-mode-hook
 ;;           '(lambda ()

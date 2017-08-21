@@ -59,7 +59,6 @@
   "ac" 'calc
   "ad" 'diff
   "aw" 'browse-url-at-point
-  "ap" 'package-list-packages
   "ao" 'browse-url-generic
 
   "js" 'bookmark-set
@@ -108,6 +107,7 @@
 
   "rd" 'delete-frame
   "rn" 'make-frame
+  "rr" 'ruin/refactor-name
 
   "bl" 'helm-buffers-list
   "TAB" 'spacemacs/alternate-buffer
