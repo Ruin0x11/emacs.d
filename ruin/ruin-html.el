@@ -3,6 +3,8 @@
 (package-require 'haml-mode)
 (package-require 'rainbow-mode)
 (package-require 'coffee-mode)
+(package-require 'less)
+(package-require 'flymake-less)
 
 (require 'web-mode)
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
@@ -19,8 +21,10 @@
 (setq web-mode-markup-indent-offset 2)
 
 (dolist (hook
-         '(css-mode-hook web-mode-hook sass-mode-hook))
+         '(css-mode-hook web-mode-hook sass-mode-hook less-css-mode-hook))
   (add-hook hook 'rainbow-turn-on))
+
+(add-hook 'less-css-mode-hook 'electric-pair-mode)
 
 (add-hook 'haml-mode-hook
   (function (lambda ()

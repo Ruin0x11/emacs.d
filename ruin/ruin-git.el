@@ -42,7 +42,8 @@
 
 ;; always open symlinks as actual file
 (setq vc-follow-symlinks t
-      magit-commit-show-diff nil)
+      magit-commit-show-diff nil
+      magit-remote-add-set-remote.pushDefault "origin")
 
 (add-to-list 'evil-insert-state-modes 'git-commit-mode)
 

@@ -24,33 +24,17 @@
 ;; winner
 (winner-mode)
 
+
 ;; which-key
 (package-require 'which-key)
 (setq which-key-idle-delay 0.2)
 (require 'which-key)
 (which-key-mode)
 
-;; ;; desktop
-;; (require 'desktop)
 
 ;; request
 (package-require 'request)
 
-;; (desktop-save-mode)
-
-;; (setq desktop-dirname "~/.emacs.d"
-;;       desktop-base-file-name "desktop"
-;;       desktop-base-lock-name "desktop.lock"
-;;       desktop-save t
-;;       desktop-restore-frames t
-;;       desktop-restore-reuses-frames t
-;;       desktop-restore-in-current-display t
-;;       desktop-restore-forces-onscreen t)
-
-;; (defun save-desktop ()
-;;   (interactive)
-;;   (if (eq (desktop-owner) (emacs-pid))
-;;       (desktop-save desktop-dirname)))
 
 ;; persp
 (package-require 'persp-mode)
@@ -71,13 +55,16 @@
   "sl" 'persp-load-state-from-file
   "sr" 'persp-rename)
 
+
 ;; electric-indent
 (electric-indent-mode 1)
+
 
 ;; savehist
 (savehist-mode t)
 
 (setq savehist-file "~/.emacs.d/savehist")
+
 
 ;; quickrun
 (package-require 'quickrun)
@@ -97,6 +84,7 @@
     (if (window-live-p (get-buffer-window quickrun/buffer-name))
         (delete-window (get-buffer-window quickrun/buffer-name)))
     (kill-buffer quickrun/buffer-name)))
+
 
 ;; lookup
 ;; (add-to-list 'load-path "/usr/share/emacs/site-lisp/lookup")
@@ -118,6 +106,7 @@
                                         ; (add-to-list 'evil-emacs-state-modes 'lookup-modules-mode)
                                         ; (add-to-list 'evil-emacs-state-modes 'lookup-summary-mode)
 
+
 ;;;###autoload
 (defun lookup-region-noconfirm (beg end &optional mod)
   "Search for the region."
@@ -125,6 +114,7 @@
   (let* ((lookup-edit-input nil))
     (lookup-word (buffer-substring-no-properties beg end) mod)))
 (global-set-key (kbd "C-c C-l") 'lookup-region-noconfirm)
+
 
 ;; expand-region
 (package-require 'expand-region)
@@ -141,14 +131,17 @@
       (setf entries (append entries (lookup-dictionary-search dict query))))
     entries))
 
+
 ;; anzu
 (package-require 'anzu)
 (global-anzu-mode 1)
 (setq anzu-cons-mode-line-p nil)
 
+
 ;; arduino-mode
 (package-require 'arduino-mode)
 (setq auto-mode-alist (remove (rassoc 'arduino-mode auto-mode-alist) auto-mode-alist))
+
 
 ;; processing-mode
 (package-require 'processing-mode)
@@ -168,27 +161,16 @@
     (:tempfile . nil))
   :mode 'processing-mode)
 
-;; eyebrowse
-;; (package-require 'eyebrowse)
-;; (eyebrowse-mode t)
-;; (global-set-key (kbd "M-0") 'eyebrowse-switch-to-window-config-0)
-;; (global-set-key (kbd "M-1") 'eyebrowse-switch-to-window-config-1)
-;; (global-set-key (kbd "M-2") 'eyebrowse-switch-to-window-config-2)
-;; (global-set-key (kbd "M-3") 'eyebrowse-switch-to-window-config-3)
-;; (global-set-key (kbd "M-4") 'eyebrowse-switch-to-window-config-4)
-;; (global-set-key (kbd "M-5") 'eyebrowse-switch-to-window-config-5)
-;; (global-set-key (kbd "M-6") 'eyebrowse-switch-to-window-config-6)
-;; (global-set-key (kbd "M-7") 'eyebrowse-switch-to-window-config-7)
-;; (global-set-key (kbd "M-8") 'eyebrowse-switch-to-window-config-8)
-;; (global-set-key (kbd "M-9") 'eyebrowse-switch-to-window-config-9)
 
 ;; sos
 (require 'sos)
+
 
 ;; crux
 (package-require 'crux)
 (evil-leader/set-key
   "fw" 'crux-view-url)
+
 
 ;; lively
 (require 'lively)
@@ -198,6 +180,7 @@
 (setq google-translate-default-target-language "en")
 (evil-leader/set-key
   "at" 'google-translate-at-point)
+
 
 ;; markdown-mode
 (package-require 'markdown-mode)
@@ -233,6 +216,7 @@
 
 (setq mmm-parse-when-idle 't)
 
+
 ;; cucumber
 (package-require 'feature-mode)
 (require 'helm-feature)
@@ -256,6 +240,7 @@
 
 ;; YAML
 (package-require 'yaml-mode)
+
 
 ;; kaomoji
 (package-require 'kaomoji)
@@ -283,19 +268,12 @@
 (evil-leader/set-key
   "ak" 'kaomoji)
 
-;; emojify
-(when (not (eq system-type 'windows-nt))
-  (package-require 'emojify)
-  (package-require 'company-emoji)
-                                        ; (add-hook 'markdown-mode-hook #'emojify-mode)
-  (add-to-list 'company-backends 'company-emoji)
-  (setq company-emoji-insert-unicode nil))
-
 ;; google-this
 (package-require 'google-this)
 (evil-leader/set-key
   "ag" 'google-this
   "aG" (lambda () (interactive) (google-this-line nil t)))
+
 
 ;; doc-mode
 (require 'doc-mode)
@@ -304,11 +282,14 @@
 (evil-leader/set-key-for-mode 'java-mode
   "mdd" 'doc-mode-fix-tag-doc)
 
+
 ;; hsp-mode
 (require 'hsp-mode)
 
+
 ;; uim
 (if (locate-library "uim") (require 'uim))
+
 
 ;; buffer-move
 (package-require 'buffer-move)
@@ -317,8 +298,7 @@
 (global-set-key (kbd "C-S-h") 'buf-move-left)
 (global-set-key (kbd "C-S-l") 'buf-move-right)
 
-;; highlight-symbol
-(require 'highlight-symbol)
+
 
 ;; command-frequency
 (package-require 'keyfreq)
@@ -326,21 +306,30 @@
 (keyfreq-autosave-mode)
 (evil-leader/set-key "af" 'keyfreq-show)
 
+
 ;; highlight-symbol
 (package-require 'highlight-symbol)
+(defun ruin/highlight-evil-search ()
+  (interactive)
+  (highlight-symbol (evil-get-register ?/)))
+
 (evil-leader/set-key
   "HH" 'highlight-symbol-at-point
-  "Hr" 'highlight-symbol-remove-all)
+  "Hr" 'highlight-symbol-remove-all
+  "Hc" 'highlight-symbol-remove-all
+  "H/" 'ruin/highlight-evil-search)
 ;; glsl-mode
 (package-require 'glsl-mode)
 (defun ruin/open-this-file-in-shader-view ()
   (interactive)
   (shell-command-on-file "glslViewer"))
 
+
 ;; compilation-shell-minor-mode
 ;; Can't be without it.
 (add-hook 'compilation-mode-hook 'compilation-shell-minor-mode)
 (add-hook 'shell-hook 'compilation-shell-minor-mode)
+
 
 ;; dumb-jump
 (package-require 'dumb-jump)
@@ -348,8 +337,10 @@
 (evil-leader/set-key "fj" 'dumb-jump-go
   "fp" 'dumb-jump-back)
 
+
 ;; mpc
 (require 'mpc)
+
 
 ;; firestarter
 (package-require 'firestarter)
@@ -358,8 +349,55 @@
 
 (put 'firestarter 'safe-local-variable 'identity)
 
-;; (eval-after-load "glsl-mode"
-;;   (define-key glsl-mode-map (kbd "C-c C-v") 'ruin/open-this-file-in-shader-view))
+
+;; restclient
+(package-require 'restclient)
+
+(defun ruin/start-restclient ()
+  (interactive)
+  (delete-other-windows)
+  (let ((exists (member "*restclient*" (mapcar 'buffer-name (buffer-list)))))
+    (switch-to-buffer "*restclient*")
+    (when (not exists)
+      (ruin/insert-template "httpbin")
+      (setq-local url-max-redirections 0)))
+  (restclient-mode))
+
+(evil-leader/set-key
+  "ar" 'ruin/start-restclient)
+
+
+;; howdoi
+(package-require 'howdoi)
+
+
+;;edbi
+(defun ruin/start-edbi (uri &optional username password)
+  "Open Database viewer buffer with args."
+  (interactive "sUri: ")
+  (if (or (null uri)
+          (string-equal "" uri))
+      (error "Uri cannot be empty")
+    (let* ((connection-func
+           (lambda (ds)
+             (let (conn msg)
+               (setq msg
+                     (condition-case err
+                         (progn
+                           (setq conn (edbi:start))
+                           (edbi:connect conn ds)
+                           nil)
+                       (error (format "%s" err))))
+               (cond
+                ((null msg)
+                 (deferred:call 'edbi:dbview-open conn) nil)
+                (t msg)))))
+          (msg (funcall connection-func (edbi:data-source uri username password))))
+      (when msg (error (format "Connection error: %s" msg))))))
+
+(evil-leader/set-key
+  "ae" 'ruin/start-edbi)
+
 
 ;; diminish
 (package-require 'diminish)
@@ -392,6 +430,7 @@
 
 (diminish 'visual-line-mode)
 
+
 (defun my-create-newline-and-enter-sexp (&rest _ignored)
   "Open a new brace or bracket expression, with relevant newlines and indent. "
   (newline)
@@ -402,7 +441,7 @@
 (setq open-paren-modes
       '(rust-mode glsl-mode c-mode))
 
-(dolist (mode open-paren-modes)
-  (sp-local-pair mode "{" nil :post-handlers '((my-create-newline-and-enter-sexp "RET"))))
+; (dolist (mode open-paren-modes)
+;   (sp-local-pair mode "{" nil :post-handlers '((my-create-newline-and-enter-sexp "RET"))))
 
 (provide 'ruin-misc-modes)
