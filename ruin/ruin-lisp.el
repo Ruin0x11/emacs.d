@@ -1,5 +1,6 @@
 (package-require 'smartparens)
 (package-require 'evil-smartparens)
+(package-require 'lispyville)
 (require 'smartparens-config)
 (require 'cl)
 
@@ -12,6 +13,7 @@
 
 (smartparens-global-mode t)
 (add-lisp-hook 'smartparens-strict-mode)
+(add-lisp-hook 'lispyville-mode)
 ;; (add-lisp-hook #'evil-smartparens-mode)
 (add-lisp-hook 'eldoc-mode)
 

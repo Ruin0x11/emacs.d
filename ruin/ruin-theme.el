@@ -202,7 +202,7 @@ This segment overrides the modeline functionality of `org-mode-line-string'."
   (spaceline-toggle-org-clock-not-on)
   (if (not window-system)
       (ruin/init-textmode-theme)
-    (ruin/growth-theme))
+    (ruin/normal-theme))
   (spaceline-emacs-theme)
   (spaceline-helm-mode)
   (spaceline-toggle-projectile-root-on)
