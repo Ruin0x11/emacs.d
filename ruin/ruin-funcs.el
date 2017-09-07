@@ -70,6 +70,18 @@
           (goto-char (point-max)))
       (scroll-down count))))
 
+(defun directory-files-exclude (directory &optional full match nosort)
+  "Like `directory-files', but excluding \".\" and \"..\"."
+  (delete "." (delete ".." (directory-files directory full match nosort))))
+
+(defun ruin/insert-template (file)
+ "Insert a template file from the \"misc\" directory."
+  (interactive
+   (list
+    (completing-read "Choose one: " (directory-files-exclude (locate-user-emacs-file "misc")))))
+  (let ((template-dir (locate-user-emacs-file "misc")))
+    (insert-file-contents (concat template-dir "/" file))))
+
 (require 'url)
 
 (defun download-file-and-open (&optional url download-dir download-name)

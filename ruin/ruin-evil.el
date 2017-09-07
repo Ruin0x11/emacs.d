@@ -7,6 +7,7 @@
 (package-require 'evil-surround)
 ;(load-file (locate-user-emacs-file "site-lisp/evil-leader/evil-leader.el"))
 (package-require 'evil-leader)
+(package-require 'elisp-refs)
 (global-evil-leader-mode t)
 (load "evil-leader-minor")
 (require 'evil-little-word)
@@ -20,8 +21,6 @@
 (evil-leader/set-leader "<SPC>")
 
 (evil-leader/set-key
-  "ar" (lambda () (interactive) (save-buffer) (quickrun) (quickrun/remove-temp-files))
-  "aR" 'quickrun-shell
   "au" 'undo-tree-visualize
   "w" 'save-buffer
   "q" 'quit-or-kill-buffer
@@ -59,7 +58,8 @@
   "ac" 'calc
   "ad" 'diff
   "aw" 'browse-url-at-point
-  "ao" 'browse-url-generic
+  "al" 'browse-url-generic
+  "ax" 're-builder
 
   "js" 'bookmark-set
   "jj" 'bookmark-jump
@@ -75,6 +75,7 @@
   "fv" 'find-variable
   "fw" 'crux-view-url
   "fl" 'find-library
+  "fe" 'elisp-refs-function
 
   "hR" 'helm-regexp
   "hm" 'helm-man-woman
@@ -172,6 +173,11 @@
 (add-to-list 'evil-emacs-state-modes 'mpc-tagbrowser-mode)
 (add-to-list 'evil-emacs-state-modes 'mpc-tagbrowser-dir-mode)
 
+(general-define-key :states 'emacs "C-h" 'windmove-left)
+(general-define-key :states 'emacs "C-j" 'windmove-down)
+(general-define-key :states 'emacs "C-k" 'windmove-up)
+(general-define-key :states 'emacs "C-l" 'windmove-right)
+
 ;; esc quits
 (defun minibuffer-keyboard-quit ()
   "Abort recursive edit.
@@ -200,6 +206,7 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
      (define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
      (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
      (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
+     (define-key evil-emacs-state-map [escape] 'evil-normal-state)
      (global-set-key [escape] 'evil-exit-emacs-state)
      ))
 

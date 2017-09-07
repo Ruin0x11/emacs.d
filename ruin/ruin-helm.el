@@ -69,7 +69,10 @@
 
 (case system-type
   (gnu/linux (setq browse-url-browser-function 'browse-url-chromium))
-  (darwin (setq browse-url-browser-function 'browse-url-chrome)))
+  (darwin (progn
+            (setq browse-url-browser-function 'browse-url-generic)
+            (setq browse-url-generic-program "open"))))
+
 
 (defcustom browse-url-surf-arguments nil
   "A list of strings to pass to surf as arguments."

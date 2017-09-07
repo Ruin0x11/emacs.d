@@ -19,7 +19,8 @@
       ruby-block-highlight-toggle 'minibuffer ;; display to minibuffer
       ruby-block-highlight-toggle t)          ;; display to minibuffer and do overlay
 
-;; (add-hook 'ruby-mode-hook 'robe-mode)
+(add-hook 'ruby-mode-hook 'robe-mode)
+(add-hook 'enh-ruby-mode-hook 'robe-mode)
 
 (add-to-list 'auto-mode-alist '("Gemfile" . enh-ruby-mode))
 (add-to-list 'auto-mode-alist '("Rakefile" . enh-ruby-mode))
@@ -48,8 +49,6 @@
 (evil-define-key 'insert enh-ruby-mode-map (kbd "RET") 'evil-ret-and-indent)
 
 (remove-hook 'enh-ruby-mode-hook 'erm-define-faces)
-
-;; (add-hook 'enh-ruby-mode-hook 'robe-mode)
 
 (add-hook 'enh-ruby-mode-hook
           #'(lambda ()
@@ -142,8 +141,9 @@
   "mi" 'inf-ruby
   "dd" 'robe-doc
   "mm" 'robe-jump-to-module
-  "mj" 'robe-jump
+  "fs" 'robe-jump
   "my" 'yari-helm
+  "mo" 'robe-start
 
   "mbi" 'bundle-install
   "mbe" 'bundle-exec

@@ -1,21 +1,28 @@
 ;;; ruin-org.el --- org-mode settings
 (package-require 'org)
 (package-require 'org-bullets)
+(package-require 'helm-org-rifle)
+(package-require 'gnuplot)
 
 (require 'org)
 (require 'org-bullets)
 
 (require 'ob-ruby)
-(require 'ob-sh)
+(require 'ob-shell)
+(require 'ob-gnuplot)
+(require 'ob-sql)
+(require 'ob-clojure)
 
 ;; Startup & Directories
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 
 ;; start agenda on emacs startup
 (when (file-exists-p "~/Dropbox/org")
+  (setq org-directory "~/Dropbox/org")
   (setq org-agenda-files '("~/Dropbox/org/tracked/"))
-  (setq org-refile-targets '((org-agenda-files :maxlevel . 9)))
-
+  (setq org-refile-targets '(("~/Dropbox/org/notes.org" :maxlevel . 9)
+                             (org-agenda-files :maxlevel . 9)))
+  
   (setq org-default-notes-file "~/Dropbox/org/tracked/refile.org")
   (setq org-capture-templates
         '(("t" "todo" entry (file "~/Dropbox/org/tracked/refile.org")
@@ -61,9 +68,15 @@
      org-log-state-notes-insert-after-drawers nil
      org-return-follows-link t
 
-     org-babel-confirm-evaluate nil
+     org-confirm-babel-evaluate nil
+     org-babel-clojure-backend 'cider
+     org-babel-clojure-sync-nrepl-timeout nil
+     
+     org-hide-emphasis-markers t
+     org-pretty-entities t 
+     org-startup-with-inline-images t)
 
-     org-hide-emphasis-markers t)
+(add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images)
 
 (setq org-agenda-time-grid
   '((daily today require-timed)
@@ -309,10 +322,11 @@ show this warning instead."
   "oiT" 'org-time-stamp
   "ois" 'org-schedule
   "oil" 'org-insert-link
+  "oic" 'org-insert-code-block
   "ot" 'org-set-tags-command
   "or" 'org-refile
   "ow" 'org-save-all-org-buffers
-  "oh" 'helm-org-agenda-files-headings)
+  "oh" 'helm-org-rifle-org-directory)
 
 (package-require 'general)
 
