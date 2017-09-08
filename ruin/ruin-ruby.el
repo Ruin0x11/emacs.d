@@ -6,9 +6,10 @@
 (package-require 'chruby)
 (package-require 'yari) ;ルビヌスの槍
 (package-require 'bundler)
+(package-require 'minitest)
 ;; (require 'rcodetools)
 
-(chruby "ruby-2.3.3")
+(chruby "ruby-2.4.1")
 
 (setq ruby-align-to-stmt-keywords '(def case)) ;; indent "case" as per ruby style guide
 
@@ -157,11 +158,20 @@
   "ta" 'rspec-verify-all
   "tr" 'rspec-run-last-failed
   "tj" 'rspec-find-spec-or-target-other-window
-  "th" 'helm-feature-snippets)
+  "th" 'helm-feature-snippets
+
+  "tmt" 'minitest-verify
+  "tma" 'minitest-verify-all)
 
 (evil-leader/set-key-for-mode 'haml-mode
   "my" 'yari-helm
   "mY" 'yari-helm-rehash)
+
+(evil-leader/set-key-for-mode 'haml-mode
+  "dd" 'robe-doc)
+
+(evil-leader/set-key-for-mode 'web-mode
+  "dd" 'robe-doc)
 
 (add-to-list 'evil-emacs-state-modes 'inf-ruby-mode)
 (ruin/window-movement-for-mode "inf-ruby" 'inf-ruby-mode-map)
@@ -189,6 +199,7 @@
 ;;; Rails
 (package-require 'projectile-rails)
 (add-hook 'projectile-mode-hook 'projectile-rails-on)
+(add-hook 'projectile-mode-hook 'minitest-mode)
 
 (evil-leader/set-key
   "mrm" 'projectile-rails-find-model

@@ -3,9 +3,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   (quote
-    ("9725731db9d8d93a7ea1eee48fec9cfce93fec888c491f109b524e21c85aab1a" default)))
  '(haskell-interactive-popup-errors nil)
  '(haskell-mode-hook (quote (turn-on-haskell-indentation turn-on-haskell-doc)))
  '(haskell-process-auto-import-loaded-modules t)

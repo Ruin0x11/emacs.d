@@ -1,7 +1,10 @@
 (package-require 'lispyville)
 (package-require 'eval-in-repl)
 (package-require 'smartparens)
+(package-require 'evil-smartparens)
+(package-require 'lispyville)
 (package-require 'slamhound)
+(require 'smartparens-config)
 (require 'eval-in-repl-cider)
 (require 'cl)
 
