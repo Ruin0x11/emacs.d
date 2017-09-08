@@ -34,13 +34,17 @@
 ;; (define-key smartparens-mode-map (kbd "C-M-s") 'sp-forward-barf-sexp)
 
 (with-eval-after-load 'lispyville
-  (define-key lispy-mode-map (kbd "<C-return>") nil)
   (lispyville-set-key-theme
    '(operators
      (escape insert)
      (slurp/barf-cp normal visual motion)
-     (additional normal visual)
-     (additional-movement normal visual))))
+     (additional normal visual)))
+  (define-key lispy-mode-map (kbd "<C-return>") nil)
+
+  (evil-define-key '(normal visual motion) lispyville-mode-map (kbd "M-{") 'lispyville-next-opening)
+  (evil-define-key '(normal visual motion) lispyville-mode-map (kbd "M-}") 'lispyville-previous-closing)
+  (evil-define-key '(normal visual motion) lispyville-mode-map (kbd "M-[") 'lispyville-previous-opening)
+  (evil-define-key '(normal visual motion) lispyville-mode-map (kbd "M-]") 'lispyville-next-closing))
 
 (eval-after-load "ielm" #'(lambda ()
                             (ruin/window-movement-for-map inferior-emacs-lisp-mode-map)
@@ -98,7 +102,7 @@
   "ed" 'cider-eval-defun-at-point
   "eD" 'cider-pprint-eval-defun-at-point
   "en" 'cider-repl-set-ns
-
+  
   "Fs" 'cider-find-var
 
   "tt" 'cider-test-run-test
