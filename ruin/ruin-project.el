@@ -28,6 +28,7 @@
   "pr" 'projectile-replace
   "pu" 'projectile-run-project
   "pi" 'ruin/open-project-info
+  "pt" 'projectile-test-project
   )
 
 (defun ruin/open-project-info (&rest r)

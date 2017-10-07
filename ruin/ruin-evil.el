@@ -128,15 +128,12 @@
 (define-key Info-mode-map (kbd "C-i") 'Info-history-forward)
 (define-key Info-mode-map (kbd "C-o") 'Info-history-back)
 (define-key Info-mode-map "m" 'Info-menu)
-(ruin/window-movement-for-map Info-mode-map)
-
-(define-key dired-mode-map "f" 'dired-goto-file)
-(define-key dired-mode-map "g" 'dired-goto-file)
-(define-key dired-mode-map (kbd "<DEL>") 'dired-unmark-backward)
 
 (add-hook 'dired-mode-hook
           (lambda()
-            (evil-commentary-mode 0)))
+            (define-key dired-mode-map "f" 'dired-goto-file)
+            (define-key dired-mode-map "g" 'dired-goto-file)
+            (define-key dired-mode-map (kbd "<DEL>") 'dired-unmark-backward)))
 
 
 ;;; mode-based binds
@@ -158,6 +155,7 @@
   (define-key map (kbd "C-k") 'evil-window-up)
   (define-key map (kbd "C-l") 'evil-window-right))
 
+(ruin/window-movement-for-map Info-mode-map)
 
 (global-set-key (kbd "C-{") 'winner-undo)
 (global-set-key (kbd "C-}") 'winner-redo)
@@ -281,6 +279,9 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (global-set-key (kbd "C-x |") 'align-regexp)
 (global-set-key (kbd "C-x =") 'eval-region)
 ;; (global-set-key (kbd "M-{") 'xah-insert-brace)
+
+(when (memq system-type '(darwin))
+  (global-set-key (kbd "s-n") nil))
 
 (global-set-key (kbd "<s-return>") 'toggle-frame-fullscreen)
 

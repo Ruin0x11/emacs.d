@@ -44,4 +44,6 @@
 (setq-default flycheck-disabled-checkers '(markdown processing))
 (add-hook 'mmm-major-mode-hook (lambda () (flycheck-mode nil)))
 
+(add-to-list 'flycheck-disabled-checkers 'haml)
+
 (provide 'ruin-flycheck)

@@ -146,7 +146,7 @@
    :default-config-keywords '(:position :bottom :height 10 :stick t)))
 
 (defun close-popwin-if-open ()
-  (if popwin:popup-window
+  (when popwin:popup-window
       (popwin:close-popup-window)))
 
 ;; replace popwin if one is already active

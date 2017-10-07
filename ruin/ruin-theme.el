@@ -71,6 +71,11 @@
 (setq custom-theme-load-path (add-to-list 'custom-theme-load-path
                                           (locate-user-emacs-file "themes/btcsb")))
 
+(add-hook 'term-mode-hook 'my-term-mode-hook)
+(defun my-term-mode-hook ()
+  ;; https://debbugs.gnu.org/cgi/bugreport.cgi?bug=20611
+  (setq bidi-paragraph-direction 'left-to-right))
+
 ;;; Properly align CJK org-mode tables
 ;; https://github.com/kuanyui/.emacs.d/blob/master/rc/rc-basic.el#L102
 (defun setup-cjk-alignment ()
@@ -194,7 +199,7 @@ This segment overrides the modeline functionality of `org-mode-line-string'."
 
 (defun ruin/init-theme ()
   (setup-cjk-alignment)
-  (display-time)
+  ;; (display-time)
   (display-battery-mode)
   (spaceline-compile)
   (spaceline-toggle-org-clock-on)
