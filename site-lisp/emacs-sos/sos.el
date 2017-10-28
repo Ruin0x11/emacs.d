@@ -262,9 +262,8 @@ API Reference: http://api.stackexchange.com/docs/excerpt-search"
   (tabulated-list-print)
   (goto-char (point-min)))
 
-
-(defun sos-get-answers (id)
-  "Get answers for SO's question defined by ID."
+(defun sos-download-answers (id)
+  "Download answers for question ID."
   (let* ((api-url (concat "http://api.stackexchange.com/2.2/"
                           "questions/"
                           (if (stringp id) id
@@ -276,35 +275,37 @@ API Reference: http://api.stackexchange.com/docs/excerpt-search"
                           "&site=stackoverflow"
                           "&key=" sos-api-key))
          (response-buffer (url-retrieve-synchronously api-url))
-         (json-response (progn
+         (json-response (save-window-excursion
                           (switch-to-buffer response-buffer)
                           (goto-char (point-min))
                           (sos-get-response-body response-buffer)))
-         (answer-list (cdr (assoc 'items json-response)))
-         (n-answers (length answer-list))
-         (i 0)
-         (sos-string
-          ""
-          ;; (concat "Answers [" (int-to-string n-answers) "]\n")
-          ))
-    (while (< i n-answers) 
-      (let* ((answer (elt answer-list i))
-             (accepted? (not (eq json-false (cdr (assoc 'is_accepted answer)))))
-             (author (cdr (assoc 'owner answer)))
-             (author-name (cdr (assoc 'display_name author))))
-        (setq sos-string
-              (concat sos-string
-                      (concat
-                       (propertize (concat "Answer " (int-to-string (1+ i)) " by " author-name (if accepted? " (Accepted)" "")
-                                           " Score: " (int-to-string (cdr (assoc 'score answer)))
-                                           "\n") 'face 'underline
-                                           'sos-answer-section t)
-                       (cdr (assoc 'body answer))
-                       "\n")
+         (answer-list (cdr (assoc 'items json-response))))
+    answer-list))
+
+(defun sos-get-answers (id)
+  "Download and format answers for SO's question defined by ID."
+  (let* (answer-list (sos-download-answers id))
+    (n-answers (length answer-list))
+    (i 0)
+    (sos-string ""))
+  (while (< i n-answers)
+    (let* ((answer (elt answer-list i))
+           (accepted? (not (eq json-false (cdr (assoc 'is_accepted answer)))))
+           (author (cdr (assoc 'owner answer)))
+           (author-name (cdr (assoc 'display_name author))))
+      (setq sos-string
+            (concat sos-string
+                    (concat
+                     (propertize (concat "Answer " (int-to-string (1+ i)) " by " author-name (if accepted? " (Accepted)" "")
+                                         " Score: " (int-to-string (cdr (assoc 'score answer)))
+                                         "\n")
+                                 'face 'underline 'sos-answer-section t)
+                     (cdr (assoc 'body answer))
+                     "\n")
 
                       )
               i (1+ i))))
-    sos-string))
+    sos-string)
 
 (defun sos-current-result ()
   "Returns the current hightlighted StackOverflow question in the tabulated list."

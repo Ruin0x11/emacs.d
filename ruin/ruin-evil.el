@@ -147,9 +147,9 @@
 
 (add-hook 'dired-mode-hook
           (lambda()
-(define-key dired-mode-map "f" 'dired-goto-file)
-(define-key dired-mode-map "g" 'dired-goto-file)
-(define-key dired-mode-map (kbd "<DEL>") 'dired-unmark-backward)
+            (define-key dired-mode-map "f" 'dired-goto-file)
+            (define-key dired-mode-map "g" 'dired-goto-file)
+            (define-key dired-mode-map (kbd "<DEL>") 'dired-unmark-backward)
             (evil-commentary-mode 0)))
 
 
@@ -158,6 +158,21 @@
   (interactive)
   (evil-yank (point) (point-at-eol)))
 
+(defun ruin/window-movement-for-mode (mode map)
+  (eval-after-load mode `(lambda ()
+                   (define-key ,map (kbd "C-h") 'evil-window-left)
+                   (define-key ,map (kbd "C-j") 'evil-window-down)
+                   (define-key ,map (kbd "C-k") 'evil-window-up)
+                   (define-key ,map (kbd "C-l") 'evil-window-right))
+            ))
+
+(defun ruin/window-movement-for-map (map)
+  (define-key map (kbd "C-h") 'evil-window-left)
+  (define-key map (kbd "C-j") 'evil-window-down)
+  (define-key map (kbd "C-k") 'evil-window-up)
+  (define-key map (kbd "C-l") 'evil-window-right))
+
+(ruin/window-movement-for-map Info-mode-map)
 
 (global-set-key (kbd "C-{") 'winner-undo)
 (global-set-key (kbd "C-}") 'winner-redo)
@@ -281,6 +296,9 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (global-set-key (kbd "C-x |") 'align-regexp)
 (global-set-key (kbd "C-x =") 'eval-region)
 ;; (global-set-key (kbd "M-{") 'xah-insert-brace)
+
+(when (memq system-type '(darwin))
+  (global-set-key (kbd "s-n") nil))
 
 (global-set-key (kbd "<s-return>") 'toggle-frame-fullscreen)
 

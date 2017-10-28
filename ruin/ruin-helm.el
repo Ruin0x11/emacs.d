@@ -59,10 +59,14 @@
   "hr" 'helm-resume
   "hc" 'helm-colors
   "hg" 'helm-google
+  "ht" 'helm-top
+  "hp" 'helm-list-emacs-process
+  "h@" 'helm-list-elisp-packages
 
   ;; "ii" 'helm-info-at-point
   "?e" 'helm-info-emacs
   "?l" 'helm-info-elisp
+  "?g" 'helm-info-magit
   "?c" 'helm-info-calc)
 
 (setq browse-url-text-browser "links")

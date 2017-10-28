@@ -28,20 +28,22 @@
 (add-to-list 'auto-mode-alist '("Gemfile" . enh-ruby-mode))
 (add-to-list 'auto-mode-alist '("Rakefile" . enh-ruby-mode))
 (add-to-list 'auto-mode-alist '("\\.rb$" . enh-ruby-mode))
+(add-to-list 'auto-mode-alist '("\\.gemspec$" . enh-ruby-mode))
 (add-to-list 'auto-mode-alist '("\\.rake$" . enh-ruby-mode))
 (add-to-list 'interpreter-mode-alist '("ruby" . enh-ruby-mode))
 
-(setq enh-ruby-program "ruby"
-      enh-ruby-deep-indent-paren nil
-      enh-ruby-comment-column 32 
-      enh-ruby-bounce-deep-indent t 
-      enh-ruby-deep-indent-paren t 
-      enh-ruby-hanging-brace-deep-indent-level 1 
-      enh-ruby-hanging-brace-indent-level 2 
-      enh-ruby-hanging-indent-level 2 
-      enh-ruby-hanging-paren-deep-indent-level 0 
-      enh-ruby-hanging-paren-indent-level 2 
-      enh-ruby-indent-level 2
+(setq ruby-align-chained-calls t
+
+      enh-ruby-program "ruby"
+      ;enh-ruby-comment-column 32
+      ;enh-ruby-bounce-deep-indent t
+      ;enh-ruby-deep-indent-paren t
+      ;enh-ruby-hanging-brace-deep-indent-level 1
+      ;enh-ruby-hanging-brace-indent-level 2
+      ;enh-ruby-hanging-indent-level 2
+      ;enh-ruby-hanging-paren-deep-indent-level 0
+      ;enh-ruby-hanging-paren-indent-level 2
+      ;enh-ruby-indent-level 2
 
       inf-ruby-default-implementation "pry")
 
@@ -151,6 +153,7 @@
   "mbi" 'bundle-install
   "mbe" 'bundle-exec
   "mbs" 'bundle-show
+  "mbu" 'bundle-update
 
   "ed" 'ruby-send-block
   "eb" 'ruby-send-buffer
@@ -164,7 +167,9 @@
   "th" 'helm-feature-snippets
 
   "tmt" 'minitest-verify
-  "tma" 'minitest-verify-all)
+  "tma" 'minitest-verify-all
+
+  "mg" 'helm-rubygems-org)
 
 (evil-leader/set-key-for-mode 'haml-mode
   "my" 'yari-helm
@@ -227,7 +232,7 @@
   "mrg" 'projectile-rails-generate
   "mrr" 'projectile-rails-rake
   "mrR" 'projectile-rails-goto-routes
-  )
+  "mrt" 'projectile-rails-find-test)
 
 ;; (add-hook 'projectile-rails-mode-hook
 ;;           '(lambda ()

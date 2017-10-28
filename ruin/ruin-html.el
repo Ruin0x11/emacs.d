@@ -7,12 +7,15 @@
 (package-require 'flymake-less)
 (package-require 'js-doc)
 (package-require 'prettier-js)
+(package-require 'ssass-mode)
 
 (require 'web-mode)
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.jsx?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.js\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.scss\\'" . ssass-mode))
 
 (add-hook 'web-mode-hook
       (lambda ()
