@@ -2,8 +2,7 @@
 (require 'column-marker)
 (require 'line-comment-banner)
 (require 'google-c-style)
-
-(require 'google-c-style)
+(package-require 'ggtags)
                                         ; Add cmake listfile names to the mode list.
 (setq auto-mode-alist
       (append
@@ -21,6 +20,11 @@
 (add-hook 'asm-mode-hook
           (lambda () (make-local-variable 'comment-fill)
             (setq comment-fill "-")))
+
+(add-hook 'c-mode-common-hook
+          (lambda ()
+            (when (derived-mode-p 'c-mode 'c++-mode 'java-mode)
+              (ggtags-mode 1))))
 
 (defun my-asm-mode-hook ()
   ;; you can use `comment-dwim' (M-;) for this kind of behaviour anyway

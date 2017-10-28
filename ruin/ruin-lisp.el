@@ -10,7 +10,7 @@
 
 (setq lisp-modes
       '(scheme-mode emacs-lisp-mode lisp-mode clojure-mode common-lisp-mode
-                    lisp-interaction-mode cider-repl-mode))
+                    lisp-interaction-mode cider-repl-mode inferior-emacs-lisp-mode))
 
 (defun add-lisp-hook (func)
   (add-hooks lisp-modes func))
@@ -79,7 +79,8 @@
                              (define-key cider-repl-mode-map (kbd "<up>") 'cider-repl-previous-input)
                              (define-key cider-repl-mode-map (kbd "M-n") 'cider-repl-next-input)
                              (define-key cider-repl-mode-map (kbd "M-p") 'cider-repl-previous-input)
-                             (define-key cider-repl-mode-map (kbd "C-x C-e") 'ruin/cider-eval-last-sexp-in-repl)
+                             (define-key cider-repl-mode-map (kbd "C-c C-k") 'cider-repl-clear-buffer)
+                             (define-key clojure-mode-map (kbd "C-x C-e") 'ruin/cider-eval-last-sexp-in-repl)
                              (define-key clojure-mode-map (kbd "<C-return>") 'eir-eval-in-cider)))
 
 (add-to-list 'evil-emacs-state-modes 'cider-repl-mode)

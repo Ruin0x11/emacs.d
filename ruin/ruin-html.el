@@ -5,11 +5,14 @@
 (package-require 'coffee-mode)
 (package-require 'less)
 (package-require 'flymake-less)
+(package-require 'js-doc)
+(package-require 'prettier-js)
 
 (require 'web-mode)
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.js\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
 
 (add-hook 'web-mode-hook
       (lambda ()
@@ -22,7 +25,8 @@
 
 (dolist (hook
          '(css-mode-hook web-mode-hook sass-mode-hook less-css-mode-hook))
-  (add-hook hook 'rainbow-turn-on))
+  (add-hook hook 'rainbow-mode)
+  (add-hook hook 'company-mode-on))
 
 (add-hook 'less-css-mode-hook 'electric-pair-mode)
 
@@ -31,6 +35,12 @@
           (setq evil-shift-width haml-indent-offset))))
 
 (package-require 'scss-mode)
+
+(add-hook 'js2-mode-hook 'prettier-js-mode)
+(add-hook 'web-mode-hook 'prettier-js-mode)
+
+(evil-leader/set-key-for-mode 'web-mode
+  "md" 'js-doc-insert-file-doc)
 
 ;; (evil-define-key 'insert web-mode-map (kbd "C-e") 'web-mode-element-close)
 

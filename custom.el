@@ -10,10 +10,16 @@
  '(haskell-process-suggest-remove-import-lines t)
  '(package-selected-packages
    (quote
-    (slamhound gnuplot elisp-refs helm-org-rifle eval-in-repl textile-mode lispy lispyville howdoi restclient sed-mode general Omnisharp omnisharp csv-mode yasnippet yari yaml-mode wgrep toml-mode smeargle scss-mode ruby-block rainbow-mode racer processing-mode powerline-evil popwin org-bullets multi-term mmm-mode magit lua-mode lively keyfreq kaomoji jabber highlight-symbol helm-swoop helm-projectile helm-flycheck helm-flx helm-ag haml-mode google-translate google-this go-mode glsl-mode gitignore-mode git-timemachine ghc flycheck-rust flycheck-haskell firestarter fill-column-indicator feature-mode expand-region exec-path-from-shell evil-surround evil-smartparens evil-org evil-multiedit evil-matchit evil-leader evil-jumper evil-commentary enh-ruby-mode emojify dumb-jump diminish dictionary csharp-mode crux company-emoji coffee-mode cider-eval-sexp-fu cider chruby cargo bundler buffer-move arduino-mode anzu ample-theme aggressive-indent)))
+    (ggtags powershell prettier-js js-doc company-jedi jedi py-autopep8 slamhound gnuplot elisp-refs helm-org-rifle eval-in-repl textile-mode lispy lispyville howdoi restclient sed-mode general Omnisharp omnisharp csv-mode yasnippet yari yaml-mode wgrep toml-mode smeargle scss-mode ruby-block rainbow-mode racer processing-mode powerline-evil popwin org-bullets multi-term mmm-mode magit lua-mode lively keyfreq kaomoji jabber highlight-symbol helm-swoop helm-projectile helm-flycheck helm-flx helm-ag haml-mode google-translate google-this go-mode glsl-mode gitignore-mode git-timemachine ghc flycheck-rust flycheck-haskell firestarter fill-column-indicator feature-mode expand-region exec-path-from-shell evil-surround evil-smartparens evil-org evil-multiedit evil-matchit evil-leader evil-jumper evil-commentary enh-ruby-mode emojify dumb-jump diminish dictionary csharp-mode crux company-emoji coffee-mode cider-eval-sexp-fu cider chruby cargo bundler buffer-move arduino-mode anzu ample-theme aggressive-indent)))
  '(safe-local-variable-values
    (quote
-    ((cider-cljs-lein-repl . "(do (user/go) (user/cljs-repl))")
+    ((eval progn
+           (pp-buffer)
+           (indent-buffer))
+     (eval progn
+           (lispyville-mode 1)
+           (smartparens-mode 1))
+     (cider-cljs-lein-repl . "(do (user/go) (user/cljs-repl))")
      (cider-refresh-after-fn . "reloaded.repl/resume")
      (cider-refresh-before-fn . "reloaded.repl/suspend")
      (flycheck-checker . csharp-hand)

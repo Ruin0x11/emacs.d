@@ -16,3 +16,9 @@
 [submodule "site-lisp/evil-plugins"]
 	path = site-lisp/evil-plugins
 	url = https://github.com/tarao/evil-plugins
+[submodule "site-lisp/ruby-complexity"]
+	path = site-lisp/ruby-complexity
+	url = https://github.com/jsmestad/ruby-complexity
+[submodule "site-lisp/flay"]
+	path = site-lisp/flay
+	url = https://www.github.com/ruin0x11/flay.el

@@ -57,6 +57,7 @@
         ("*sldb.*":regexp t :height 0.3)
         ("*Gofmt Errors*" :noselect t)
         ("\\*godoc*" :regexp t :height 0.3)
+        ("*PowerShell Get-Help*" :noselect t :stick t :height 0.3)
         ;; ("*nrepl-error*" :height 0.2 :stick t)
         ;; ("*nrepl-doc*" :height 0.2 :stick t)
         ;; ("*nrepl-src*" :height 0.2 :stick t)

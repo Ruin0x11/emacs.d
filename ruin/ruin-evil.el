@@ -125,25 +125,6 @@
   "b="  'my-diff-buffer-with-file
   "bi"  'indent-buffer)
 
-(define-key Info-mode-map (kbd "C-i") 'Info-history-forward)
-(define-key Info-mode-map (kbd "C-o") 'Info-history-back)
-(define-key Info-mode-map "m" 'Info-menu)
-(ruin/window-movement-for-map Info-mode-map)
-
-(define-key dired-mode-map "f" 'dired-goto-file)
-(define-key dired-mode-map "g" 'dired-goto-file)
-(define-key dired-mode-map (kbd "<DEL>") 'dired-unmark-backward)
-
-(add-hook 'dired-mode-hook
-          (lambda()
-            (evil-commentary-mode 0)))
-
-
-;;; mode-based binds
-(defun copy-to-end-of-line ()
-  (interactive)
-  (evil-yank (point) (point-at-eol)))
-
 (defun ruin/window-movement-for-mode (mode map)
   (eval-after-load mode `(lambda ()
                    (define-key ,map (kbd "C-h") 'evil-window-left)
@@ -157,6 +138,25 @@
   (define-key map (kbd "C-j") 'evil-window-down)
   (define-key map (kbd "C-k") 'evil-window-up)
   (define-key map (kbd "C-l") 'evil-window-right))
+
+(define-key Info-mode-map (kbd "C-i") 'Info-history-forward)
+(define-key Info-mode-map (kbd "C-o") 'Info-history-back)
+(define-key Info-mode-map "m" 'Info-menu)
+(ruin/window-movement-for-map Info-mode-map)
+
+
+(add-hook 'dired-mode-hook
+          (lambda()
+(define-key dired-mode-map "f" 'dired-goto-file)
+(define-key dired-mode-map "g" 'dired-goto-file)
+(define-key dired-mode-map (kbd "<DEL>") 'dired-unmark-backward)
+            (evil-commentary-mode 0)))
+
+
+;;; mode-based binds
+(defun copy-to-end-of-line ()
+  (interactive)
+  (evil-yank (point) (point-at-eol)))
 
 
 (global-set-key (kbd "C-{") 'winner-undo)
