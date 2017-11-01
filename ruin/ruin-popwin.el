@@ -10,11 +10,11 @@
 ;; popwin settings
 (setq popwin:special-display-config
       '(("*Help*" :height 0.4 :stick t)
-        (Man-mode :height 0.4 :stick t)
+        ;; (Man-mode :height 0.4 :stick t)
         ;; ("\\*Man.*" :regexp t :height 0.4 :stick t)
         ;; Debug
         ("*Warnings*" :noselect t :position bottom :height 0.3 )
-        ("*Backtrace*" :noselect t :position bottom :height 0.3 )
+        ("*Backtrace*" :stick t :noselect t :position bottom :height 0.3 )
         ("*Messages*" :noselect t :position bottom :height 0.3 )
         ("*Compile-Log*" :position bottom :height 0.3 )
         ("*Shell Command Output*" :position bottom :height 0.3 )

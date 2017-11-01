@@ -208,4 +208,6 @@
                  (end-of-defun)
                  (point)))))
 
+(add-hook 'edebug-mode-hook 'evil-emacs-state)
+
 (provide 'ruin-lisp)

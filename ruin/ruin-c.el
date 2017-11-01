@@ -24,6 +24,8 @@
 (add-hook 'c-mode-common-hook
           (lambda ()
             (when (derived-mode-p 'c-mode 'c++-mode 'java-mode)
+              (semanticdb-enable-gnu-global-databases 'c-mode)
+              (semanticdb-enable-gnu-global-databases 'c++-mode)
               (ggtags-mode 1))))
 
 (defun my-asm-mode-hook ()

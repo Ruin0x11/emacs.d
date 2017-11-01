@@ -47,8 +47,8 @@
   "eQ" 'toggle-debug-on-quit
   "ee" 'eval-expression
   "ei" 'ielm
-  "enn" 'debug-on-entry
-  "enc" 'cancel-debug-on-entry
+  "enn" 'edebug-on-entry
+  "enc" 'cancel-edebug-on-entry
 
   "aa" 'org-agenda
   "c" 'org-capture
@@ -248,6 +248,8 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (add-hook 'Man-mode-hook '(lambda ()
                             (ruin/window-movement-for-map Man-mode-map)
                             ))
+
+(setq Man-notify-method 'pushy)
 
 (ruin/window-movement-for-mode "help-mode" 'help-mode-map)
 (ruin/window-movement-for-mode "compile" 'compilation-mode-map)
