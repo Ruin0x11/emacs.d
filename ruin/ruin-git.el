@@ -7,8 +7,6 @@
 (package-require 'gitignore-mode)
 (require 'magit)
 
-(setq magit-remote-add-set-remote.pushDefault "origin")
-
 (add-to-list 'evil-emacs-state-modes 'git-timemachine-mode)
 
 (defun ruin/magit-rebase-interactive-preserve-merge ()
@@ -62,8 +60,7 @@
 
 ;; always open symlinks as actual file
 (setq vc-follow-symlinks t
-      magit-commit-show-diff nil
-      magit-remote-add-set-remote.pushDefault "origin")
+      magit-commit-show-diff t)
 
 (add-to-list 'evil-insert-state-modes 'git-commit-mode)
 
@@ -75,5 +72,11 @@
   "msn" 'smerge-next
   "msp" 'smerge-prev
   "mse" 'smerge-ediff)
+
+(general-define-key
+ :keymaps '(magit-log-mode-map magit-mode-map)
+ :states '(emacs)
+ "C-d" 'evil-scroll-down
+ "C-u" 'evil-scroll-up)
 
 (provide 'ruin-git)
