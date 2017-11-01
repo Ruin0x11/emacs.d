@@ -8,6 +8,7 @@
 
 (require 'helm-config)
 (require 'wgrep)
+(require 'helm-fd)
 
 (eval-after-load "helm-net" '(require 'helm-google))
 
@@ -24,6 +25,7 @@
       helm-candidate-number-limit 50
       helm-input-idle-delay 0.1
       helm-ag-base-command "ag --vimgrep --nocolor "
+      helm-fd-command-option "-H"
       )
 
 ;; dumb redefinition for ripgrep
@@ -48,8 +50,11 @@
   "ff" 'helm-find-files
   "fg" 'helm-do-grep-ag
   "fr" 'helm-recentf
-  "fd" 'helm-semantic-or-imenu
+  "fd" 'dumb-jump-go
+  "fj" 'helm-semantic-or-imenu
   "fF" 'helm-find
+  "fi" 'helm-fd-this-directory
+  "fI" 'helm-fd
 
   "hf" 'helm-flycheck
   "hR" 'helm-regexp
@@ -68,6 +73,12 @@
   "?l" 'helm-info-elisp
   "?g" 'helm-info-magit
   "?c" 'helm-info-calc)
+
+(require 'pulse)
+
+(advice-add 'dumb-jump-result-follow :after
+            (lambda (&rest args)
+              (pulse-momentary-highlight-one-line (point))))
 
 (setq browse-url-text-browser "links")
 

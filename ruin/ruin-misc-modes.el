@@ -399,6 +399,8 @@
 
 ;; powershell
 (package-require 'powershell)
+(require 'powershell)
+
 (when (memq system-type '(gnu/linux darwin))
   (setq powershell-location-of-exe "pwsh"))
 
@@ -421,7 +423,7 @@ if there isn't one at point."
 (defun powershell-run-cmd (command symbol)
   "Run COMMAND for the PowerShell symbol SYMBOL."
   (if symbol
-        (let* ((cmd (concat "pwsh -c \"" command "\""))
+        (let* ((cmd (concat powershell-location-of-exe " -NoProfile -c \"" command "\""))
               (formatted (replace-regexp-in-string "\%s" symbol cmd)))
           (shell-command-to-string formatted))
       (user-error "No symbol found")))
@@ -459,7 +461,7 @@ If REHASH is set, rehashes the list of all cached cmdlets."
 (defun powershell-all-cmdlets (rehash)
   "Return a string with all PowerShell cmdlets."
   (if (or rehash (null powershell-cmdlet-cache))
-      (let* ((command "pwsh -c \"Get-Command | select -Property Name\"")
+      (let* ((command (concat powershell-location-of-exe " -NoProfile -c \"Get-Command | select -Property Name\""))
              (str (shell-command-to-string command))
              (cmds (seq-drop (split-string str "\n" t "[ ]+") 2)))
         (setq powershell-cmdlet-cache cmds))

@@ -8,6 +8,7 @@
 ;(load-file (locate-user-emacs-file "site-lisp/evil-leader/evil-leader.el"))
 (package-require 'evil-leader)
 (package-require 'elisp-refs)
+(package-require 'general)
 (global-evil-leader-mode t)
 (load "evil-leader-minor")
 (require 'evil-little-word)
@@ -123,7 +124,8 @@
   "b!"  'shell-command-on-file
   "bB"  'browse-url-of-file
   "b="  'my-diff-buffer-with-file
-  "bi"  'indent-buffer)
+  "bi"  'indent-buffer
+  "ba"  'helm-do-ag-buffers)
 
 (defun ruin/window-movement-for-mode (mode map)
   (eval-after-load mode `(lambda ()

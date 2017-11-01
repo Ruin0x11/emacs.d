@@ -7,7 +7,7 @@
 (package-require 'yari) ;ルビヌスの槍
 (package-require 'bundler)
 (package-require 'minitest)
-(require 'flay)
+;(require 'flay)
 ;; (require 'rcodetools)
 
 (require 'chruby)

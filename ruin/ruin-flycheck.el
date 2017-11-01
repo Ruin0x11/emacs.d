@@ -17,6 +17,7 @@
 
      (define-key flycheck-error-list-mode-map "j" 'next-line)
      (define-key flycheck-error-list-mode-map "k" 'previous-line)
+     (flycheck-package-setup)
      (ruin/window-movement-for-map flycheck-error-list-mode-map)
 
 

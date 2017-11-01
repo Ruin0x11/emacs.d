@@ -4,13 +4,15 @@
 (package-require 'evil-smartparens)
 (package-require 'lispyville)
 (package-require 'slamhound)
+(package-require 'package-lint)
+(package-require 'flycheck-package)
 (require 'smartparens-config)
 (require 'eval-in-repl-cider)
 (require 'cl)
 
 (setq lisp-modes
       '(scheme-mode emacs-lisp-mode lisp-mode clojure-mode common-lisp-mode
-                    lisp-interaction-mode cider-repl-mode inferior-emacs-lisp-mode))
+                    lisp-interaction-mode  cider-repl-mode inferior-emacs-lisp-mode))
 
 (defun add-lisp-hook (func)
   (add-hooks lisp-modes func))
@@ -209,5 +211,7 @@
                  (point)))))
 
 (add-hook 'edebug-mode-hook 'evil-emacs-state)
+
+(add-hook 'ielm-mode-hook 'company-mode)
 
 (provide 'ruin-lisp)

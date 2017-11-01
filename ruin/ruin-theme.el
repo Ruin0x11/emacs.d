@@ -192,7 +192,7 @@ This segment overrides the modeline functionality of `org-mode-line-string'."
 (defun ruin/growth-theme ()
   (interactive)
   (when (eq system-type 'windows-nt)
-    (set-frame-font "y-outline-ＭＳ ゴシック-normal-normal-normal-mono-14-*-*-*-c-*-iso10646-1"))
+    (set-frame-font "y-outline-ＭＳ ゴシック-normal-normal-normal-mono-20-*-*-*-c-*-iso10646-1"))
   (load-theme 'consonance t)
   (transparency 95)
   (toggle-frame-fullscreen))

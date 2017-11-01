@@ -92,7 +92,7 @@
 (add-hook 'csharpmode-hook (lambda ()
                              (push '(?< . ("< " . " >")) evil-surround-pairs-alist)))
 
-(setq omnisharp-server-executable-path "C:\\bin\\omnisharp\\OmniSharp.exe")
+;(setq omnisharp-server-executable-path "C:\\bin\\omnisharp\\OmniSharp.exe")
 
 ;; (add-hook 'csharp-mode-hook 'omnisharp-mode)
 
@@ -173,7 +173,18 @@ again, I haven't see that as a problem."
                               (local-set-key "\C-c<"  'hs-show-block)
                               ))
 
+(require 'asm-mode)
+(add-hook 'asm-mode-hook (lambda ()
+                           (setq indent-tabs-mode nil) ; use spaces to indent
+                           (electric-indent-mode -1) ; indentation in asm-mode is annoying
+                           (setq tab-stop-list (number-sequence 2 60 2))))
+(add-hook 'asm-mode-hook (lambda()
+                           (setq tab-width 4)
+                           (setq asm-indent-level 4)))
 
+(define-key asm-mode-map (kbd "<ret>") 'newline-and-indent)
+(define-key asm-mode-map (kbd "M-.") 'helm-etags-select)
 
 
 (provide 'ruin-c)
+

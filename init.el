@@ -58,22 +58,15 @@
 
 (setq create-lockfiles nil)
 
-(setq backup-save-directory (locate-user-emacs-file "saves"))
+(setq backup-save-directory "~/.emacs.d/saves")
 (when (memq system-type '(windows-nt))
   (setenv "PATH"
           (concat
            "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319" ";"
+           "C:\\bin" ";"
            (getenv "PATH")
            ))
   )
-
-(when (memq system-type '(windows-nt))
-  (setenv "PATH"
-          (concat
-           "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319" ";"
-           (getenv "PATH")
-           )))
-
 
 (when (not (file-exists-p backup-save-directory))
   (make-directory backup-save-directory))
