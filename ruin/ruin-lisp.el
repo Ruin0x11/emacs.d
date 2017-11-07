@@ -4,13 +4,15 @@
 (package-require 'evil-smartparens)
 (package-require 'lispyville)
 (package-require 'slamhound)
+(package-require 'package-lint)
+(package-require 'flycheck-package)
 (require 'smartparens-config)
 (require 'eval-in-repl-cider)
 (require 'cl)
 
 (setq lisp-modes
       '(scheme-mode emacs-lisp-mode lisp-mode clojure-mode common-lisp-mode
-                    lisp-interaction-mode cider-repl-mode))
+                    lisp-interaction-mode  cider-repl-mode inferior-emacs-lisp-mode))
 
 (defun add-lisp-hook (func)
   (add-hooks lisp-modes func))
@@ -79,7 +81,8 @@
                              (define-key cider-repl-mode-map (kbd "<up>") 'cider-repl-previous-input)
                              (define-key cider-repl-mode-map (kbd "M-n") 'cider-repl-next-input)
                              (define-key cider-repl-mode-map (kbd "M-p") 'cider-repl-previous-input)
-                             (define-key cider-repl-mode-map (kbd "C-x C-e") 'ruin/cider-eval-last-sexp-in-repl)
+                             (define-key cider-repl-mode-map (kbd "C-c C-k") 'cider-repl-clear-buffer)
+                             (define-key clojure-mode-map (kbd "C-x C-e") 'ruin/cider-eval-last-sexp-in-repl)
                              (define-key clojure-mode-map (kbd "<C-return>") 'eir-eval-in-cider)))
 
 (add-to-list 'evil-emacs-state-modes 'cider-repl-mode)
@@ -206,5 +209,9 @@
                (save-excursion
                  (end-of-defun)
                  (point)))))
+
+(add-hook 'edebug-mode-hook 'evil-emacs-state)
+
+(add-hook 'ielm-mode-hook 'company-mode)
 
 (provide 'ruin-lisp)

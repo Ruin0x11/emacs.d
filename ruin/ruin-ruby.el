@@ -7,9 +7,12 @@
 (package-require 'yari) ;ルビヌスの槍
 (package-require 'bundler)
 (package-require 'minitest)
+;(require 'flay)
 ;; (require 'rcodetools)
 
-(chruby "ruby-2.4.1")
+(require 'chruby)
+(when (chruby-rubies)
+  (chruby (car (chruby-rubies))))
 
 (setq ruby-align-to-stmt-keywords '(def case)) ;; indent "case" as per ruby style guide
 
@@ -157,14 +160,14 @@
   "es" 'ruby-send-last-sexp
 
   "mY" 'yari-helm-rehash
-  "tt" 'rspec-verify
-  "ta" 'rspec-verify-all
-  "tr" 'rspec-run-last-failed
+  ;"tt" 'rspec-verify
+  ;ta" 'rspec-verify-all
+  "tt" 'minitest-verify
+  "ta" 'minitest-verify-all
+  "tr" 'minitest-rerun
+  ;"tr" 'rspec-run-last-failed
   "tj" 'rspec-find-spec-or-target-other-window
   "th" 'helm-feature-snippets
-
-  "tmt" 'minitest-verify
-  "tma" 'minitest-verify-all
 
   "mg" 'helm-rubygems-org)
 
@@ -177,6 +180,11 @@
 
 (evil-leader/set-key-for-mode 'web-mode
   "dd" 'robe-doc)
+
+(advice-add 'minitest--run-command :before
+            (lambda (&rest args)
+              (save-some-buffers (not compilation-ask-about-save)
+                                 compilation-save-buffers-predicate)))
 
 (add-to-list 'evil-emacs-state-modes 'inf-ruby-mode)
 (ruin/window-movement-for-mode "inf-ruby" 'inf-ruby-mode-map)

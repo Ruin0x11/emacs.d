@@ -12,8 +12,7 @@
      (define-key company-active-map [tab] 'company-complete)
      (define-key company-active-map (kbd "<tab>") 'company-complete)
      (define-key company-active-map (kbd "<escape>") (lambda () (interactive) (company-abort) (evil-normal-state)))
-     
-     
+
      (setq
       ;; always start auto-completion
       company-idle-delay 0

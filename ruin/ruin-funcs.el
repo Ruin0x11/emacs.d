@@ -480,6 +480,13 @@ current window."
                                         (start-process "" nil "xdg-open" file-path))))
       (message "No file associated to this buffer."))))
 
+(defun spacemacs/recompile-elpa ()
+  "Recompile packages in elpa directory. Useful if you switch
+Emacs versions."
+  (interactive)
+  (byte-recompile-directory package-user-dir nil t))
+
+
 (defun split-window-below-and-focus ()
   "Split the window vertically and focus the new window."
   (interactive)

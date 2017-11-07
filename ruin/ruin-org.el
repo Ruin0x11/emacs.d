@@ -22,7 +22,7 @@
   (setq org-agenda-files '("~/Dropbox/org/tracked/"))
   (setq org-refile-targets '(("~/Dropbox/org/notes.org" :maxlevel . 9)
                              (org-agenda-files :maxlevel . 9)))
-  
+
   (setq org-default-notes-file "~/Dropbox/org/tracked/refile.org")
   (setq org-capture-templates
         '(("t" "todo" entry (file "~/Dropbox/org/tracked/refile.org")
@@ -36,7 +36,7 @@
           ("e" "etc." entry (file "~/Dropbox/org/notes.org")
            "* %? - %U\n")
           ("g" "generic" entry (file "~/Dropbox/org/tracked/refile.org")
-           "* %?\n")
+           "* %?\n%U\n")
           ("d" "diary" entry (file+headline "~/Dropbox/org/diary.org" "日記")
            "* %U\n%?\n" :prepend t)
           ("y" "yume" entry (file+headline "~/Dropbox/org/yume.org" "ゆめにっき")
@@ -71,12 +71,13 @@
      org-confirm-babel-evaluate nil
      org-babel-clojure-backend 'cider
      org-babel-clojure-sync-nrepl-timeout nil
-     
+
      org-hide-emphasis-markers t
-     org-pretty-entities t 
+     org-pretty-entities t
      org-startup-with-inline-images t)
 
 (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images)
+
 
 (setq org-agenda-time-grid
   '((daily today require-timed)

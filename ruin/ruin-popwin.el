@@ -10,11 +10,11 @@
 ;; popwin settings
 (setq popwin:special-display-config
       '(("*Help*" :height 0.4 :stick t)
-        (Man-mode :height 0.4 :stick t)
-        ("\\*Man*" :regexp t :height 0.4 :stick t)
+        ;; (Man-mode :height 0.4 :stick t)
+        ;; ("\\*Man.*" :regexp t :height 0.4 :stick t)
         ;; Debug
         ("*Warnings*" :noselect t :position bottom :height 0.3 )
-        ("*Backtrace*" :noselect t :position bottom :height 0.3 )
+        ("*Backtrace*" :stick t :noselect t :position bottom :height 0.3 )
         ("*Messages*" :noselect t :position bottom :height 0.3 )
         ("*Compile-Log*" :position bottom :height 0.3 )
         ("*Shell Command Output*" :position bottom :height 0.3 )
@@ -39,7 +39,7 @@
         ;; Magit/vc
         ;; (magit-status-mode :position bottom :noselect t :height 0.3 :stick t)
         ;; ("*magit-commit*" :position bottom :noselect t :height 0.3 :stick t)
-        ;; ("\\*magit.*" :regexp t :position bottom :noselect t :height 0.3 :stick t)
+        ; ("\\*magit.*" :regexp t :position bottom :noselect t :height 0.3 :stick t)
         ;; ("*magit-diff*" :position bottom :noselect t :height 0.3)
         ;; ("*magit-edit-log*" :position bottom :noselect t :height 0.2)
         ;; ("*magit-process*" :position bottom :noselect t :height 0.2)
@@ -57,14 +57,16 @@
         ("*sldb.*":regexp t :height 0.3)
         ("*Gofmt Errors*" :noselect t)
         ("\\*godoc*" :regexp t :height 0.3)
+        ("*PowerShell Get-Help*" :noselect t :stick t :height 0.3)
         ;; ("*nrepl-error*" :height 0.2 :stick t)
         ;; ("*nrepl-doc*" :height 0.2 :stick t)
         ;; ("*nrepl-src*" :height 0.2 :stick t)
         ("*Kill Ring*" :height 0.3)
         ("*project-status*" :noselect t)
-        ("*Compile-Log" :height 0.2 :stick t)
+        ("*Compile-Log*" :height 0.2 :stick t)
         ("*pytest*" :noselect t)
         (rspec-compilation-mode :height 0.4 :tail nil)
+        ("\\*Minitest*" :regexp t :stick t :noselect t :height 0.4 :tail nil)
         ("*projectile-rails-compilation*" :height 0.3 :stick t)
         ("*projectile-rails-generate*" :height 0.3 :stick t)
         ;; Programing

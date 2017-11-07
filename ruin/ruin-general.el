@@ -33,6 +33,7 @@
 (recentf-mode 1)
 (setq recentf-max-saved-items 1000)
 (run-with-idle-timer 30 t (lambda () (let ((inhibit-message t)) (recentf-save-list))))
+(recentf-cleanup)
 
 ;; Highlight matching parentheses when the point is on them.
 (show-paren-mode 1)
@@ -84,5 +85,34 @@
                                    display-buffer-pop-up-frame) .
                                   ((reusable-frames . t)
                                   (inhibit-same-window . t)))))
+
+
+(defvar truncated-compilation-line-limit 200)
+(defvar truncated-compilation-line-trailer "…")
+
+(defun truncate-compilation-long-lines ()
+  "Emacs doesn't cope well with extremely long
+lines. Unfortunately some processes like grep, ack, ag, rg are
+prone to matching minified files or otherwise extremely long
+lines. Once Added to compilation-filter-hook, this function
+truncates lines returned by the compilation process."
+  (cl-flet ((truncate-line (pos)
+                           (let* ((beginning (progn (beginning-of-line) (point)))
+                                  (ending (progn (end-of-line) (point)))
+                                  (length (- ending beginning))
+                                  (excess (max (- length truncated-compilation-line-limit))))
+                             (when (plusp excess)
+                               (delete-region (- ending excess) ending)
+                               (when truncated-compilation-line-trailer
+                                 (insert truncated-compilation-line-trailer))))))
+    (goto-char compilation-filter-start)
+    (cl-loop do (truncate-line (point))
+             (forward-line 1)
+             (end-of-line)
+             (when (= (point) (point-max))
+               (return)))))
+
+
+(add-hook 'compilation-filter-hook 'truncate-compilation-long-lines)
 
 (provide 'ruin-general)

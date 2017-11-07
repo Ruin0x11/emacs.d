@@ -8,6 +8,7 @@
 ;(load-file (locate-user-emacs-file "site-lisp/evil-leader/evil-leader.el"))
 (package-require 'evil-leader)
 (package-require 'elisp-refs)
+(package-require 'general)
 (global-evil-leader-mode t)
 (load "evil-leader-minor")
 (require 'evil-little-word)
@@ -47,8 +48,8 @@
   "eQ" 'toggle-debug-on-quit
   "ee" 'eval-expression
   "ei" 'ielm
-  "enn" 'debug-on-entry
-  "enc" 'cancel-debug-on-entry
+  "enn" 'edebug-on-entry
+  "enc" 'cancel-edebug-on-entry
 
   "aa" 'org-agenda
   "c" 'org-capture
@@ -89,6 +90,7 @@
   "kr" 'recompile
   "kk" 'kill-compilation
 
+  "?i" 'helm-info
   "?E" 'info-emacs-manual
   "?y" 'yas-describe-tables
 
@@ -118,22 +120,39 @@
   "bm"  'move-buffer-file
   "br"  'revert-buffer
   "bK"  'spacemacs/kill-other-buffers
-  "bw"  'whitespace-cleanup
   "bY"  'spacemacs/copy-whole-buffer-to-clipboard
   "b!"  'shell-command-on-file
   "bB"  'browse-url-of-file
   "b="  'my-diff-buffer-with-file
-  "bi"  'indent-buffer)
+  "bi"  'indent-buffer
+  "ba"  'helm-do-ag-buffers)
+
+(defun ruin/window-movement-for-mode (mode map)
+  (eval-after-load mode `(lambda ()
+                   (define-key ,map (kbd "C-h") 'evil-window-left)
+                   (define-key ,map (kbd "C-j") 'evil-window-down)
+                   (define-key ,map (kbd "C-k") 'evil-window-up)
+                   (define-key ,map (kbd "C-l") 'evil-window-right))
+            ))
+
+(defun ruin/window-movement-for-map (map)
+  (define-key map (kbd "C-h") 'evil-window-left)
+  (define-key map (kbd "C-j") 'evil-window-down)
+  (define-key map (kbd "C-k") 'evil-window-up)
+  (define-key map (kbd "C-l") 'evil-window-right))
 
 (define-key Info-mode-map (kbd "C-i") 'Info-history-forward)
 (define-key Info-mode-map (kbd "C-o") 'Info-history-back)
 (define-key Info-mode-map "m" 'Info-menu)
+(ruin/window-movement-for-map Info-mode-map)
+
 
 (add-hook 'dired-mode-hook
           (lambda()
             (define-key dired-mode-map "f" 'dired-goto-file)
             (define-key dired-mode-map "g" 'dired-goto-file)
-            (define-key dired-mode-map (kbd "<DEL>") 'dired-unmark-backward)))
+            (define-key dired-mode-map (kbd "<DEL>") 'dired-unmark-backward)
+            (evil-commentary-mode 0)))
 
 
 ;;; mode-based binds
@@ -231,6 +250,8 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (add-hook 'Man-mode-hook '(lambda ()
                             (ruin/window-movement-for-map Man-mode-map)
                             ))
+
+(setq Man-notify-method 'pushy)
 
 (ruin/window-movement-for-mode "help-mode" 'help-mode-map)
 (ruin/window-movement-for-mode "compile" 'compilation-mode-map)

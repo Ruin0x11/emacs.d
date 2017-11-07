@@ -3,7 +3,6 @@
 ;; semantic
 (semantic-mode)
 (global-semantic-decoration-mode)
-(global-semantic-idle-scheduler-mode)
 (global-semantic-stickyfunc-mode)
 (global-semantic-highlight-func-mode)
 (global-semantic-show-parser-state-mode)
@@ -61,7 +60,7 @@
 
 
 ;; savehist
-(savehist-mode t)
+(add-hook 'after-init-hook 'savehist-mode)
 
 (setq savehist-file "~/.emacs.d/savehist")
 
@@ -398,6 +397,127 @@
 (evil-leader/set-key
   "ae" 'ruin/start-edbi)
 
+;; powershell
+(package-require 'powershell)
+(require 'powershell)
+
+(when (memq system-type '(gnu/linux darwin))
+  (setq powershell-location-of-exe "pwsh"))
+
+(defvar powershell-cmdlet-cache nil)
+
+(defun powershell-symbol-at-point (&optional look-back)
+  "Return the name of the symbol at point, otherwise nil.
+If LOOK-BACK is non-nil, move backwards trying to find a symbol
+if there isn't one at point."
+  (or (when-let ((str (thing-at-point 'symbol)))
+        (unless (text-property-any 0 (length str) 'field 'cider-repl-prompt str)
+          (substring-no-properties str)))
+      (when look-back
+        (save-excursion
+          (ignore-errors
+            (while (not (looking-at "\\sw\\|\\s_\\|\\`"))
+              (forward-sexp -1)))
+          (powershell-symbol-at-point)))))
+
+(defun powershell-run-cmd (command symbol)
+  "Run COMMAND for the PowerShell symbol SYMBOL."
+  (if symbol
+        (let* ((cmd (concat powershell-location-of-exe " -NoProfile -c \"" command "\""))
+              (formatted (replace-regexp-in-string "\%s" symbol cmd)))
+          (shell-command-to-string formatted))
+      (user-error "No symbol found")))
+
+(defun powershell-read-symbol (rehash look-back)
+  "Read a PowerShell symbol interactively or at point.
+
+If REHASH is set, rehashes the list of all cached cmdlets."
+  (let* ((symbol (powershell-symbol-at-point look-back))
+         (prompt (concat "Find symbol"
+                         (and symbol (format " (default %s)" symbol))
+                         ": "))
+         (enable-recursive-minibuffers t))
+    (completing-read
+     prompt
+     (powershell-all-cmdlets rehash)
+     nil
+     t
+     symbol)))
+
+(defun powershell-doc (&optional topic rehash)
+  "Lookup PowerShell documentation."
+  (interactive (list nil current-prefix-arg))
+  (let ((topic (or topic
+                   (powershell-read-symbol nil nil)))
+         (buffer-name (format "*PowerShell Get-Help*")))
+    (let ((buffer (get-buffer-create buffer-name))
+            (content (powershell-run-cmd "Get-Help %s -full" topic)))
+        (with-current-buffer buffer
+          (erase-buffer)
+          (insert content)
+          (goto-char (point-min))))
+    (display-buffer buffer-name)))
+
+(defun powershell-all-cmdlets (rehash)
+  "Return a string with all PowerShell cmdlets."
+  (if (or rehash (null powershell-cmdlet-cache))
+      (let* ((command (concat powershell-location-of-exe " -NoProfile -c \"Get-Command | select -Property Name\""))
+             (str (shell-command-to-string command))
+             (cmds (seq-drop (split-string str "\n" t "[ ]+") 2)))
+        (setq powershell-cmdlet-cache cmds))
+    powershell-cmdlet-cache))
+
+(defvar powershell-helm-cmdlet-docs
+ (helm-build-sync-source "test"
+   :candidates (powershell-all-cmdlets nil)
+   :action (helm-make-actions "Lookup" 'powershell-doc))
+ "Source for looking up PowerShell documentation.")
+
+;;;###autoload
+(defun powershell-helm-docs ()
+  "Search through all PowerShell documentation with Helm."
+  (interactive)
+  (helm :sources '(powershell-helm-cmdlet-docs)
+        :buffer "*PowerShell Docs*"
+        :prompt "Doc: "))
+
+
+;;
+
+(package-require 'outshine)
+(require 'outshine)
+(add-hook 'outline-minor-mode-hook 'outshine-hook-function)
+(defun -add-font-lock-kwds (FONT-LOCK-ALIST)
+  (font-lock-add-keywords
+   nil (--map (-let (((rgx uni-point) it))
+                `(,rgx (0 (progn
+                            (compose-region (match-beginning 1) (match-end 1)
+                                            ,(concat "\t" (list uni-point)))
+                            nil))))
+              FONT-LOCK-ALIST)))
+
+(defmacro add-font-locks (FONT-LOCK-HOOKS-ALIST)
+  `(--each ,FONT-LOCK-HOOKS-ALIST
+     (-let (((font-locks . mode-hooks) it))
+       (--each mode-hooks
+         (add-hook it (-partial '-add-font-lock-kwds
+                                (symbol-value font-locks)))))))
+
+(defconst emacs-outlines-font-lock-alist
+  ;; Outlines
+  '(("\\(^;;;\\) "          ?■)
+    ("\\(^;;;;\\) "         ?○)
+    ("\\(^;;;;;\\) "        ?✸)
+    ("\\(^;;;;;;\\) "       ?✿)))
+
+(add-font-locks
+ '((emacs-outlines-font-lock-alist emacs-lisp-mode-hook)))
+
+;;; hello
+
+(evil-leader/set-key-for-mode 'powershell-mode
+  "dd" 'powershell-doc
+  "df" 'powershell-helm-docs)
 
 ;; diminish
 (package-require 'diminish)
@@ -441,7 +561,11 @@
 (setq open-paren-modes
       '(rust-mode glsl-mode c-mode))
 
-; (dolist (mode open-paren-modes)
-;   (sp-local-pair mode "{" nil :post-handlers '((my-create-newline-and-enter-sexp "RET"))))
+                                        ; (dolist (mode open-paren-modes)
+                                        ;   (sp-local-pair mode "{" nil :post-handlers '((my-create-newline-and-enter-sexp "RET"))))
 
 (provide 'ruin-misc-modes)
+
+;; Local Variables:
+;; eval: (outline-minor-mode)
+;; End:

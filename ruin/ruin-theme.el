@@ -57,6 +57,7 @@
 (require 'whitespace)
 (setq whitespace-style '(face trailing))
 (global-whitespace-mode 1)
+(add-hook 'before-save-hook 'whitespace-cleanup)
 
 ;; Install themes
 ;; (package-require 'ample-theme)
@@ -82,7 +83,7 @@
   (when (display-graphic-p)
     (defvar emacs-english-font "Iosevka Light"
       "The font name of English.")
- 
+
     (defvar emacs-cjk-font "東風ゴシック" "The font name for CJK.")
 
     (defvar emacs-font-size-pair '(14 . 14)
@@ -192,7 +193,7 @@ This segment overrides the modeline functionality of `org-mode-line-string'."
 (defun ruin/growth-theme ()
   (interactive)
   (when (eq system-type 'windows-nt)
-    (set-frame-font "y-outline-ＭＳ ゴシック-normal-normal-normal-mono-14-*-*-*-c-*-iso10646-1"))
+    (set-frame-font "y-outline-ＭＳ ゴシック-normal-normal-normal-mono-20-*-*-*-c-*-iso10646-1"))
   (load-theme 'consonance t)
   (transparency 95)
   (toggle-frame-fullscreen))

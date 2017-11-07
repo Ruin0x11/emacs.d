@@ -12,11 +12,12 @@
 (eval-after-load "flycheck"
   '(progn
      (setq flycheck-highlighting-mode 'symbols
-           flycheck-display-errors-delay 0)
+           flycheck-display-errors-delay 0.8)
      (set-face-foreground 'flycheck-warning nil)
 
      (define-key flycheck-error-list-mode-map "j" 'next-line)
      (define-key flycheck-error-list-mode-map "k" 'previous-line)
+     (flycheck-package-setup)
      (ruin/window-movement-for-map flycheck-error-list-mode-map)
 
 
