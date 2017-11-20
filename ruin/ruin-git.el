@@ -5,14 +5,10 @@
 (package-require 'git-timemachine)
 (package-require 'smeargle)
 (package-require 'gitignore-mode)
+;(package-require 'magithub)
 (require 'magit)
 
 (add-to-list 'evil-emacs-state-modes 'git-timemachine-mode)
-
-(defun ruin/magit-rebase-interactive-preserve-merge ()
-  (interactive)
-  (magit-rebase-interactive )
-  )
 
 (defun endless/visit-pull-request-url ()
   "Visit the current branch's PR on Github."

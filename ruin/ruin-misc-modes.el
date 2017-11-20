@@ -1,6 +1,6 @@
 ;;;ruin-misc-modes.el --- modes too small for individual .el files
 
-;; semantic
+;;; semantic
 (semantic-mode)
 (global-semantic-decoration-mode)
 (global-semantic-stickyfunc-mode)
@@ -20,22 +20,22 @@
                               (define-key semantic-symref-results-mode-map "k" 'evil-previous-line)))
 
 
-;; winner
+;;; winner
 (winner-mode)
 
 
-;; which-key
+;;; which-key
 (package-require 'which-key)
 (setq which-key-idle-delay 0.2)
 (require 'which-key)
 (which-key-mode)
 
 
-;; request
+;;; request
 (package-require 'request)
 
 
-;; persp
+;;; persp
 (package-require 'persp-mode)
 (with-eval-after-load "persp-mode"
   (setq wg-morph-on nil)
@@ -55,17 +55,17 @@
   "sr" 'persp-rename)
 
 
-;; electric-indent
+;;; electric-indent
 (electric-indent-mode 1)
 
 
-;; savehist
+;;; savehist
 (add-hook 'after-init-hook 'savehist-mode)
 
 (setq savehist-file "~/.emacs.d/savehist")
 
 
-;; quickrun
+;;; quickrun
 (package-require 'quickrun)
 
 (setq quickrun-timeout-seconds nil
@@ -85,7 +85,7 @@
     (kill-buffer quickrun/buffer-name)))
 
 
-;; lookup
+;;; lookup
 ;; (add-to-list 'load-path "/usr/share/emacs/site-lisp/lookup")
                                         ; (load "lookup-autoloads")
                                         ; (evil-leader/set-key
@@ -115,7 +115,7 @@
 (global-set-key (kbd "C-c C-l") 'lookup-region-noconfirm)
 
 
-;; expand-region
+;;; expand-region
 (package-require 'expand-region)
 (define-key evil-normal-state-map (kbd "C-'") 'er/expand-region)
 (define-key evil-visual-state-map (kbd "C-'") 'er/expand-region)
@@ -131,18 +131,18 @@
     entries))
 
 
-;; anzu
+;;; anzu
 (package-require 'anzu)
 (global-anzu-mode 1)
 (setq anzu-cons-mode-line-p nil)
 
 
-;; arduino-mode
+;;; arduino-mode
 (package-require 'arduino-mode)
 (setq auto-mode-alist (remove (rassoc 'arduino-mode auto-mode-alist) auto-mode-alist))
 
 
-;; processing-mode
+;;; processing-mode
 (package-require 'processing-mode)
 (setq processing-location "/usr/bin/processing-java"
       processing-application-dir "/usr/bin/processing"
@@ -161,17 +161,17 @@
   :mode 'processing-mode)
 
 
-;; sos
+;;; sos
 (require 'sos)
 
 
-;; crux
+;;; crux
 (package-require 'crux)
 (evil-leader/set-key
   "fw" 'crux-view-url)
 
 
-;; lively
+;;; lively
 (require 'lively)
 (evil-define-key 'insert emacs-lisp-mode-map (kbd "C-M-l") 'lively)
 
@@ -181,7 +181,7 @@
   "at" 'google-translate-at-point)
 
 
-;; markdown-mode
+;;; markdown-mode
 (package-require 'markdown-mode)
 (eval-after-load "markdown-mode" #'(lambda ()
                                      (define-key markdown-mode-map (kbd "<C-return>") 'markdown-follow-thing-at-point)))
@@ -216,7 +216,7 @@
 (setq mmm-parse-when-idle 't)
 
 
-;; cucumber
+;;; cucumber
 (package-require 'feature-mode)
 (require 'helm-feature)
 (evil-leader/set-key-for-mode 'feature-mode
@@ -237,11 +237,11 @@
 (add-hook 'feature-mode-hook '(lambda ()
                                 (local-set-key (kbd "RET") 'newline-and-indent)))
 
-;; YAML
+;;; YAML
 (package-require 'yaml-mode)
 
 
-;; kaomoji
+;;; kaomoji
 (package-require 'kaomoji)
 (require 'kaomoji)
 (defun my-slurp (file)
@@ -267,14 +267,14 @@
 (evil-leader/set-key
   "ak" 'kaomoji)
 
-;; google-this
+;;; google-this
 (package-require 'google-this)
 (evil-leader/set-key
   "ag" 'google-this
   "aG" (lambda () (interactive) (google-this-line nil t)))
 
 
-;; doc-mode
+;;; doc-mode
 (require 'doc-mode)
 (add-hook 'c-mode-common-hook 'doc-mode)
 (add-hook 'java-mode-hook 'doc-mode)
@@ -282,15 +282,15 @@
   "mdd" 'doc-mode-fix-tag-doc)
 
 
-;; hsp-mode
+;;; hsp-mode
 (require 'hsp-mode)
 
 
-;; uim
+;;; uim
 (if (locate-library "uim") (require 'uim))
 
 
-;; buffer-move
+;;; buffer-move
 (package-require 'buffer-move)
 (global-set-key (kbd "C-S-k") 'buf-move-up)
 (global-set-key (kbd "C-S-j") 'buf-move-down)
@@ -299,14 +299,14 @@
 
 
 
-;; command-frequency
+;;; command-frequency
 (package-require 'keyfreq)
 (keyfreq-mode)
 (keyfreq-autosave-mode)
 (evil-leader/set-key "af" 'keyfreq-show)
 
 
-;; highlight-symbol
+;;; highlight-symbol
 (package-require 'highlight-symbol)
 (defun ruin/highlight-evil-search ()
   (interactive)
@@ -317,31 +317,31 @@
   "Hr" 'highlight-symbol-remove-all
   "Hc" 'highlight-symbol-remove-all
   "H/" 'ruin/highlight-evil-search)
-;; glsl-mode
+;;; glsl-mode
 (package-require 'glsl-mode)
 (defun ruin/open-this-file-in-shader-view ()
   (interactive)
   (shell-command-on-file "glslViewer"))
 
 
-;; compilation-shell-minor-mode
+;;; compilation-shell-minor-mode
 ;; Can't be without it.
 (add-hook 'compilation-mode-hook 'compilation-shell-minor-mode)
 (add-hook 'shell-hook 'compilation-shell-minor-mode)
 
 
-;; dumb-jump
+;;; dumb-jump
 (package-require 'dumb-jump)
 (dumb-jump-mode)
 (evil-leader/set-key "fj" 'dumb-jump-go
   "fp" 'dumb-jump-back)
 
 
-;; mpc
+;;; mpc
 (require 'mpc)
 
 
-;; firestarter
+;;; firestarter
 (package-require 'firestarter)
 (firestarter-mode)
 (setq firestarter-default-type 'finished)
@@ -349,7 +349,7 @@
 (put 'firestarter 'safe-local-variable 'identity)
 
 
-;; restclient
+;;; restclient
 (package-require 'restclient)
 
 (defun ruin/start-restclient ()
@@ -366,11 +366,11 @@
   "ar" 'ruin/start-restclient)
 
 
-;; howdoi
+;;; howdoi
 (package-require 'howdoi)
 
 
-;;edbi
+;;; edbi
 (defun ruin/start-edbi (uri &optional username password)
   "Open Database viewer buffer with args."
   (interactive "sUri: ")
@@ -397,7 +397,7 @@
 (evil-leader/set-key
   "ae" 'ruin/start-edbi)
 
-;; powershell
+;;; powershell
 (package-require 'powershell)
 (require 'powershell)
 
@@ -481,8 +481,11 @@ If REHASH is set, rehashes the list of all cached cmdlets."
         :buffer "*PowerShell Docs*"
         :prompt "Doc: "))
 
+(evil-leader/set-key-for-mode 'powershell-mode
+  "dd" 'powershell-doc
+  "df" 'powershell-helm-docs)
 
-;;
+;;; Outshine
 
 (package-require 'outshine)
 (require 'outshine)
@@ -513,13 +516,10 @@ If REHASH is set, rehashes the list of all cached cmdlets."
 (add-font-locks
  '((emacs-outlines-font-lock-alist emacs-lisp-mode-hook)))
 
-;;; hello
+;;; auto-YASnippet
+(package-require 'auto-yasnippet)
 
-(evil-leader/set-key-for-mode 'powershell-mode
-  "dd" 'powershell-doc
-  "df" 'powershell-helm-docs)
-
-;; diminish
+;;; diminish
 (package-require 'diminish)
 (eval-after-load "helm" '(diminish 'helm-mode))
 (eval-after-load "yasnippet" '(diminish 'yas-minor-mode))
@@ -545,12 +545,13 @@ If REHASH is set, rehashes the list of all cached cmdlets."
 (eval-after-load "whitespace" '(diminish 'global-whitespace-mode))
 (eval-after-load "org-indent" '(diminish 'org-indent-mode))
 (eval-after-load "evil-org" '(diminish 'evil-org-mode))
+(eval-after-load "prettier-js" '(diminish 'prettier-js-mode))
+;(eval-after-load "rainbow-mode" '(diminish 'rainbow-mode))
 
 (diminish 'compilation-in-progress "㋙")
-
 (diminish 'visual-line-mode)
 
-
+;;; open-paren-modes
 (defun my-create-newline-and-enter-sexp (&rest _ignored)
   "Open a new brace or bracket expression, with relevant newlines and indent. "
   (newline)
@@ -566,6 +567,8 @@ If REHASH is set, rehashes the list of all cached cmdlets."
 
 (provide 'ruin-misc-modes)
 
+;;; Local variables
 ;; Local Variables:
 ;; eval: (outline-minor-mode)
+;; eval: (outline-hide-sublevels)
 ;; End:

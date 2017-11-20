@@ -71,7 +71,8 @@
   "?e" 'helm-info-emacs
   "?l" 'helm-info-elisp
   "?g" 'helm-info-magit
-  "?c" 'helm-info-calc)
+  "?c" 'helm-info-calc
+  "?o" 'helm-info-org)
 
 (require 'pulse)
 
@@ -113,7 +114,7 @@ surf."
 (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
 (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
 (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
- 
+
 
 (defun prev-window ()
   (interactive)

@@ -256,4 +256,11 @@
 ;;                )
 ;;              ))
 
+;; Setup compilation errors for minitest
+(add-to-list 'compilation-error-regexp-alist 'minitest)
+(add-to-list 'compilation-error-regexp-alist-alist '(minitest
+                                                     ;;"^[\t ]*bin/rails test \\(.*\\):\\([1-9][0-9]*\\)"
+                                                     "^[\t ]*\\(.*\\) \\[\\(.*\\):\\([1-9][0-9]*\\)\\]:"
+                                                     2 3))
+
 (provide 'ruin-ruby)

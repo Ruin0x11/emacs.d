@@ -12,6 +12,7 @@
 (require 'ob-gnuplot)
 (require 'ob-sql)
 (require 'ob-clojure)
+(require 'ox-md nil t)
 
 ;; Startup & Directories
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))

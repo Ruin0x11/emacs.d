@@ -9,6 +9,8 @@
 (package-require 'evil-leader)
 (package-require 'elisp-refs)
 (package-require 'general)
+(package-require 'color-moccur)
+(package-require 'moccur-edit)
 (global-evil-leader-mode t)
 (load "evil-leader-minor")
 (require 'evil-little-word)
@@ -77,6 +79,8 @@
   "fw" 'crux-view-url
   "fl" 'find-library
   "fe" 'elisp-refs-function
+  "fO" 'dmoccur
+  "fo" 'moccur
 
   "hR" 'helm-regexp
   "hm" 'helm-man-woman
@@ -143,6 +147,8 @@
 
 (define-key Info-mode-map (kbd "C-i") 'Info-history-forward)
 (define-key Info-mode-map (kbd "C-o") 'Info-history-back)
+(define-key Info-mode-map (kbd "C-u") 'Info-scroll-down)
+(define-key Info-mode-map (kbd "C-d") 'Info-scroll-up)
 (define-key Info-mode-map "m" 'Info-menu)
 (ruin/window-movement-for-map Info-mode-map)
 
