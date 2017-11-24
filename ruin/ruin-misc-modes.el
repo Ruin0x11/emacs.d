@@ -215,17 +215,6 @@
 
 (setq mmm-parse-when-idle 't)
 
-
-;;; cucumber
-(package-require 'feature-mode)
-(require 'helm-feature)
-(evil-leader/set-key-for-mode 'feature-mode
-  "tt" 'feature-verify-scenario-at-pos
-  "tb" 'feature-verify-all-scenarios-in-buffer
-  "ta" 'feature-verify-all-scenarios-in-project
-  "th" 'helm-feature-snippets
-  "tj" 'feature-goto-step-definition)
-
 ;; (add-hook 'compilation-shell-minor-mode-hook
 ;;           #'(lambda ()
 ;;               (setq compilation-scroll-output nil)))
@@ -271,7 +260,8 @@
 (package-require 'google-this)
 (evil-leader/set-key
   "ag" 'google-this
-  "aG" (lambda () (interactive) (google-this-line nil t)))
+  "aG" (lambda () (interactive) (google-this-line nil t))
+  "al" 'google-this-lucky-search)
 
 
 ;;; doc-mode
@@ -420,10 +410,21 @@ if there isn't one at point."
               (forward-sexp -1)))
           (powershell-symbol-at-point)))))
 
+(defun powershell-format-cmd (command)
+  (concat powershell-location-of-exe " -NoProfile -c \"" command "\""))
+
+(defun powershell-run-async (command)
+  (interactive "scommand: ")
+  (call-process-shell-command (powershell-format-cmd command)))
+
+(defun powershell-run-sync (command)
+  (interactive "scommand: ")
+  (message (shell-command-to-string (powershell-format-cmd command))))
+
 (defun powershell-run-cmd (command symbol)
   "Run COMMAND for the PowerShell symbol SYMBOL."
   (if symbol
-        (let* ((cmd (concat powershell-location-of-exe " -NoProfile -c \"" command "\""))
+        (let* ((cmd (powershell-format-cmd command))
               (formatted (replace-regexp-in-string "\%s" symbol cmd)))
           (shell-command-to-string formatted))
       (user-error "No symbol found")))
@@ -562,13 +563,52 @@ If REHASH is set, rehashes the list of all cached cmdlets."
 (setq open-paren-modes
       '(rust-mode glsl-mode c-mode))
 
-                                        ; (dolist (mode open-paren-modes)
-                                        ;   (sp-local-pair mode "{" nil :post-handlers '((my-create-newline-and-enter-sexp "RET"))))
+; (dolist (mode open-paren-modes)
+;   (sp-local-pair mode "{" nil :post-handlers '((my-create-newline-and-enter-sexp "RET"))))
+
+(package-require 'hydra)
+
+(defun w32-run (name)
+  (call-process-shell-command (concat "START " name)))
+
+(defun elevated-cmd ()
+  "Start an elevated command prompt in the current buffer's directory.
+
+If no directory is associated with the buffer, \"C:\\\" is used
+instead."
+  (interactive)
+  (let* ((dir (if (buffer-file-name)
+                  (replace-regexp-in-string "/" "\\\\\\\\"
+                                           (file-name-directory (buffer-file-name)))
+                "C:\\\\"))
+         (cmd (concat "Start-Process cmd -ArgumentList \\\"/K\\\",\\\"cd " dir "\\\" -Verb runAs")))
+    (powershell-run-sync cmd)))
+
+(defhydra windows-shortcuts-hydra nil
+  "Windows"
+  ("s" (w32-run "shell:System") "System")
+  ("d" (w32-run "shell:Downloads") "Downloads")
+  ("o" (w32-run "shell:DocumentsLibrary") "Documents")
+  ("m" (w32-run "shell:MyComputerFolder") "My Computer")
+  ("x" (explorer) "Explorer")
+
+  ("e" (call-process-shell-command "\"C:\\Program Files\\Everything\\Everything.exe\"") "Everything")
+  ("a" (call-process-shell-command "\"C:\\Windows\\System32\\SystemPropertiesAdvanced.exe\"")"System Properties")
+  ("c" (elevated-cmd) "cmd")
+  ("t" (w32-run "Taskschd.msc") "Task Scheduler")
+  ("q" nil "quit")
+  )
+
+(when (eq system-type 'windows-nt)
+  (evil-leader/set-key "hw" 'windows-shortcuts-hydra/body))
+
+;;; GPG
+(require 'epa)
+
 
 (provide 'ruin-misc-modes)
 
 ;;; Local variables
 ;; Local Variables:
 ;; eval: (outline-minor-mode)
-;; eval: (outline-hide-sublevels)
 ;; End:

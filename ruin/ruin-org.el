@@ -6,9 +6,8 @@
 
 (require 'org)
 (require 'org-bullets)
-
 (require 'ob-ruby)
-(require 'ob-shell)
+;(require 'ob-shell)
 (require 'ob-gnuplot)
 (require 'ob-sql)
 (require 'ob-clojure)

@@ -61,7 +61,6 @@
   "ac" 'calc
   "ad" 'diff
   "aw" 'browse-url-at-point
-  "al" 'browse-url-generic
   "ax" 're-builder
 
   "js" 'bookmark-set

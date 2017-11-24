@@ -7,7 +7,6 @@
 (package-require 'package-lint)
 (package-require 'flycheck-package)
 (require 'smartparens-config)
-(require 'eval-in-repl-cider)
 (require 'cl)
 
 (setq lisp-modes
@@ -38,6 +37,8 @@
 ;; (define-key smartparens-mode-map (kbd "C-s") 'sp-forward-slurp-sexp)
 ;; (define-key smartparens-mode-map (kbd "C-M-s") 'sp-forward-barf-sexp)
 
+
+
 (with-eval-after-load 'lispyville
   (lispyville-set-key-theme
    '(operators
@@ -62,6 +63,7 @@
 (package-require 'cider-eval-sexp-fu)
 ;;(package-require 'clj-refactor)
 (require 'cider-eval-sexp-fu)
+(require 'eval-in-repl-cider)
 
 (add-hook 'cider-repl-mode-hook #'company-mode)
 (add-hook 'cider-mode-hook #'company-mode)
@@ -108,7 +110,7 @@
   "ed" 'cider-eval-defun-at-point
   "eD" 'cider-pprint-eval-defun-at-point
   "en" 'cider-repl-set-ns
-  
+
   "Fs" 'cider-find-var
 
   "tt" 'cider-test-run-test

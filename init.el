@@ -1,6 +1,11 @@
 ;; init.el -- inits
 (require 'cl)
 
+(require 'server)
+(when (eq system-type 'windows-nt)
+  (or (server-running-p)
+      (server-start)))
+
 ;; Add .emacs.d/ruin to load-path
 (setq dotfiles-dir (file-name-directory
                     (or (buffer-file-name) load-file-name)))
@@ -17,6 +22,11 @@
         (normal-top-level-add-subdirs-to-load-path)))))
 
 (reload-site-lisp)
+
+(defun reload-init-file ()
+  "Reload my init file."
+  (interactive)
+  (load-file user-init-file))
 
 ;; recompile all .el files
 ;; (byte-recompile-directory (expand-file-name "~/.emacs.d/elpa") 0)
@@ -119,3 +129,8 @@
 (load custom-file 'noerror)
 (put 'downcase-region 'disabled nil)
 (put 'dired-find-alternate-file 'disabled nil)
+
+;; load sensitive configs, if available
+(let ((secrets (locate-user-emacs-file "secret.el.gpg")))
+  (when (file-exists-p secrets)
+    (ruin/load-encrypted secrets)))

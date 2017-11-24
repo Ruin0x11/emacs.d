@@ -8,7 +8,7 @@
 
 (require 'helm-config)
 (require 'wgrep)
-(require 'helm-fd)
+;(require 'helm-fd)
 
 (eval-after-load "helm-net" '(require 'helm-google))
 
@@ -66,6 +66,7 @@
   "ht" 'helm-top
   "hp" 'helm-list-emacs-process
   "h@" 'helm-list-elisp-packages
+  "hq" 'helm-quick-launch
 
   ;; "ii" 'helm-info-at-point
   "?e" 'helm-info-emacs
@@ -105,11 +106,11 @@ surf."
   (setq url (browse-url-encode-url url))
   (let* ((process-environment (browse-url-process-environment)))
     (apply 'start-process
-	   (concat "surf " url) nil
+           (concat "surf " url) nil
            "surf"
-	   (append
-	    browse-url-surf-arguments
-	    (list url)))))
+           (append
+            browse-url-surf-arguments
+            (list url)))))
 
 (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
 (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
@@ -140,7 +141,7 @@ surf."
       (if helm-ff-sort-expansions-p
           (sort fnames
                 (lambda (f1 f2) (or (file-directory-p f1)
-                                (not (file-directory-p f2)))))
+                                    (not (file-directory-p f2)))))
         fnames)))
 
   (defun helm-ff-try-expand-fname-1 (parent children)
@@ -177,26 +178,14 @@ surf."
 
   (advice-add 'helm-ff-kill-or-find-buffer-fname :around #'qjp-helm-ff-try-expand-fname))
 
-; (defun helm-project-comments--collect ()
-;   (let ((files (projectile-current-project-files))
-;         matches)
-;     (dolist (file files)
-;       (let ((filename (concat (projectile-project-root) file)))
-;         (when (file-exists-p filename)
-;           (save-excursion
-;             with-current-buffer (find-file-noselect filename t nil t)
-;               (let ((results (re-seq-lines trc-comment-keywords (buffer-string))))
-;                 (setq matches (append matches results))))))))
-;     matches))
-
-(defvar helm-source-project-comments
-  (helm-build-async-source "Project Comments"
-    :candidates-process 'helm-project-comments--collect
-    :nohighlight t))
-
-(defun helm-list-project-comments ()
+(setq quick-launch-dir "~\\AppData\\Roaming\\Microsoft\\Internet Explorer\\Quick Launch")
+(defun helm-quick-launch ()
   (interactive)
-  (helm :sources '(helm-source-project-comments) :buffer "*helm-project-comments*"))
-
+  (let* ((source (helm-build-sync-source "test"
+                   :candidates (cddr (directory-files quick-launch-dir nil ".lnk"))))
+         (link (helm :sources source
+                     :buffer "*helm sync source*"))
+         (full-path (expand-file-name (file-name-as-directory quick-launch-dir))))
+    (ruin/async-shell-command-no-output (concat full-path link))))
 
 (provide 'ruin-helm)

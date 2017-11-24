@@ -27,7 +27,7 @@
 (menu-bar-mode 0)
 
 ;; Set frame title
-(setq frame-title-format '(multiple-frames "%b" ("" invocation-name "@" system-name ": Grow a world." )))
+(setq frame-title-format '(multiple-frames "%b" ("" invocation-name "@" system-name ": End of days." )))
 
 ;; You can also set the initial frame parameters
 ;; (setq initial-frame-alist
@@ -191,6 +191,12 @@ This segment overrides the modeline functionality of `org-mode-line-string'."
   (load-theme 'monokai t)
   (toggle-frame-fullscreen))
 
+(defun ruin/classic-theme-windows ()
+  (when (eq system-type 'windows-nt)
+    (set-default-font "y-outline-MS Gothic-normal-normal-normal-mono-13-*-*-*-c-*-iso10646-1"))
+  (load-theme 'adwaita t)
+  (set-frame-size (selected-frame) 120 60))
+
 (defun ruin/growth-theme ()
   (interactive)
   (when (eq system-type 'windows-nt)
@@ -199,20 +205,24 @@ This segment overrides the modeline functionality of `org-mode-line-string'."
   (transparency 95)
   (toggle-frame-fullscreen))
 
-(defun ruin/init-theme ()
-  (setup-cjk-alignment)
-  ;; (display-time)
-  (display-battery-mode)
+(defun ruin/init-spaceline ()
   (spaceline-compile)
   (spaceline-toggle-org-clock-on)
   (spaceline-toggle-org-clock-not-on)
-  (cond ((not window-system) (ruin/init-textmode-theme))
-        ((memq system-type '(darwin)) (ruin/normal-theme))
-        (t (ruin/growth-theme)))
   (spaceline-emacs-theme)
   (spaceline-helm-mode)
   (spaceline-toggle-projectile-root-on)
   (spaceline-toggle-which-function-off))
+
+(defun ruin/init-theme ()
+  (interactive)
+  (setup-cjk-alignment)
+  (display-battery-mode)
+  ;(ruin/init-spaceline)
+
+  (cond ((not window-system) (ruin/init-textmode-theme))
+        ((memq system-type '(darwin)) (ruin/normal-theme))
+        (t (ruin/classic-theme-windows))))
 
 (if (daemonp)
     (add-hook 'after-make-frame-functions
@@ -236,28 +246,6 @@ This segment overrides the modeline functionality of `org-mode-line-string'."
   (fci-mode))
 
 (add-hook 'rust-mode-hook 'ruin/enable-filling)
-
-;; ;; Calculate default font size
-;; (setq default-frame-font-size 9)
-;; (setq presentation-frame-font-size
-;;       (truncate (* 1.25 default-frame-font-size)))
-
-;; ;; Build font descriptor strings
-;; ;; (defun font-desc (name size)
-;; ;;   (concat "-unknown-" name "-normal-normal-normal-*-"
-;; ;;           (number-to-string size) "-*-*-*-m-0-iso10646-1"))
-;; (defun font-desc (name size)
-;;   (concat name " " (number-to-string size)))
-
-;; ;; Set default and presentation mode fonts
-;; (defun default-frame-font ()
-;;   (font-desc "Menlo for Powerline" default-frame-font-size))
-;; (defun presentation-frame-font ()
-;;   (font-desc "Menlo for Powerline" presentation-frame-font-size))
-;; (set-frame-font (default-frame-font))
-;; (add-to-list 'default-frame-alist '(font . "Menlo\ for\ Powerline-9"))
-
-;; (require 'iosevka-ligatures)
 
 (defun ruin/battery-pmset ()
   "Get battery status information using `pmset'.

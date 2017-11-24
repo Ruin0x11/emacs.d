@@ -70,6 +70,23 @@
           (goto-char (point-max)))
       (scroll-down count))))
 
+(defun ruin/async-shell-command-no-output (command)
+  "Run COMMAND asynchronously without opening the output buffer."
+  (let ((display-buffer-alist
+         (cons
+          (cons "\\*Async Shell Command\\*.*"
+                (cons #'display-buffer-no-window nil))
+          display-buffer-alist)))
+    (async-shell-command command nil nil)))
+
+(defun ruin/load-encrypted (filename)
+  "Load the encrypted Emacs Lisp file FILENAME."
+  (let ((temp-file (make-temp-file "epa"))
+        (filename (expand-file-name filename)))
+    (epa-decrypt-file filename temp-file)
+    (load filename nil nil)))
+
+;;; General functions
 (defun directory-files-exclude (directory &optional full match nosort)
   "Like `directory-files', but excluding \".\" and \"..\"."
   (delete "." (delete ".." (directory-files directory full match nosort))))
@@ -355,6 +372,32 @@ buffer is not visiting a file."
           (select-window first-win)
           (if this-win-2nd (other-window 1))))))
 
+;; from scimax
+;;;###autoload
+(defun explorer ()
+  "Open Finder or Windows Explorer in the current directory."
+  (interactive)
+  (cond
+   ((string= system-type "darwin")
+    (shell-command (format "open -b com.apple.finder %s"
+			   (if (buffer-file-name)
+			       (file-name-directory (buffer-file-name))
+			     "~/"))))
+   ((string= system-type "windows-nt")
+    (shell-command (format "explorer %s"
+			   (replace-regexp-in-string
+			    "/" "\\\\"
+			    (if (buffer-file-name)
+				(file-name-directory (buffer-file-name))
+			      (expand-file-name  "~/"))))))))
+
+(defalias 'finder 'explorer "Alias for `explorer'.")
+
+
+(defun quick-launch ()
+  (interactive)
+  (helm )
+  )
 
 ;;; Bodil
 
