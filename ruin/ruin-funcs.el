@@ -372,6 +372,19 @@ buffer is not visiting a file."
           (select-window first-win)
           (if this-win-2nd (other-window 1))))))
 
+;; https://stackoverflow.com/a/18034042
+(define-key process-menu-mode-map (kbd "k") 'joaot/delete-process-at-point)
+
+(defun joaot/delete-process-at-point ()
+  (interactive)
+  (let ((process (get-text-property (point) 'tabulated-list-id)))
+    (cond ((and process
+                (processp process))
+           (delete-process process)
+           (revert-buffer))
+          (t
+           (error "no process at point!")))))
+
 ;; from scimax
 ;;;###autoload
 (defun explorer ()
@@ -393,11 +406,6 @@ buffer is not visiting a file."
 
 (defalias 'finder 'explorer "Alias for `explorer'.")
 
-
-(defun quick-launch ()
-  (interactive)
-  (helm )
-  )
 
 ;;; Bodil
 
@@ -425,13 +433,19 @@ buffer is not visiting a file."
         (setq pos (match-end 0)))
       matches)))
 
-                                        ; Sample URL
-(setq urlreg "\\(?:http://\\)?ux\\(?:[./#+-_]\\w*\\)+")
+(defconst urlreg "\\(?:https?://\\)\\([A-Za-z]+\\)\\(?:[./#\+-]\\(\\w\\|[&;=_?]\\)*\\)+"
+)
 
 (defun url-list ()
   (mapconcat 'identity
              (re-seq urlreg (buffer-string))
              "\n"))
+
+(defun yank-buffer-url-list ()
+  "Copy all URLs in the current buffer to the kill ring."
+  (interactive)
+  (kill-new (url-list))
+  (message "Copied URLs."))
 
 ;; Crux
 ;;https://github.com/bbatsov/crux/blob/master/crux.el#L258

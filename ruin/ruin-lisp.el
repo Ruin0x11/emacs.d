@@ -163,6 +163,7 @@
       cider-prompt-for-symbol nil
       cider-repl-pop-to-buffer-on-connect nil
       cider-repl-use-clojure-font-lock t
+      cider-repl-display-help-banner nil
 
       nrepl-prompt-to-kill-server-buffer-on-quit nil)
 

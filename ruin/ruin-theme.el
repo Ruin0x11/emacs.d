@@ -20,9 +20,7 @@
 ;; This is bound to f11 in Emacs 24.4
 ;; (toggle-frame-fullscreen)
 ;; Who use the bar to scroll?
-(when window-system
-(scroll-bar-mode 0))
-
+(scroll-bar-mode 0)
 (tool-bar-mode 0)
 (menu-bar-mode 0)
 
@@ -194,7 +192,7 @@ This segment overrides the modeline functionality of `org-mode-line-string'."
 (defun ruin/classic-theme-windows ()
   (when (eq system-type 'windows-nt)
     (set-default-font "y-outline-MS Gothic-normal-normal-normal-mono-13-*-*-*-c-*-iso10646-1"))
-  (load-theme 'adwaita t)
+  (load-theme 'solarized-dark t)
   (set-frame-size (selected-frame) 120 60))
 
 (defun ruin/growth-theme ()
@@ -234,16 +232,17 @@ This segment overrides the modeline functionality of `org-mode-line-string'."
 
 (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
 
-(package-require 'fill-column-indicator)
+;(package-require 'fill-column-indicator)
 (setq fill-column 80)
-(fci-mode)
+;(fci-mode)
 
 (defun ruin/enable-filling ()
   (interactive)
   ; for Rust
   (setq fill-column 99)
   (auto-fill-mode)
-  (fci-mode))
+  (fci-mode 0)
+  )
 
 (add-hook 'rust-mode-hook 'ruin/enable-filling)
 

@@ -20,4 +20,7 @@
 (add-hook 'term-mode-hook
 	  (lambda() (setq yas-dont-activate t)))
 
+(add-hook 'magit-mode-hook
+	  (lambda() (setq yas-dont-activate t)))
+
 (provide 'ruin-snippet)

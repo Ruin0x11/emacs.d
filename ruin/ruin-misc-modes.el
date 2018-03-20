@@ -1,12 +1,12 @@
 ;;;ruin-misc-modes.el --- modes too small for individual .el files
 
 ;;; semantic
-(semantic-mode)
-(global-semantic-decoration-mode)
-(global-semantic-stickyfunc-mode)
-(global-semantic-highlight-func-mode)
-(global-semantic-show-parser-state-mode)
-(global-semantic-highlight-edits-mode)
+;(semantic-mode)
+;(global-semantic-decoration-mode)
+;(global-semantic-stickyfunc-mode)
+;(global-semantic-highlight-func-mode)
+;(global-semantic-show-parser-state-mode)
+;(global-semantic-highlight-edits-mode)
 
 (evil-leader/set-key
   "fj" 'semantic-ia-fast-jump
@@ -563,13 +563,23 @@ If REHASH is set, rehashes the list of all cached cmdlets."
 (setq open-paren-modes
       '(rust-mode glsl-mode c-mode))
 
-; (dolist (mode open-paren-modes)
-;   (sp-local-pair mode "{" nil :post-handlers '((my-create-newline-and-enter-sexp "RET"))))
+(dolist (mode open-paren-modes)
+  (sp-local-pair mode "{" nil :post-handlers '((my-create-newline-and-enter-sexp "RET"))))
+
+(add-hook 'rust-mode-hook 'smartparens-mode)
+(setq sp-highlight-pair-overlay nil
+      sp-highlight-wrap-overlay nil
+      sp-highlight-wrap-tag-overlay nil)
 
 (package-require 'hydra)
 
 (defun w32-run (name)
   (call-process-shell-command (concat "START " name)))
+
+(defun control-panel (&optional system)
+  "Run the control panel for SYSTEM."
+  (let ((cmd (if system (concat "control system") "control")))
+    (w32-run cmd)))
 
 (defun elevated-cmd ()
   "Start an elevated command prompt in the current buffer's directory.
@@ -586,16 +596,18 @@ instead."
 
 (defhydra windows-shortcuts-hydra nil
   "Windows"
-  ("s" (w32-run "shell:System") "System")
   ("d" (w32-run "shell:Downloads") "Downloads")
   ("o" (w32-run "shell:DocumentsLibrary") "Documents")
   ("m" (w32-run "shell:MyComputerFolder") "My Computer")
   ("x" (explorer) "Explorer")
 
-  ("e" (call-process-shell-command "\"C:\\Program Files\\Everything\\Everything.exe\"") "Everything")
-  ("a" (call-process-shell-command "\"C:\\Windows\\System32\\SystemPropertiesAdvanced.exe\"")"System Properties")
+  ("a" (call-process-shell-command "\"C:\\Windows\\System32\\SystemPropertiesAdvanced.exe\"") "System Properties")
+
   ("c" (elevated-cmd) "cmd")
   ("t" (w32-run "Taskschd.msc") "Task Scheduler")
+  ("r" (control-panel) "Control Panel")
+  ("s" (control-panel "sysdm.cpl") "System")
+
   ("q" nil "quit")
   )
 
@@ -605,6 +617,22 @@ instead."
 ;;; GPG
 (require 'epa)
 
+
+(setq lsp-print-io t
+      lsp-response-timeout 10000
+      lsp-document-sync-method 'incremental
+      company-lsp-enable-snippet t)
+
+(require 'lsp-imenu)
+(add-hook 'lsp-after-open-hook 'lsp-enable-imenu)
+
+(load "E:/build/intellij-lsp-server/lsp-intellij.el")
+(with-eval-after-load 'lsp-mode
+  (require 'lsp-intellij)
+  (add-hook 'java-mode-hook #'lsp-intellij-enable))
+
+(package-require 'lsp-ui)
+(add-hook 'lsp-mode-hook 'lsp-ui-mode)
 
 (provide 'ruin-misc-modes)
 

@@ -131,6 +131,6 @@
 (put 'dired-find-alternate-file 'disabled nil)
 
 ;; load sensitive configs, if available
-(let ((secrets (locate-user-emacs-file "secret.el.gpg")))
-  (when (file-exists-p secrets)
-    (ruin/load-encrypted secrets)))
+;(let ((secrets (locate-user-emacs-file "secret.el.gpg")))
+;  (when (file-exists-p secrets)
+;    (ruin/load-encrypted secrets)))

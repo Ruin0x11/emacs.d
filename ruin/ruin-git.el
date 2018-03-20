@@ -8,6 +8,12 @@
 ;(package-require 'magithub)
 (require 'magit)
 
+(if (eq system-type 'windows-nt)
+    (progn
+      (setq exec-path (add-to-list 'exec-path "C:/Program Files/Git/bin"))
+      (setenv "PATH" (concat "C:\\Program Files\\Git\\bin;" (getenv "PATH")))))
+
+
 (add-to-list 'evil-emacs-state-modes 'git-timemachine-mode)
 
 (defun endless/visit-pull-request-url ()

@@ -24,7 +24,6 @@
 (evil-leader/set-leader "<SPC>")
 
 (evil-leader/set-key
-  "au" 'undo-tree-visualize
   "w" 'save-buffer
   "q" 'quit-or-kill-buffer
   "Q" 'kill-buffer-and-window
@@ -58,6 +57,7 @@
   "ob" 'org-iswitchb
   "oc" 'org-clock-goto
 
+  "au" 'undo-tree-visualize
   "ac" 'calc
   "ad" 'diff
   "aw" 'browse-url-at-point
@@ -128,7 +128,9 @@
   "bB"  'browse-url-of-file
   "b="  'my-diff-buffer-with-file
   "bi"  'indent-buffer
-  "ba"  'helm-do-ag-buffers)
+  "ba"  'helm-do-ag-buffers
+  "bw"  'whitespace-cleanup
+  "bf"  'fit-window-to-buffer)
 
 (defun ruin/window-movement-for-mode (mode map)
   (eval-after-load mode `(lambda ()
@@ -230,6 +232,7 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
   '(progn
      (define-key evil-normal-state-map "Y" 'copy-to-end-of-line)
      (define-key evil-normal-state-map "&" 'evil-ex-repeat-substitute-with-flags)
+     (define-key evil-normal-state-map (kbd "M-.") 'xref-find-definitions)
 
      ;; trade ctrl-h and others for faster window switching
      (ruin/window-movement-for-map evil-normal-state-map)

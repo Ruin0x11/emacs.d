@@ -23,7 +23,7 @@
 
 (add-hook 'c-mode-common-hook
           (lambda ()
-            (when (derived-mode-p 'c-mode 'c++-mode 'java-mode)
+            (when (derived-mode-p 'c-mode 'c++-mode)
               (semanticdb-enable-gnu-global-databases 'c-mode)
               (semanticdb-enable-gnu-global-databases 'c++-mode)
               (ggtags-mode 1))))
@@ -47,7 +47,7 @@
   (with-current-buffer helm-buffer
     (when (looking-at " ")
       (goto-char (next-single-property-change
-                  (point-at-bol) 'semantic-tag nil (point-at-eol)))) 
+                  (point-at-bol) 'semantic-tag nil (point-at-eol))))
     (let ((tag (get-text-property (point) 'semantic-tag)))
       (semantic-go-to-tag tag)
       (open-line 1)
