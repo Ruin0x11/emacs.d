@@ -60,9 +60,9 @@
 
 ;; Clojure
 (package-require 'cider)
-(package-require 'cider-eval-sexp-fu)
+;(package-require 'cider-eval-sexp-fu)
 ;;(package-require 'clj-refactor)
-(require 'cider-eval-sexp-fu)
+;(require 'cider-eval-sexp-fu)
 (require 'eval-in-repl-cider)
 
 (add-hook 'cider-repl-mode-hook #'company-mode)

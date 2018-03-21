@@ -5,7 +5,7 @@
 ;; (setq yas-snippet-dirs
 ;;       '("~/.emacs.d/snippets"))
 
-(yas-global-mode 1)
+;(yas-global-mode 1)
 
 ;; The following is optional.
 ;; (define-key yas-minor-mode-map [backtab]     'yas-expand)

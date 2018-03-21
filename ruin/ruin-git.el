@@ -24,7 +24,8 @@
 
 (evil-leader/set-key
   "gg" 'magit-dispatch-popup
-  "gB" 'magit-blame
+  "gBB" 'magit-blame
+  "gBq" 'magit-quit
   "gb" 'magit-branch
   "gh" 'magit-checkout
   "gH" 'magit-branch-and-checkout
@@ -47,6 +48,7 @@
   "gC" 'magit-clone
   "gc" 'magit-commit
   "gR" 'magit-reset-hard
+  "gK" 'magit-file-checkout
   "gv" 'endless/visit-pull-request-url)
 
 (defun magit-diff-head ()
@@ -56,7 +58,9 @@
 
 ;; always open symlinks as actual file
 (setq vc-follow-symlinks t
-      magit-commit-show-diff t)
+      vc-handled-backends nil
+      magit-commit-show-diff t
+      magit-refresh-status-buffer nil)
 
 (add-to-list 'evil-insert-state-modes 'git-commit-mode)
 

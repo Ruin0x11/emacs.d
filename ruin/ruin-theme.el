@@ -20,9 +20,7 @@
 ;; This is bound to f11 in Emacs 24.4
 ;; (toggle-frame-fullscreen)
 ;; Who use the bar to scroll?
-(when window-system
-(scroll-bar-mode 0))
-
+(scroll-bar-mode 0)
 (tool-bar-mode 0)
 (menu-bar-mode 0)
 
@@ -58,7 +56,7 @@
 (require 'whitespace)
 (setq whitespace-style '(face trailing))
 (global-whitespace-mode 1)
-(add-hook 'before-save-hook 'whitespace-cleanup)
+;;(add-hook 'before-save-hook 'whitespace-cleanup)
 
 ;; Install themes
 ;; (package-require 'ample-theme)
@@ -180,7 +178,7 @@ This segment overrides the modeline functionality of `org-mode-line-string'."
   (set-face-background 'spaceline-flycheck-info "black")
   (set-face-background 'spaceline-flycheck-warning "black")
   (set-face-background 'spaceline-flycheck-error "black")
-  (set-face-background 'helm-selection "blue"))
+  )
 
 (defun ruin/classic-theme ()
   (set-frame-font "SGI Screen:style=Regular:pixelsize=14" t)
@@ -200,10 +198,10 @@ This segment overrides the modeline functionality of `org-mode-line-string'."
 (defun ruin/growth-theme ()
   (interactive)
   (when (eq system-type 'windows-nt)
-    (set-frame-font "y-outline-ＭＳ ゴシック-normal-normal-normal-mono-20-*-*-*-c-*-iso10646-1"))
+    (set-default-font "ProggyClean:pixelsize=13"))
   (load-theme 'consonance t)
   (transparency 95)
-  (toggle-frame-fullscreen))
+  (toggle-frame-maximized))
 
 (defun ruin/init-spaceline ()
   (spaceline-compile)
@@ -218,11 +216,11 @@ This segment overrides the modeline functionality of `org-mode-line-string'."
   (interactive)
   (setup-cjk-alignment)
   (display-battery-mode)
-  ;(ruin/init-spaceline)
+  (ruin/init-spaceline)
 
   (cond ((not window-system) (ruin/init-textmode-theme))
         ((memq system-type '(darwin)) (ruin/normal-theme))
-        (t (ruin/classic-theme-windows))))
+        (t (ruin/growth-theme))))
 
 (if (daemonp)
     (add-hook 'after-make-frame-functions

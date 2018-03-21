@@ -123,12 +123,14 @@
   "bm"  'move-buffer-file
   "br"  'revert-buffer
   "bK"  'spacemacs/kill-other-buffers
-  "bY"  'spacemacs/copy-whole-buffer-to-clipboard
+  "by"  'spacemacs/copy-whole-buffer-to-clipboard
   "b!"  'shell-command-on-file
   "bB"  'browse-url-of-file
   "b="  'my-diff-buffer-with-file
+  "bw"  'whitespace-cleanup
   "bi"  'indent-buffer
-  "ba"  'helm-do-ag-buffers)
+  "ba"  'helm-do-ag-buffers
+  "bp"  'prelude-copy-file-name-to-clipboard)
 
 (defun ruin/window-movement-for-mode (mode map)
   (eval-after-load mode `(lambda ()
@@ -230,6 +232,8 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
   '(progn
      (define-key evil-normal-state-map "Y" 'copy-to-end-of-line)
      (define-key evil-normal-state-map "&" 'evil-ex-repeat-substitute-with-flags)
+
+     (define-key evil-normal-state-map (kbd "M-.") 'xref-find-definitions)
 
      ;; trade ctrl-h and others for faster window switching
      (ruin/window-movement-for-map evil-normal-state-map)

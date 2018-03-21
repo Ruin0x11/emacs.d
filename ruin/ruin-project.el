@@ -6,6 +6,9 @@
 
 (setq projectile-completion-system 'helm)
 
+(setq projectile-globally-ignored-file-suffixes
+      (append projectile-globally-ignored-file-suffixes '(".class")))
+
 (setq projectile-globally-ignored-directories
       (append projectile-globally-ignored-directories '(".git"
                                                         ".svn"

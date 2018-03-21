@@ -85,6 +85,7 @@
 
 (case system-type
   (gnu/linux (setq browse-url-browser-function 'browse-url-chromium))
+  (windows-nt (setq browse-url-browser-function 'browse-url-default-windows-browser))
   (darwin (progn
             (setq browse-url-browser-function 'browse-url-generic)
             (setq browse-url-generic-program "open"))))

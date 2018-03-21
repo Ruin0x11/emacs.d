@@ -3,6 +3,9 @@
 (require 'line-comment-banner)
 (require 'google-c-style)
 (package-require 'ggtags)
+(package-require 'gxref)
+(package-require 'helm-gtags)
+(package-require 'function-args)
                                         ; Add cmake listfile names to the mode list.
 (setq auto-mode-alist
       (append
@@ -23,10 +26,26 @@
 
 (add-hook 'c-mode-common-hook
           (lambda ()
-            (when (derived-mode-p 'c-mode 'c++-mode 'java-mode)
-              (semanticdb-enable-gnu-global-databases 'c-mode)
-              (semanticdb-enable-gnu-global-databases 'c++-mode)
+            (when (derived-mode-p 'c-mode 'c++-mode)
+              ;(semanticdb-enable-gnu-global-databases 'c-mode)
+              ;(semanticdb-enable-gnu-global-databases 'c++-mode)
+              (define-key c++-mode-map [(tab)]        'moo-complete)
+              (define-key c++-mode-map (kbd "TAB")    'moo-complete)
+              (define-key c++-mode-map (kbd "<tab>")  'moo-complete)
+              (define-key c-mode-map [(tab)]        'moo-complete)
+              (define-key c-mode-map (kbd "TAB")    'moo-complete)
+              (define-key c-mode-map (kbd "<tab>")  'moo-complete)
+              (setq-local compilation-error-regexp-alist '(msbuild-warning msbuild-error xbuild-warning xbuild-error))
+
               (ggtags-mode 1))))
+
+(evil-define-key 'normal c++-mode-map
+  (kbd "M-.") 'ggtags-find-tag-dwim)
+(evil-define-key 'normal c-mode-map
+  (kbd "M-.") 'ggtags-find-tag-dwim)
+(add-to-list 'xref-backend-functions 'gxref-xref-backend)
+(setq ggtags-highlight-tag nil)
+(global-eldoc-mode 0)
 
 (defun my-asm-mode-hook ()
   ;; you can use `comment-dwim' (M-;) for this kind of behaviour anyway
@@ -47,7 +66,7 @@
   (with-current-buffer helm-buffer
     (when (looking-at " ")
       (goto-char (next-single-property-change
-                  (point-at-bol) 'semantic-tag nil (point-at-eol)))) 
+                  (point-at-bol) 'semantic-tag nil (point-at-eol))))
     (let ((tag (get-text-property (point) 'semantic-tag)))
       (semantic-go-to-tag tag)
       (open-line 1)
@@ -85,14 +104,15 @@
 (package-require 'hideshow)
 (add-hook 'csharp-mode-hook 'electric-pair-mode)
 (eval-after-load
- 'company
- '(add-to-list 'company-backends 'company-omnisharp))
+    'company
+  '(add-to-list 'company-backends 'company-omnisharp))
 
 (autoload 'cmake-mode "/usr/share/cmake-3.6/editors/emacs/cmake-mode.el" t)
 (add-hook 'csharpmode-hook (lambda ()
                              (push '(?< . ("< " . " >")) evil-surround-pairs-alist)))
 
-;(setq omnisharp-server-executable-path "C:\\bin\\omnisharp\\OmniSharp.exe")
+                                        ;(setq omnisharp-server-executable-path "C:\\bin\\omnisharp\\OmniSharp.exe")
+(setq omnisharp-debug nil)
 
 ;; (add-hook 'csharp-mode-hook 'omnisharp-mode)
 

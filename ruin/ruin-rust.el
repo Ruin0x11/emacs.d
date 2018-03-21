@@ -7,9 +7,9 @@
  racer-cmd "~/.cargo/bin/racer"
  racer-rust-src-path "/home/nuko/build/rust/src")
 
-(add-hook 'flycheck-mode-hook #'flycheck-rust-setup)
-(add-hook 'rust-mode-hook 'cargo-minor-mode)
-(add-hook 'rust-mode-hook #'rust-enable-format-on-save)
+;(add-hook 'flycheck-mode-hook #'flycheck-rust-setup)
+;(add-hook 'rust-mode-hook 'cargo-minor-mode)
+;(add-hook 'rust-mode-hook #'rust-enable-format-on-save)
 
 ;; (add-hook 'rust-mode-hook #'racer-mode)
 ;; (add-hook 'racer-mode-hook #'eldoc-mode)
