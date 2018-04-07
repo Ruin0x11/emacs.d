@@ -48,7 +48,6 @@
 (setq package-user-dir (locate-user-emacs-file "elpa"))
 (require 'package)
 (dolist (source '(("melpa" . "http://melpa.org/packages/")
-                  ("marmalade" . "http://marmalade-repo.org/packages/")
                   ("elpa" . "http://tromey.com/elpa/")))
   (add-to-list 'package-archives source t))
 (package-initialize)
@@ -74,6 +73,7 @@
           (concat
            "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319" ";"
            "C:\\bin" ";"
+           "C:\\Program Files\\Git\\usr\\bin" ";"
            (getenv "PATH")
            ))
   )
