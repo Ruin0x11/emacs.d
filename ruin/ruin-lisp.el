@@ -3,7 +3,7 @@
 (package-require 'smartparens)
 (package-require 'evil-smartparens)
 (package-require 'lispyville)
-(package-require 'slamhound)
+;(package-require 'slamhound)
 (package-require 'package-lint)
 (package-require 'flycheck-package)
 (require 'smartparens-config)
@@ -101,7 +101,7 @@
   "ma" 'cider-apropos-documentation
   "mr" 'cider-switch-to-repl-buffer
   "mb" 'connect-burgundy
-  "ms" 'slamhound
+;  "ms" 'slamhound
   "mq" 'cider-quit
 
   "eb" 'cider-eval-buffer
