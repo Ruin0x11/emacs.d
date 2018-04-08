@@ -1,7 +1,7 @@
 ;;; ruin-ruby.el --- settings for Ruby
 (package-require 'robe)
 (package-require 'enh-ruby-mode)
-(package-require 'ruby-block)
+;(package-require 'ruby-block)
 (package-require 'rspec-mode)
 (package-require 'chruby)
 (package-require 'yari) ;ルビヌスの槍
@@ -16,11 +16,11 @@
 
 (setq ruby-align-to-stmt-keywords '(def case)) ;; indent "case" as per ruby style guide
 
-(require 'ruby-block)
-(ruby-block-mode t)
-(setq ruby-block-highlight-toggle 'overlay    ;; do overlay
-      ruby-block-highlight-toggle 'minibuffer ;; display to minibuffer
-      ruby-block-highlight-toggle t)          ;; display to minibuffer and do overlay
+;(require 'ruby-block)
+;(ruby-block-mode t)
+;(setq ruby-block-highlight-toggle 'overlay    ;; do overlay
+;      ruby-block-highlight-toggle 'minibuffer ;; display to minibuffer
+;      ruby-block-highlight-toggle t)          ;; display to minibuffer and do overlay
 
 (add-hook 'ruby-mode-hook 'robe-mode)
 (add-hook 'enh-ruby-mode-hook 'robe-mode)
