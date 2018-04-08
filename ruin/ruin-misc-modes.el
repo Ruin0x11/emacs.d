@@ -626,13 +626,15 @@ instead."
 (require 'lsp-imenu)
 (add-hook 'lsp-after-open-hook 'lsp-enable-imenu)
 
-(load "E:/build/intellij-lsp-server/lsp-intellij.el")
-(with-eval-after-load 'lsp-mode
-  (require 'lsp-intellij)
-  (add-hook 'java-mode-hook #'lsp-intellij-enable))
 
-(package-require 'lsp-ui)
-(add-hook 'lsp-mode-hook 'lsp-ui-mode)
+(when
+    (file-exists-p "E:/build/intellij-lsp-server/lsp-intellij.el")
+  (load "E:/build/intellij-lsp-server/lsp-intellij.el")
+  (with-eval-after-load 'lsp-mode
+    (require 'lsp-intellij)
+    (add-hook 'java-mode-hook #'lsp-intellij-enable))
+  (package-require 'lsp-ui)
+  (add-hook 'lsp-mode-hook 'lsp-ui-mode))
 
 ;;; Tramp
 (setq putty-directory "C:\\Program Files\\PuTTY")
