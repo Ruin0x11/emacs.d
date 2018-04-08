@@ -634,6 +634,15 @@ instead."
 (package-require 'lsp-ui)
 (add-hook 'lsp-mode-hook 'lsp-ui-mode)
 
+;;; Tramp
+(setq putty-directory "C:\\Program Files\\PuTTY")
+(when (eq window-system 'w32)
+  (setq tramp-default-method "plink")
+  (when (and (not (string-match putty-directory (getenv "PATH")))
+	     (file-directory-p putty-directory))
+    (setenv "PATH" (concat putty-directory ";" (getenv "PATH")))
+    (add-to-list 'exec-path putty-directory)))
+
 (provide 'ruin-misc-modes)
 
 ;;; Local variables

@@ -11,6 +11,7 @@
 (package-require 'slim-mode)
 (package-require 'graphql-mode)
 (package-require 'prettier-js)
+(package-require 'impatient-mode)
 
 (require 'web-mode)
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
@@ -34,7 +35,7 @@
           (setq evil-shift-width slim-indent-offset))))
 
 (dolist (hook
-         '(css-mode-hook web-mode-hook sass-mode-hook less-css-mode-hook))
+         '(css-mode-hook web-mode-hook sass-mode-hook less-css-mode-hook ssass-mode-hook))
   (add-hook hook 'rainbow-mode)
   (add-hook hook 'company-mode-on))
 

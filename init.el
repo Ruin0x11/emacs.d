@@ -103,18 +103,18 @@
         ruin-ruby
         ruin-python
         ruin-html
-        ruin-haskell
-        ruin-go
+        ;ruin-haskell
+        ;ruin-go
         ruin-c
         ruin-rust
-        ruin-tex
+        ;ruin-tex
                                         ;ruin-hipchat
 
         ruin-project
         ruin-flycheck
         ruin-snippet
         ruin-git
-        ruin-mail
+        ;ruin-mail
         ruin-shell
         ruin-popwin
         ruin-misc-modes
