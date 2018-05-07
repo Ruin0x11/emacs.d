@@ -35,6 +35,7 @@
                                                      emacs-lisp-mode
                                                      rust-mode
                                                      java-mode
+                                                     kotlin-mode
                                                      semantic-mode
                                                      enh-ruby-mode
                                                      ruby-mode

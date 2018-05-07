@@ -1,10 +1,9 @@
-;;; undy-theme.el --- A fruity color theme for Emacs.
+;;; undy-theme.el --- A fruity color theme.            -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2011-2016
+;; Copyright (C) 2018
 
-;; Author: Kelvin Smith <oneKelvinSmith@gmail.com>
-;; URL: http://github.com/oneKelvinSmith/undy-emacs
-;; Version: 3.5.3
+;; Author:  <kadode@kadode-PC>
+;; Keywords:
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -20,31 +19,10 @@
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ;;; Commentary:
-;;
-;; A port of the popular Textmate theme Undy for Emacs 24, built on top
-;; of the new built-in theme support in Emacs 24.
-;;
-;;; Credits:
-;;
-;; Wimer Hazenberg created the original theme.
-;; - http://www.undy.nl/blog/2006/07/15/textmate-color-theme/
-;;
-;; Bozhidar Batsov created zenburn-theme.el and solarized-theme.el
-;;  on which this file is based.
-;; - https://github.com/bbatsov/zenburn-emacs
-;;
-;; Color Scheme Designer 3 for complementary colours.
-;; - http://colorschemedesigner.com/
-;;
-;; Xterm 256 Color Chart
-;; - https://upload.wikimedia.org/wikipedia/en/1/15/Xterm_256color_chart.svg
-;;
-;; K. Adam Christensen for his personal undy theme that addresses 256 colours.
-;; - https://github.com/pope/personal/blob/master/etc/emacs.d/undy-theme.el
-;;
-;; Thomas Frössman for his work on solarized-emacs.
-;; - http://github.com/bbatsov/solarized-emacs
-;;
+
+;; Sort of like Obsidian (Eclipse).
+;; Inspiration: https://twitter.com/undymente/status/499135890149482496
+
 ;;; Code:
 
 (unless (>= emacs-major-version 24)

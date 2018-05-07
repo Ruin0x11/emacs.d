@@ -10,12 +10,8 @@
        '(("\\.cmake\\'" . cmake-mode))
        auto-mode-alist))
 
-(add-hook 'c-mode-common-hook 'google-set-c-style)
-(add-hook 'c-mode-common-hook 'google-make-newline-indent)
-
-(add-hook 'c-mode-common-hook
-          (lambda () (make-local-variable 'comment-fill)
-            (setq comment-fill "*")))
+;(add-hook 'c-mode-common-hook 'google-set-c-style)
+;(add-hook 'c-mode-common-hook 'google-make-newline-indent)
 
 (add-hook 'asm-mode-hook
           (lambda () (make-local-variable 'comment-fill)
@@ -23,6 +19,11 @@
 
 (add-hook 'c-mode-common-hook
           (lambda ()
+            (c-set-offset 'innamespace 0)
+            (c-set-offset 'substatement-open 0)
+            (setq c-default-style "linux"
+                  c-basic-offset 4
+                  comment-fill "*")
             (when (derived-mode-p 'c-mode 'c++-mode)
               (semanticdb-enable-gnu-global-databases 'c-mode)
               (semanticdb-enable-gnu-global-databases 'c++-mode)

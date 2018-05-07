@@ -95,13 +95,13 @@
         ruin-evil
         ruin-org
         ruin-helm
-        ruin-ido
+        ;ruin-ido
         ruin-company
 
         ruin-lisp
-        ruin-lua
+        ;ruin-lua
         ruin-ruby
-        ruin-python
+        ;ruin-python
         ruin-html
         ;ruin-haskell
         ;ruin-go
