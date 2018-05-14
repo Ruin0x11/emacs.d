@@ -64,6 +64,7 @@
 ;; (package-require 'zenburn-theme)
 (package-require 'solarized-theme)
 (package-require 'monokai-theme)
+(package-require 'idea-darkula-theme)
 (package-require 'spaceline)
 (require 'spaceline-config)
 
@@ -191,8 +192,8 @@ This segment overrides the modeline functionality of `org-mode-line-string'."
 
 (defun ruin/classic-theme-windows ()
   (when (eq system-type 'windows-nt)
-    (set-default-font "y-outline-MS Gothic-normal-normal-normal-mono-13-*-*-*-c-*-iso10646-1"))
-  (load-theme 'adwaita t)
+    (set-default-font "y-outline-MS Gothic-normal-normal-normal-mono-12-*-*-*-c-*-iso10646-1"))
+  (load-theme 'undy t)
   (set-frame-size (selected-frame) 120 60))
 
 (defun ruin/growth-theme ()
@@ -202,6 +203,18 @@ This segment overrides the modeline functionality of `org-mode-line-string'."
   (load-theme 'consonance t)
   (transparency 95)
   (toggle-frame-maximized))
+
+(defun ruin/idea-theme ()
+  (interactive)
+  (when (eq system-type 'windows-nt)
+    (set-default-font "ProggyClean:pixelsize=13"))
+  (load-theme 'idea-darkula t)
+ ;; (toggle-frame-maximized)
+  )
+
+(defun ruin/plain-theme ()
+  (when (eq system-type 'windows-nt)
+    (set-default-font "Consolas:pixelsize=14")))
 
 (defun ruin/init-spaceline ()
   (spaceline-compile)
@@ -215,12 +228,12 @@ This segment overrides the modeline functionality of `org-mode-line-string'."
 (defun ruin/init-theme ()
   (interactive)
   (setup-cjk-alignment)
-  (display-battery-mode)
-  (ruin/init-spaceline)
+  ;(display-battery-mode)
+  ;(ruin/init-spaceline)
 
   (cond ((not window-system) (ruin/init-textmode-theme))
         ((memq system-type '(darwin)) (ruin/normal-theme))
-        (t (ruin/growth-theme))))
+        (t (ruin/classic-theme-windows))))
 
 (if (daemonp)
     (add-hook 'after-make-frame-functions

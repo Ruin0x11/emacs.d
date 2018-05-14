@@ -595,7 +595,15 @@ If no region selected, you could manually input javascript expression."
   (indent-according-to-mode))
 
 (setq open-paren-modes
-      '(rust-mode glsl-mode c-mode))
+      '(rust-mode glsl-mode c-mode c++-mode))
+
+(dolist (mode open-paren-modes)
+  (sp-local-pair mode "{" nil :post-handlers '((my-create-newline-and-enter-sexp "RET"))))
+
+(add-hooks open-paren-modes 'smartparens-mode)
+(setq sp-highlight-pair-overlay nil
+      sp-highlight-wrap-overlay nil
+      sp-highlight-wrap-tag-overlay nil)
 
 ; (dolist (mode open-paren-modes)
 ;   (sp-local-pair mode "{" nil :post-handlers '((my-create-newline-and-enter-sexp "RET"))))
@@ -726,6 +734,11 @@ instead."
       (let ((result (elt results 0)))
         (message (assoc-default 'message result)))
     (error "found more than 1 result")))
+
+(package-require 'kotlin-mode)
+(setq kotlin-tab-width 4)
+
+(require 'vc)
 
 (provide 'ruin-misc-modes)
 

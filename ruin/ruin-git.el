@@ -25,7 +25,7 @@
 (evil-leader/set-key
   "gg" 'magit-dispatch-popup
   "gBB" 'magit-blame
-  "gBq" 'magit-quit
+  "gBq" 'magit-blame-quit
   "gb" 'magit-branch
   "gh" 'magit-checkout
   "gH" 'magit-branch-and-checkout
@@ -63,6 +63,8 @@
       magit-refresh-status-buffer nil)
 
 (add-to-list 'evil-insert-state-modes 'git-commit-mode)
+
+(magit-auto-revert-mode)
 
 (evil-leader/set-key-for-mode 'smerge-mode
   "mss" 'smerge-keep-current

@@ -21,6 +21,9 @@
                                                         "semanticdb"
                                                         )))
 
+(setq projectile-project-root-files
+      (append projectile-project-root-files '("Makefile")))
+
 (evil-leader/set-key
   "ps" 'helm-projectile-switch-project
   "pa" 'helm-projectile-ag

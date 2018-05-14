@@ -26,7 +26,7 @@
       evil-complete-previous-func 'bw/company-complete-lambda)
 
      (setq company-global-modes '(clojurescript-mode clojure-mode cider-repl-mode cider-mode ruby-mode html-mode css-mode javascript-mode emacs-lisp-mode
-                                                     csharp-mode org-mode java-mode
+                                                     csharp-mode org-mode java-mode kotlin-mode
                                                      semantic-mode enh-ruby-mode ruby-mode robe-mode))
      )
   )

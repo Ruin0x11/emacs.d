@@ -86,7 +86,7 @@
                                   ((reusable-frames . t)
                                   (inhibit-same-window . t)))))
 
-(defvar truncated-compilation-line-limit 500)
+(defvar truncated-compilation-line-limit 5000)
 (defvar truncated-compilation-line-trailer "…")
 
 (defun truncate-compilation-long-lines ()

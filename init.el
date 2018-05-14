@@ -134,3 +134,27 @@
 (let ((secrets (locate-user-emacs-file "secret.el.gpg")))
   (when (file-exists-p secrets)
     (ruin/load-encrypted secrets)))
+
+(let ((secrets (locate-user-emacs-file "work.el")))
+  (when (file-exists-p secrets)
+    (load secrets)))
+
+(load "e:/build/lsp-intellij/lsp-intellij.el")
+(package-require 'lsp-ui)
+(add-hook 'lsp-after-open-hook #'lsp-ui-mode)
+
+(package-require 'company-lsp)
+(setq company-lsp-enable-snippet t
+      company-lsp-cache-candidates t
+      lsp-print-io nil)
+(push 'company-lsp company-backends)
+(push 'java-mode company-global-modes)
+(push 'kotlin-mode company-global-modes)
+(with-eval-after-load 'lsp-mode
+  (require 'lsp-intellij)
+  (add-hook 'java-mode-hook #'lsp-intellij-enable)
+  (add-hook 'kotlin-mode-hook #'lsp-intellij-enable))
+
+
+(require 'lsp-imenu)
+(add-hook 'lsp-after-open-hook 'lsp-enable-imenu)

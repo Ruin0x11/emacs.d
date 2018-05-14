@@ -5,7 +5,7 @@
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    (quote
-    ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default)))
+    ("82b67c7e21c3b12be7b569af7c84ec0fb2d62105629a173e2479e1053cff94bd" "2c867c0ed73454996d7a81570d464de7e83fd3c8d4ddd17d2becb6e1fd2d1465" "12b204c8fcce23885ce58e1031a137c5a14461c6c7e1db81998222f8908006af" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "53f97243218e8be82ba035ae34c024fd2d2e4de29dc6923e026d5580c77ff702" default)))
  '(haskell-interactive-popup-errors nil)
  '(haskell-mode-hook (quote (turn-on-haskell-indentation turn-on-haskell-doc)))
  '(haskell-process-auto-import-loaded-modules t)
@@ -13,8 +13,15 @@
  '(haskell-process-suggest-remove-import-lines t)
  '(package-selected-packages
    (quote
-    (diminish auto-yasnippet outshine powershell howdoi restclient firestarter dumb-jump glsl-mode highlight-symbol keyfreq buffer-move google-this kaomoji yaml-mode feature-mode mmm-mode markdown-mode google-translate crux processing-mode arduino-mode anzu expand-region quickrun persp-mode which-key popwin multi-term gitignore-mode smeargle git-timemachine evil-magit magit helm-flycheck helm-projectile racer cargo flycheck-rust toml-mode rust-mode omnisharp csharp-mode ggtags go-mode shm ghc flycheck-haskell haskell-mode scss-mode graphql-mode slim-mode ssass-mode prettier-js js-doc flymake-less less coffee-mode rainbow-mode haml-mode web-mode py-autopep8 company-jedi elpy projectile-rails minitest bundler yari chruby rspec-mode ruby-block enh-ruby-mode robe lua-mode cider-eval-sexp-fu cider flycheck-package package-lint slamhound evil-smartparens smartparens eval-in-repl lispyville company wgrep helm-flx helm-swoop helm-ag evil-org gnuplot helm-org-rifle org-bullets evil-matchit moccur-edit color-moccur general elisp-refs evil-leader evil-surround evil-commentary evil fill-column-indicator spaceline solarized-theme monokai-theme exec-path-from-shell)))
- '(safe-local-variable-values (quote ((eval outline-hide-sublevels)))))
+    (srefactor json-mode cmake-mode neotree f kotlin-mode idea-darkula-theme company-lsp ahk-mode eclim yari wgrep toml-mode smeargle slim-mode slamhound shm scss-mode ruby-block rspec-mode robe restclient rainbow-mode racer quickrun py-autopep8 processing-mode prettier-js powershell popwin persp-mode outshine org-bullets omnisharp multi-term moccur-edit mmm-mode minitest markdown-mode less keyfreq kaomoji js-doc howdoi highlight-symbol helm-swoop helm-org-rifle helm-gtags helm-flycheck helm-flx helm-ag haml-mode gxref graphql-mode google-translate google-this go-mode gnuplot glsl-mode gitignore-mode ghc ggtags function-args flymake-less flycheck-rust flycheck-package flycheck-haskell firestarter fill-column-indicator expand-region exec-path-from-shell evil-surround evil-smartparens evil-org evil-magit evil-leader evil-commentary eval-in-repl ensime enh-ruby-mode elisp-refs dumb-jump diminish crux company-jedi coffee-mode cider-eval-sexp-fu chruby cargo bundler buffer-move auto-yasnippet arduino-mode anzu)))
+ '(projectile-project-root-files-functions (quote (projectile-root-local projectile-root-top-down)))
+ '(safe-local-variable-values
+   (quote
+    ((eval when
+           (fboundp
+            (quote rainbow-mode))
+           (rainbow-mode 1))
+     (magit-refresh-buffers)))))
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.

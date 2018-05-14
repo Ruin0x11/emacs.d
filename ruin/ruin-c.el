@@ -6,6 +6,8 @@
 (package-require 'gxref)
 (package-require 'helm-gtags)
 (package-require 'function-args)
+(package-require 'srefactor)
+(require 'srefactor)
                                         ; Add cmake listfile names to the mode list.
 (setq auto-mode-alist
       (append
@@ -13,16 +15,30 @@
        '(("\\.cmake\\'" . cmake-mode))
        auto-mode-alist))
 
-(add-hook 'c-mode-common-hook 'google-set-c-style)
-(add-hook 'c-mode-common-hook 'google-make-newline-indent)
+;(add-hook 'c-mode-common-hook 'google-set-c-style)
+;(add-hook 'c-mode-common-hook 'google-make-newline-indent)
+
+(add-to-list 'semantic-default-submodes 'global-semantic-stickyfunc-mode)
+(global-semantic-idle-scheduler-mode 1)
+(global-semanticdb-minor-mode 1)
+(global-semantic-idle-summary-mode 1)
+
 
 (add-hook 'c-mode-common-hook
-          (lambda () (make-local-variable 'comment-fill)
-            (setq comment-fill "*")))
-
-(add-hook 'asm-mode-hook
-          (lambda () (make-local-variable 'comment-fill)
-            (setq comment-fill "-")))
+          (lambda ()
+            (c-set-offset 'innamespace 0)
+            (c-set-offset 'substatement-open 0)
+            (semantic-mode 1)
+            (setq-local eldoc-documentation-function #'ggtags-eldoc-function)
+            (setq compilation-skip-threshold 2)
+            (setq compilation-auto-jump-to-first-error t)
+            (setq c-default-style "linux"
+                  c-basic-offset 4
+                  comment-fill "*")
+            (when (derived-mode-p 'c-mode 'c++-mode)
+              (semanticdb-enable-gnu-global-databases 'c-mode)
+              (semanticdb-enable-gnu-global-databases 'c++-mode)
+              (ggtags-mode 1))))
 
 (add-hook 'c-mode-common-hook
           (lambda ()
@@ -46,6 +62,34 @@
 (add-to-list 'xref-backend-functions 'gxref-xref-backend)
 (setq ggtags-highlight-tag nil)
 (global-eldoc-mode 0)
+
+(setq
+ helm-gtags-ignore-case t
+ helm-gtags-auto-update t
+ helm-gtags-use-input-at-cursor t
+ helm-gtags-pulse-at-cursor t
+ helm-gtags-prefix-key "\C-cg"
+ helm-gtags-suggested-key-mapping t
+ )
+(evil-define-key '(visual normal) c-mode-map (kbd "M-RET") 'srefactor-refactor-at-point)
+(evil-define-key '(visual normal) c++-mode-map (kbd "M-RET") 'srefactor-refactor-at-point)
+
+(require 'helm-gtags)
+;; Enable helm-gtags-mode
+(add-hook 'dired-mode-hook 'helm-gtags-mode)
+(add-hook 'eshell-mode-hook 'helm-gtags-mode)
+(add-hook 'c-mode-hook 'helm-gtags-mode)
+(add-hook 'c++-mode-hook 'helm-gtags-mode)
+(add-hook 'asm-mode-hook 'helm-gtags-mode)
+
+(evil-leader/set-key-for-mode 'c++-mode
+  "fi" 'helm-gtags-tags-in-this-function)
+(define-key helm-gtags-mode-map (kbd "C-c g a") 'helm-gtags-tags-in-this-function)
+(define-key helm-gtags-mode-map (kbd "C-j") 'helm-gtags-select)
+(define-key helm-gtags-mode-map (kbd "M-.") 'helm-gtags-dwim)
+(define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)
+(define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
+(define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)
 
 (defun my-asm-mode-hook ()
   ;; you can use `comment-dwim' (M-;) for this kind of behaviour anyway

@@ -6,6 +6,9 @@
 ;;       '("~/.emacs.d/snippets"))
 
 ;(yas-global-mode 1)
+(yas-reload-all)
+(add-hook 'kotlin-mode-hook #'yas-minor-mode)
+(add-hook 'java-mode-hook #'yas-minor-mode)
 
 ;; The following is optional.
 ;; (define-key yas-minor-mode-map [backtab]     'yas-expand)
