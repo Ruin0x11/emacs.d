@@ -327,7 +327,8 @@ show this warning instead."
   "ot" 'org-set-tags-command
   "or" 'org-refile
   "ow" 'org-save-all-org-buffers
-  "oh" 'helm-org-rifle-org-directory)
+  "oh" 'helm-org-files
+  "oH" 'helm-org-rifle-org-directory)
 
 (package-require 'general)
 
@@ -476,5 +477,16 @@ show this warning instead."
   (goto-char (line-end-position)))
 
 (add-hook 'org-mode-hook (lambda () (yas-minor-mode 0)))
+
+(defun helm-org-files ()
+  (interactive)
+  (let* ((org-files (directory-files-recursively org-directory "\\`[^\\.].*\\.org\\'"))
+         (source (helm-build-sync-source "org-files"
+                   :candidates org-files))
+         (file (helm :sources source
+                     :buffer "*Org Files*"))
+         (full-path (expand-file-name (file-name-as-directory org-directory))))
+    (when file
+      (find-file file))))
 
 (provide 'ruin-org)

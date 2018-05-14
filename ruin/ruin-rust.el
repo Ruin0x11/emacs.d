@@ -1,5 +1,6 @@
 (package-require 'rust-mode)
 (package-require 'toml-mode)
+(package-require 'lsp-rust)
 (package-require 'flycheck-rust) (package-require 'cargo)
 (package-require 'racer)
 
@@ -7,9 +8,9 @@
  racer-cmd "~/.cargo/bin/racer"
  racer-rust-src-path "/home/nuko/build/rust/src")
 
-;(add-hook 'flycheck-mode-hook #'flycheck-rust-setup)
-;(add-hook 'rust-mode-hook 'cargo-minor-mode)
-;(add-hook 'rust-mode-hook #'rust-enable-format-on-save)
+(add-hook 'flycheck-mode-hook #'flycheck-rust-setup)
+(add-hook 'rust-mode-hook 'cargo-minor-mode)
+(add-hook 'rust-mode-hook #'rust-enable-format-on-save)
 
 ;; (add-hook 'rust-mode-hook #'racer-mode)
 ;; (add-hook 'racer-mode-hook #'eldoc-mode)
@@ -29,21 +30,12 @@
 
   "mu" 'ruin/use-missing-imports
   "mk" 'cargo-process-clippy
+  "mt" 'ruin/jump-to-cargo-dot-toml
 
   "ta" 'cargo-process-test
   "tt" 'ruin/my-cargo-process-current-test
   "tf" 'ruin/cargo-test-current-mod-or-file
   "ts" 'ruin/cargo-test-tests
-  )
-
-(evil-leader/set-key-for-mode 'toml-mode
-  "kr" 'cargo-process-run
-  "kc" 'cargo-process-build
-  "kk" 'cargo-process-clean
-  "ku" 'cargo-process-update
-  "kg" 'ruin/rust-gdb
-
-  "ta" 'cargo-process-test
   )
 
 (eval-after-load "rust-mode"
@@ -127,6 +119,10 @@ Cargo: Run the tests."
       import
     nil))
 
+(defun ruin/jump-to-cargo-dot-toml ()
+    (interactive)
+  (find-file (concat (projectile-project-root) "Cargo.toml")))
+
 ;; prevent flycheck from blocking cargo subprocesses
 (defun kill-flycheck ()
   (when (flycheck-running-p)
@@ -138,5 +134,9 @@ Cargo: Run the tests."
                 cargo-process-run
                 cargo-process-build))
   (advice-add func :after #'kill-flycheck))
+
+(with-eval-after-load 'lsp-mode
+  (require 'lsp-rust)
+  (add-hook 'rust-mode-hook #'lsp-rust-enable))
 
 (provide 'ruin-rust)

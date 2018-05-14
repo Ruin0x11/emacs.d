@@ -1,21 +1,17 @@
-﻿;;;ruin-misc-modes.el --- modes too small for individual .el files
+;;;ruin-misc-modes.el --- modes too small for individual .el files
 
 ;;; semantic
 ;(semantic-mode)
-;(global-semantic-decoration-mode)
+(global-semantic-decoration-mode)
 ;(global-semantic-stickyfunc-mode)
-;(global-semantic-highlight-func-mode)
-;(global-semantic-show-parser-state-mode)
-;(global-semantic-highlight-edits-mode)
-;(global-semantic-idle-scheduler-mode)
-;(global-semantic-idle-breadcrumbs-mode)
-;(global-semantic-idle-completions-mode)
+(global-semantic-highlight-func-mode)
+(global-semantic-show-parser-state-mode)
+(global-semantic-highlight-edits-mode)
 
 (evil-leader/set-key
   "fj" 'semantic-ia-fast-jump
   "fu" 'senator-go-to-up-reference
-  "fy" 'semantic-symref-symbol
-  "fm" 'moo-jump-local)
+  "fy" 'semantic-symref-symbol)
 (add-to-list 'evil-emacs-state-modes 'semantic-symref-results-mode)
 (eval-after-load "semantic/list" #'(lambda ()
                               (define-key semantic-symref-results-mode-map (kbd "C-u") 'evil-scroll-up)
@@ -486,37 +482,7 @@ If REHASH is set, rehashes the list of all cached cmdlets."
         :buffer "*PowerShell Docs*"
         :prompt "Doc: "))
 
-(defun powershell-proc ()
-  "Return the inferior PowerShell process for the current buffer or project.
-
-See variable `inf-ruby-buffers'."
-  (or (get-buffer-process (if (eq (buffer-name) "*PowerShell*")
-                              (current-buffer)
-                            "*PowerShell*"))
-      (error "No current process.")))
-
-(defun powershell-send-string (str)
-  (comint-send-string (powershell-proc) (concat str "\n")))
-
-;;;###autoload
-(defun powershell-send-region ()
-  "Send the current region to the inferior Javascript process.
-If no region selected, you could manually input javascript expression."
-  (interactive)
-  (let* ((str (if (region-active-p)
-                  (buffer-substring-no-properties (region-beginning) (region-end))
-                (read-string "PowerShell expression: "))))
-    (powershell-send-string str)))
-
-(defun powershell-send-buffer ()
-  (interactive)
-  (powershell-send-string (buffer-string)))
-
-;(define-key 'powershell-mode-map (kbd "C-x C-e") 'powershell-send-region)
-
 (evil-leader/set-key-for-mode 'powershell-mode
-  "eb" 'powershell-send-buffer
-  "ee" 'powershell-send-region
   "dd" 'powershell-doc
   "df" 'powershell-helm-docs)
 
@@ -605,13 +571,15 @@ If no region selected, you could manually input javascript expression."
       sp-highlight-wrap-overlay nil
       sp-highlight-wrap-tag-overlay nil)
 
-; (dolist (mode open-paren-modes)
-;   (sp-local-pair mode "{" nil :post-handlers '((my-create-newline-and-enter-sexp "RET"))))
-
 (package-require 'hydra)
 
 (defun w32-run (name)
   (call-process-shell-command (concat "START " name)))
+
+(defun control-panel (&optional system)
+  "Run the control panel for SYSTEM."
+  (let ((cmd (if system (concat "control system") "control")))
+    (w32-run cmd)))
 
 (defun elevated-cmd ()
   "Start an elevated command prompt in the current buffer's directory.
@@ -628,16 +596,18 @@ instead."
 
 (defhydra windows-shortcuts-hydra nil
   "Windows"
-  ("s" (w32-run "shell:System") "System")
   ("d" (w32-run "shell:Downloads") "Downloads")
   ("o" (w32-run "shell:DocumentsLibrary") "Documents")
   ("m" (w32-run "shell:MyComputerFolder") "My Computer")
   ("x" (explorer) "Explorer")
 
-  ("e" (call-process-shell-command "\"C:\\Program Files\\Everything\\Everything.exe\"") "Everything")
-  ("a" (call-process-shell-command "\"C:\\Windows\\System32\\SystemPropertiesAdvanced.exe\"")"System Properties")
+  ("a" (call-process-shell-command "\"C:\\Windows\\System32\\SystemPropertiesAdvanced.exe\"") "System Properties")
+
   ("c" (elevated-cmd) "cmd")
   ("t" (w32-run "Taskschd.msc") "Task Scheduler")
+  ("r" (control-panel) "Control Panel")
+  ("s" (control-panel "sysdm.cpl") "System")
+
   ("q" nil "quit")
   )
 
@@ -647,98 +617,47 @@ instead."
 ;;; GPG
 (require 'epa)
 
-;;; Java
-(require 'eclim)
-(require 'company-emacs-eclim)
-(require 'flycheck-eclim)
-(add-hook 'java-mode-hook (lambda ()
-                            (progn
-                              ;;(eclim-mode)
-                              (setq-local company-idle-delay nil)
-                              (setq-local c-basic-offset 2)
-                              (setq-local fill-column 80)
-                              (auto-fill-mode)
-                              (whitespace-mode t)
-                              (company-mode t))))
-(company-emacs-eclim-setup)
-;(flycheck-eclim-setup)
-(defun my-eclim-fix-relative-path (path)
-  (replace-regexp-in-string "^.*src/" "src/" path))
+;;; lsp-mode
+(setq lsp-print-io nil
+      lsp-response-timeout 20000
+      lsp-document-sync-method 'incremental
+      company-lsp-async nil
+      company-lsp-enable-snippet t)
 
-(setq gud-jdb-use-classpath nil
-      eclim-problems-hl-errors t
-      eclim-problems-refresh-delay 999999999
-      eclim-problems-suppress-highlights nil)
-
-(defun eclim--debug-jdb-run-command (project main-class args)
-  (let ((config `((name . ,(concat "*Debug - " main-class "*"))
-                  (debug . t)
-                  (main-class . ,main-class)
-                  (program-args . ,args)
-                  (vm-args . ,(concat "-sourcepath" (eclim-java-run-sourcepath project)))))
-        (classpath (eclim/java-classpath project)))
-    (eclim-java-run--command config (eclim-java-run--java-vm-args classpath))))
-
-(defun eclim--debug-jdb-attach-command (project port)
-  (let ((sourcepath (eclim-java-run-sourcepath project)))
-    (format "jdb -attach com.sun.jdi.SocketAttach:port=%s -sourcepath%s "
-            port
-            sourcepath)))
-
-(defun ruin/eclim-run-maven-tests-at-point ()
+(defun ruin/lsp-mode-toggle-print-io ()
   (interactive)
-  (let* ((tags (semantic-find-tag-by-overlay (point)))
-         (class (caar tags))
-         (cmd (concat "-Dtest=" class " test")))
-    (if class
-        (eclim-maven-run cmd)
-      (error "No class at point."))))
+  (setq lsp-print-io (not lsp-print-io)))
 
-(defun ruin/eclim-run-maven-tests-in-package ()
-  (interactive)
-  (let* ((package (eclim--java-current-package))
-         (cmd (concat "-Dtest=" package ".* test")))
-    (eclim-maven-run cmd)))
+(require 'lsp-imenu)
+(add-hook 'lsp-after-open-hook 'lsp-enable-imenu)
 
-(defun ruin/semantic-jump-to-enclosing-function ()
-  (interactive)
-  (let* ((tags (semantic-find-tag-by-overlay (point)))
-         (overlay (car (last (car (last tags))))))
-    (if overlay
-        (let ((start (overlay-start overlay)))
-          (goto-char start))
-      (error "No enclosing function"))))
 
-(advice-add 'eclim--project-current-file :filter-return #'my-eclim-fix-relative-path)
-(evil-leader/set-key-for-mode 'java-mode
-  "fe" 'eclim-java-find-declaration
-  "fx" 'eclim-java-find-references
-  "fn" 'ruin/semantic-jump-to-enclosing-function
-  "md" 'eclim-java-doc-comment
-  "bi" 'eclim-java-format
-  "pr" 'eclim-java-refactor-rename-symbol-at-point
-  "ms" 'eclim-java-show-documentation-for-current-element
-  "tt" 'ruin/eclim-run-maven-tests-at-point
-  "ta" 'ruin/eclim-run-maven-tests-in-package)
-
-(defun eclim-java-method-signature-at-point ()
-  "Find and display the method signature at point."
-  (interactive)
-  (let ((i (eclim--java-identifier-at-point t)))
-    ;note: for some reason the "-t 'method'" portion of command doesn't function as expected for non-methods.
-    (eclim/with-results hits ("java_search" "-n" "-f" ("-o" (car i)) ("-l" (length (cdr i))) ("-t" "method") ("-x" "declarations"))
-      hits)))
-
-(defun eclim-java-echo-signature (results)
-  (if (= 1 (length results))
-      (let ((result (elt results 0)))
-        (message (assoc-default 'message result)))
-    (error "found more than 1 result")))
-
+;;; lsp-intellij
 (package-require 'kotlin-mode)
 (setq kotlin-tab-width 4)
+(when (file-exists-p "E:/build/lsp-intellij/lsp-intellij.el")
+  (load "E:/build/lsp-intellij/lsp-intellij.el")
+  (with-eval-after-load 'lsp-mode
+    (require 'lsp-intellij)
+    (add-hook 'java-mode-hook #'lsp-intellij-enable)
+    (add-hook 'kotlin-mode-hook #'lsp-intellij-enable))
+  (package-require 'lsp-ui)
+  (add-hook 'lsp-mode-hook 'lsp-ui-mode))
 
-(require 'vc)
+(add-hook 'lsp-after-diagnostics-hook (lambda () (message "Got diagnostics!")))
+
+;;; Tramp
+(setq putty-directory "C:\\Program Files\\PuTTY")
+(when (eq window-system 'w32)
+  (setq tramp-default-method "plink")
+  (when (and (not (string-match putty-directory (getenv "PATH")))
+	     (file-directory-p putty-directory))
+    (setenv "PATH" (concat putty-directory ";" (getenv "PATH")))
+    (add-to-list 'exec-path putty-directory)))
+
+
+(package-require 'cmake-mode)
+(require 'cmake-mode)
 
 (provide 'ruin-misc-modes)
 

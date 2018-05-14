@@ -9,8 +9,8 @@
 (package-require 'evil-leader)
 (package-require 'elisp-refs)
 (package-require 'general)
-(package-require 'color-moccur)
-(package-require 'moccur-edit)
+;(package-require 'color-moccur)
+;(package-require 'moccur-edit)
 (global-evil-leader-mode t)
 (load "evil-leader-minor")
 (require 'evil-little-word)
@@ -24,7 +24,6 @@
 (evil-leader/set-leader "<SPC>")
 
 (evil-leader/set-key
-  "au" 'undo-tree-visualize
   "w" 'save-buffer
   "q" 'quit-or-kill-buffer
   "Q" 'kill-buffer-and-window
@@ -58,6 +57,7 @@
   "ob" 'org-iswitchb
   "oc" 'org-clock-goto
 
+  "au" 'undo-tree-visualize
   "ac" 'calc
   "ad" 'diff
   "aw" 'browse-url-at-point
@@ -123,14 +123,14 @@
   "bm"  'move-buffer-file
   "br"  'revert-buffer
   "bK"  'spacemacs/kill-other-buffers
-  "by"  'spacemacs/copy-whole-buffer-to-clipboard
+  "bY"  'spacemacs/copy-whole-buffer-to-clipboard
   "b!"  'shell-command-on-file
   "bB"  'browse-url-of-file
   "b="  'my-diff-buffer-with-file
-  "bw"  'whitespace-cleanup
   "bi"  'indent-buffer
   "ba"  'helm-do-ag-buffers
-  "bp"  'prelude-copy-file-name-to-clipboard)
+  "bw"  'whitespace-cleanup
+  "bf"  'fit-window-to-buffer)
 
 (defun ruin/window-movement-for-mode (mode map)
   (eval-after-load mode `(lambda ()
@@ -232,7 +232,6 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
   '(progn
      (define-key evil-normal-state-map "Y" 'copy-to-end-of-line)
      (define-key evil-normal-state-map "&" 'evil-ex-repeat-substitute-with-flags)
-
      (define-key evil-normal-state-map (kbd "M-.") 'xref-find-definitions)
 
      ;; trade ctrl-h and others for faster window switching

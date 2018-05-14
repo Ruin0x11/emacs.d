@@ -47,8 +47,6 @@ flycheck_*.el
 # sensitive information
 secret.el
 secret.el.gpg
-work.el
-/work/
 
 network-security.data
 org-clock-save.el
@@ -57,3 +55,4 @@ projectile-bookmarks.eld
 projectile.cache
 recentf
 savehist
+semanticdb/

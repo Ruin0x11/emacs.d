@@ -5,10 +5,7 @@
 ;; (setq yas-snippet-dirs
 ;;       '("~/.emacs.d/snippets"))
 
-;(yas-global-mode 1)
-(yas-reload-all)
-(add-hook 'kotlin-mode-hook #'yas-minor-mode)
-(add-hook 'java-mode-hook #'yas-minor-mode)
+(yas-global-mode 1)
 
 ;; The following is optional.
 ;; (define-key yas-minor-mode-map [backtab]     'yas-expand)
@@ -20,7 +17,12 @@
 (define-key yas-minor-mode-map (kbd "TAB")    'yas-expand)
 (define-key yas-minor-mode-map (kbd "<tab>")  'yas-expand)
 
+(add-hook 'kotlin-mode-hook 'yas-minor-mode-on)
+
 (add-hook 'term-mode-hook
+	  (lambda() (setq yas-dont-activate t)))
+
+(add-hook 'magit-mode-hook
 	  (lambda() (setq yas-dont-activate t)))
 
 (provide 'ruin-snippet)

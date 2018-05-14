@@ -6,9 +6,6 @@
 
 (setq projectile-completion-system 'helm)
 
-(setq projectile-globally-ignored-file-suffixes
-      (append projectile-globally-ignored-file-suffixes '(".class")))
-
 (setq projectile-globally-ignored-directories
       (append projectile-globally-ignored-directories '(".git"
                                                         ".svn"
@@ -19,10 +16,12 @@
                                                         "tmp"
                                                         "auto-save-list"
                                                         "semanticdb"
+                                                        "build"
+                                                        "deps"
+                                                        "CMakeFiles"
                                                         )))
 
-(setq projectile-project-root-files
-      (append projectile-project-root-files '("Makefile")))
+(setq projectile-globally-ignored-file-suffixes '("class" "db"))
 
 (evil-leader/set-key
   "ps" 'helm-projectile-switch-project

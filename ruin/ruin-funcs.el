@@ -372,6 +372,19 @@ buffer is not visiting a file."
           (select-window first-win)
           (if this-win-2nd (other-window 1))))))
 
+;; https://stackoverflow.com/a/18034042
+(define-key process-menu-mode-map (kbd "k") 'joaot/delete-process-at-point)
+
+(defun joaot/delete-process-at-point ()
+  (interactive)
+  (let ((process (get-text-property (point) 'tabulated-list-id)))
+    (cond ((and process
+                (processp process))
+           (delete-process process)
+           (revert-buffer))
+          (t
+           (error "no process at point!")))))
+
 ;; from scimax
 ;;;###autoload
 (defun explorer ()
@@ -393,11 +406,6 @@ buffer is not visiting a file."
 
 (defalias 'finder 'explorer "Alias for `explorer'.")
 
-
-(defun quick-launch ()
-  (interactive)
-  (helm )
-  )
 
 ;;; Bodil
 
@@ -425,86 +433,19 @@ buffer is not visiting a file."
         (setq pos (match-end 0)))
       matches)))
 
-                                        ; Sample URL
-(setq urlreg "\\(?:http://\\)?ux\\(?:[./#+-_]\\w*\\)+")
+(defconst urlreg "\\(?:https?://\\)\\([A-Za-z]+\\)\\(?:[./#\+-]\\(\\w\\|[&;=_?]\\)*\\)+"
+)
 
 (defun url-list ()
   (mapconcat 'identity
              (re-seq urlreg (buffer-string))
              "\n"))
 
-;;; https://stackoverflow.com/a/9414763
-(defun prelude-copy-file-name-to-clipboard ()
-  "Copy the current buffer file name to the clipboard."
+(defun yank-buffer-url-list ()
+  "Copy all URLs in the current buffer to the kill ring."
   (interactive)
-  (let ((filename (if (equal major-mode 'dired-mode)
-                      default-directory
-                    (buffer-file-name))))
-    (when filename
-      (kill-new filename)
-
-      (message "Copied buffer file name '%s' to the clipboard." filename))))
-
-(defun prelude-copy-file-name-to-clipboard ()
-  "Copy the current buffer file name to the clipboard."
-  (interactive)
-  (let ((filename (if (equal major-mode 'dired-mode)
-                      default-directory
-                    (buffer-file-name))))
-    (when filename
-      (kill-new filename)
-      (message "Copied buffer file name '%s' to the clipboard." filename))))
-
-;;; https://emacs.stackexchange.com/a/33863
-(require 'diff)
-(defun diff-buffers-without-temp-files (buffer1 buffer2 &optional switches)
-  "Run diff program on BUFFER1 and BUFFER2.
-Make the comparison without the creation of temporary files.
-
-When called interactively with a prefix argument, prompt
-interactively for diff switches.  Otherwise, the switches
-specified in the variable `diff-switches' are passed to the diff command."
-  (interactive
-   (list (read-buffer "buffer1: " (current-buffer))
-         (read-buffer "buffer2: " (current-buffer))
-         (diff-switches)))
-  (or switches (setq switches diff-switches))
-  (unless (listp switches) (setq switches (list switches)))
-  (let ((buffers (list buffer1 buffer2))
-        (buf (get-buffer-create "*diff-buffers*"))
-        fifos res)
-    (dotimes (_ 2) (push (make-temp-name "/tmp/pipe") fifos))
-    (setq fifos (nreverse fifos))
-    (with-current-buffer buf (erase-buffer))
-    (unwind-protect
-        (progn
-          (dotimes (i 2)
-            (let ((cmd (format "cat > %s << EOF\n%s\nEOF"
-                               (nth i fifos)
-                               (with-current-buffer (nth i buffers)
-                                 (buffer-string)))))
-              (call-process "mkfifo" nil nil nil (nth i fifos))
-              (start-process-shell-command (format "p%d" i) nil cmd)))
-          (setq res (apply #'call-process diff-command nil buf nil (car fifos) (cadr fifos) switches))
-          (if (zerop res)
-              (message "Buffers have same content")
-            (display-buffer buf)
-            (with-current-buffer buf (diff-mode))
-            (message "Buffer contents are different"))
-          res)
-      ;; Clean up.
-      (dolist (x fifos)
-        (and (file-exists-p x) (delete-file x))))))
-
-(defun gk-markdown-preview-buffer ()
-  (interactive)
-  (let* ((buf-this (buffer-name (current-buffer)))
-         (buf-html (get-buffer-create
-                    (format "*gk-md-html (%s)*" buf-this))))
-    (markdown-other-window (buffer-name buf-html))
-    (shr-render-buffer buf-html)
-    (eww-mode)
-    (kill-buffer buf-html)))
+  (kill-new (url-list))
+  (message "Copied URLs."))
 
 ;; Crux
 ;;https://github.com/bbatsov/crux/blob/master/crux.el#L258

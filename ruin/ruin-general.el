@@ -86,7 +86,8 @@
                                   ((reusable-frames . t)
                                   (inhibit-same-window . t)))))
 
-(defvar truncated-compilation-line-limit 5000)
+
+(defvar truncated-compilation-line-limit 1000)
 (defvar truncated-compilation-line-trailer "…")
 
 (defun truncate-compilation-long-lines ()
@@ -113,5 +114,8 @@ truncates lines returned by the compilation process."
 
 
 (add-hook 'compilation-filter-hook 'truncate-compilation-long-lines)
+
+(when (eq system-type 'windows-nt)
+  (shell-command "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\VC\\Auxiliary\\Build\\vcvars64.bat"))
 
 (provide 'ruin-general)

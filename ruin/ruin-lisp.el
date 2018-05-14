@@ -3,7 +3,7 @@
 (package-require 'smartparens)
 (package-require 'evil-smartparens)
 (package-require 'lispyville)
-(package-require 'slamhound)
+;(package-require 'slamhound)
 (package-require 'package-lint)
 (package-require 'flycheck-package)
 (require 'smartparens-config)
@@ -60,9 +60,9 @@
 
 ;; Clojure
 (package-require 'cider)
-;(package-require 'cider-eval-sexp-fu)
+(package-require 'cider-eval-sexp-fu)
 ;;(package-require 'clj-refactor)
-;(require 'cider-eval-sexp-fu)
+(require 'cider-eval-sexp-fu)
 (require 'eval-in-repl-cider)
 
 (add-hook 'cider-repl-mode-hook #'company-mode)
@@ -101,7 +101,7 @@
   "ma" 'cider-apropos-documentation
   "mr" 'cider-switch-to-repl-buffer
   "mb" 'connect-burgundy
-  "ms" 'slamhound
+;  "ms" 'slamhound
   "mq" 'cider-quit
 
   "eb" 'cider-eval-buffer
@@ -163,6 +163,7 @@
       cider-prompt-for-symbol nil
       cider-repl-pop-to-buffer-on-connect nil
       cider-repl-use-clojure-font-lock t
+      cider-repl-display-help-banner nil
 
       nrepl-prompt-to-kill-server-buffer-on-quit nil)
 

@@ -8,6 +8,12 @@
 ;(package-require 'magithub)
 (require 'magit)
 
+(if (eq system-type 'windows-nt)
+    (progn
+      (setq exec-path (add-to-list 'exec-path "C:/Program Files/Git/bin"))
+      (setenv "PATH" (concat "C:\\Program Files\\Git\\bin;" (getenv "PATH")))))
+
+
 (add-to-list 'evil-emacs-state-modes 'git-timemachine-mode)
 
 (defun endless/visit-pull-request-url ()
@@ -24,8 +30,7 @@
 
 (evil-leader/set-key
   "gg" 'magit-dispatch-popup
-  "gBB" 'magit-blame
-  "gBq" 'magit-blame-quit
+  "gB" 'magit-blame
   "gb" 'magit-branch
   "gh" 'magit-checkout
   "gH" 'magit-branch-and-checkout
@@ -48,7 +53,6 @@
   "gC" 'magit-clone
   "gc" 'magit-commit
   "gR" 'magit-reset-hard
-  "gK" 'magit-file-checkout
   "gv" 'endless/visit-pull-request-url)
 
 (defun magit-diff-head ()
@@ -58,13 +62,9 @@
 
 ;; always open symlinks as actual file
 (setq vc-follow-symlinks t
-      vc-handled-backends nil
-      magit-commit-show-diff t
-      magit-refresh-status-buffer nil)
+      magit-commit-show-diff t)
 
 (add-to-list 'evil-insert-state-modes 'git-commit-mode)
-
-(magit-auto-revert-mode)
 
 (evil-leader/set-key-for-mode 'smerge-mode
   "mss" 'smerge-keep-current

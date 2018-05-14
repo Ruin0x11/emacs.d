@@ -23,7 +23,7 @@
       helm-semantic-fuzzy-match t
       helm-imenu-fuzzy-match    t
       helm-candidate-number-limit 50
-      helm-input-idle-delay 0.1
+      helm-input-idle-delay 0.01
       helm-ag-base-command "ag --vimgrep --nocolor "
       helm-fd-command-option "-H"
       )
@@ -85,7 +85,6 @@
 
 (case system-type
   (gnu/linux (setq browse-url-browser-function 'browse-url-chromium))
-  (windows-nt (setq browse-url-browser-function 'browse-url-default-windows-browser))
   (darwin (progn
             (setq browse-url-browser-function 'browse-url-generic)
             (setq browse-url-generic-program "open"))))
