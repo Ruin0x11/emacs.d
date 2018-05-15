@@ -38,7 +38,9 @@
                                                      semantic-mode
                                                      enh-ruby-mode
                                                      ruby-mode
-                                                     robe-mode))
+                                                     robe-mode
+                                                     elixir-mode
+                                                     alchemist-iex-mode))
      )
   )
 

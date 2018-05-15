@@ -20,11 +20,11 @@
 ;; This is bound to f11 in Emacs 24.4
 ;; (toggle-frame-fullscreen)
 ;; Who use the bar to scroll?
+(menu-bar-mode 0)
 (if (display-graphic-p)
     (progn
       (scroll-bar-mode 0)
-      (tool-bar-mode 0)
-      (menu-bar-mode 0)))
+      (tool-bar-mode 0)))
 
 ;; Set frame title
 (setq frame-title-format '(multiple-frames "%b" ("" invocation-name "@" system-name ": End of days." )))
@@ -67,6 +67,8 @@
 (package-require 'solarized-theme)
 (package-require 'monokai-theme)
 (package-require 'spaceline)
+(package-require 'helm)
+(require 'helm)
 (require 'spaceline-config)
 
 (setq custom-theme-directory (locate-user-emacs-file "themes"))
@@ -165,7 +167,10 @@ This segment overrides the modeline functionality of `org-mode-line-string'."
 
 (defun ruin/init-textmode-theme()
   (load-theme 'monokai t)
-
+  (package-require 'helm)
+  (require 'helm-files)
+  (package-require 'company)
+  (require 'company)
   (set-face-background 'default "black")
   (set-face-background 'mode-line "black")
   (set-face-foreground 'font-lock-comment-face "yellow")
@@ -180,7 +185,11 @@ This segment overrides the modeline functionality of `org-mode-line-string'."
   (set-face-background 'spaceline-flycheck-info "black")
   (set-face-background 'spaceline-flycheck-warning "black")
   (set-face-background 'spaceline-flycheck-error "black")
-  (set-face-background 'helm-selection "blue"))
+  (set-face-background 'helm-selection "blue")
+  (set-face-foreground 'helm-ff-file "green")
+  (set-face-foreground 'company-tooltip "yellow")
+  (set-face-foreground 'company-tooltip-annotation "magenta")
+  (set-face-foreground 'company-tooltip-common "magenta"))
 
 (defun ruin/classic-theme ()
   (set-frame-font "SGI Screen:style=Regular:pixelsize=14" t)

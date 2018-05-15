@@ -267,8 +267,8 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (eval-after-load "comint" #'(lambda ()
                               (define-key comint-mode-map (kbd "<up>") 'comint-previous-input)
                               (define-key comint-mode-map (kbd "<down>") 'comint-next-input)
-                        (define-key comint-mode-map (kbd "C-n") 'comint-next-matching-input-from-input)
-                        (define-key comint-mode-map (kbd "C-p") 'comint-previous-matching-input-from-input)))
+                              (define-key comint-mode-map (kbd "C-n") 'comint-next-matching-input-from-input)
+                              (define-key comint-mode-map (kbd "C-p") 'comint-previous-matching-input-from-input)))
 
 
 ;; j and k where it counts

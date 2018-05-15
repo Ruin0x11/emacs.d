@@ -108,6 +108,7 @@
         ruin-c
         ruin-rust
         ;ruin-tex
+        ruin-elixir
                                         ;ruin-hipchat
 
         ruin-project

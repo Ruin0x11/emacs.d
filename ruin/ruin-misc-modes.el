@@ -645,6 +645,9 @@ instead."
     (setenv "PATH" (concat putty-directory ";" (getenv "PATH")))
     (add-to-list 'exec-path putty-directory)))
 
+
+(setq eww-search-prefix "http://www.google.com/search?btnI=Im+Feeling+Lucky&q=")
+
 (provide 'ruin-misc-modes)
 
 ;;; Local variables
