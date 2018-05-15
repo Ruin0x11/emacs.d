@@ -23,7 +23,7 @@
       helm-semantic-fuzzy-match t
       helm-imenu-fuzzy-match    t
       helm-candidate-number-limit 50
-      helm-input-idle-delay 0.1
+      helm-input-idle-delay 0.01
       helm-ag-base-command "ag --vimgrep --nocolor "
       helm-fd-command-option "-H"
       )

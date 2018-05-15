@@ -2,11 +2,11 @@
 
 ;;; semantic
 ;(semantic-mode)
-;(global-semantic-decoration-mode)
+(global-semantic-decoration-mode)
 ;(global-semantic-stickyfunc-mode)
-;(global-semantic-highlight-func-mode)
-;(global-semantic-show-parser-state-mode)
-;(global-semantic-highlight-edits-mode)
+(global-semantic-highlight-func-mode)
+(global-semantic-show-parser-state-mode)
+(global-semantic-highlight-edits-mode)
 
 (evil-leader/set-key
   "fj" 'semantic-ia-fast-jump
@@ -561,12 +561,12 @@ If REHASH is set, rehashes the list of all cached cmdlets."
   (indent-according-to-mode))
 
 (setq open-paren-modes
-      '(rust-mode glsl-mode c-mode))
+      '(rust-mode glsl-mode c-mode c++-mode))
 
 (dolist (mode open-paren-modes)
   (sp-local-pair mode "{" nil :post-handlers '((my-create-newline-and-enter-sexp "RET"))))
 
-(add-hook 'rust-mode-hook 'smartparens-mode)
+(add-hooks open-paren-modes 'smartparens-mode)
 (setq sp-highlight-pair-overlay nil
       sp-highlight-wrap-overlay nil
       sp-highlight-wrap-tag-overlay nil)
@@ -617,24 +617,34 @@ instead."
 ;;; GPG
 (require 'epa)
 
-
-(setq lsp-print-io t
-      lsp-response-timeout 10000
+;;; lsp-mode
+(setq lsp-print-io nil
+      lsp-response-timeout 20000
       lsp-document-sync-method 'incremental
+      company-lsp-async nil
       company-lsp-enable-snippet t)
+
+(defun ruin/lsp-mode-toggle-print-io ()
+  (interactive)
+  (setq lsp-print-io (not lsp-print-io)))
 
 (require 'lsp-imenu)
 (add-hook 'lsp-after-open-hook 'lsp-enable-imenu)
 
 
-(when
-    (file-exists-p "E:/build/intellij-lsp-server/lsp-intellij.el")
-  (load "E:/build/intellij-lsp-server/lsp-intellij.el")
+;;; lsp-intellij
+(package-require 'kotlin-mode)
+(setq kotlin-tab-width 4)
+(when (file-exists-p "E:/build/lsp-intellij/lsp-intellij.el")
+  (load "E:/build/lsp-intellij/lsp-intellij.el")
   (with-eval-after-load 'lsp-mode
     (require 'lsp-intellij)
-    (add-hook 'java-mode-hook #'lsp-intellij-enable))
+    (add-hook 'java-mode-hook #'lsp-intellij-enable)
+    (add-hook 'kotlin-mode-hook #'lsp-intellij-enable))
   (package-require 'lsp-ui)
   (add-hook 'lsp-mode-hook 'lsp-ui-mode))
+
+(add-hook 'lsp-after-diagnostics-hook (lambda () (message "Got diagnostics!")))
 
 ;;; Tramp
 (setq putty-directory "C:\\Program Files\\PuTTY")
@@ -647,6 +657,8 @@ instead."
 
 
 (setq eww-search-prefix "http://www.google.com/search?btnI=Im+Feeling+Lucky&q=")
+(package-require 'cmake-mode)
+(require 'cmake-mode)
 
 (provide 'ruin-misc-modes)
 

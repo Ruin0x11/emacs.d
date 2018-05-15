@@ -21,7 +21,7 @@
 ;; (toggle-frame-fullscreen)
 ;; Who use the bar to scroll?
 (menu-bar-mode 0)
-(if (display-graphic-p)
+((if (or (display-graphic-p) (daemonp))
     (progn
       (scroll-bar-mode 0)
       (tool-bar-mode 0)))
@@ -203,7 +203,7 @@ This segment overrides the modeline functionality of `org-mode-line-string'."
 (defun ruin/classic-theme-windows ()
   (when (eq system-type 'windows-nt)
     (set-default-font "y-outline-MS Gothic-normal-normal-normal-mono-13-*-*-*-c-*-iso10646-1"))
-  (load-theme 'solarized-dark t)
+  (load-theme 'undy t)
   (set-frame-size (selected-frame) 120 60))
 
 (defun ruin/growth-theme ()

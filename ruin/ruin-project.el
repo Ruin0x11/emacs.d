@@ -16,7 +16,12 @@
                                                         "tmp"
                                                         "auto-save-list"
                                                         "semanticdb"
+                                                        "build"
+                                                        "deps"
+                                                        "CMakeFiles"
                                                         )))
+
+(setq projectile-globally-ignored-file-suffixes '("class" "db"))
 
 (evil-leader/set-key
   "ps" 'helm-projectile-switch-project

@@ -17,6 +17,8 @@
 (define-key yas-minor-mode-map (kbd "TAB")    'yas-expand)
 (define-key yas-minor-mode-map (kbd "<tab>")  'yas-expand)
 
+(add-hook 'kotlin-mode-hook 'yas-minor-mode-on)
+
 (add-hook 'term-mode-hook
 	  (lambda() (setq yas-dont-activate t)))
 

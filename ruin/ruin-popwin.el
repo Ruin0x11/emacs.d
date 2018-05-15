@@ -14,7 +14,7 @@
         ;; ("\\*Man.*" :regexp t :height 0.4 :stick t)
         ;; Debug
         ("*Warnings*" :noselect t :position bottom :height 0.3 )
-        ("*Backtrace*" :stick t :noselect t :position bottom :height 0.3 )
+        ;("*Backtrace*" :stick t :noselect t :position bottom :height 0.3 )
         ("*Messages*" :noselect t :position bottom :height 0.3 )
         ("*Compile-Log*" :position bottom :height 0.3 )
         ("*Shell Command Output*" :position bottom :height 0.3 )
@@ -36,6 +36,7 @@
         ("*quickrun*" :height 0.3 :stick t)
         (projectile-rails-server-mode :height 0.3 :stick t)
         (semantic-symref-results-mode :position right :width 0.3)
+        ("*quickrun*" :height 0.3 :stick t)
         ;; Magit/vc
         ;; (magit-status-mode :position bottom :noselect t :height 0.3 :stick t)
         ;; ("*magit-commit*" :position bottom :noselect t :height 0.3 :stick t)
