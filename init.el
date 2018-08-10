@@ -131,6 +131,13 @@
 (put 'downcase-region 'disabled nil)
 (put 'dired-find-alternate-file 'disabled nil)
 
+(defun ruin/profile-recompile ()
+  (interactive)
+  (push (lambda (a b) (profiler-report) (profiler-stop) (setq compilation-finish-functions nil))
+        compilation-finish-functions)
+  (profiler-start 'cpu)
+  (recompile))
+
 ;; load sensitive configs, if available
 ;(let ((secrets (locate-user-emacs-file "secret.el.gpg")))
 ;  (when (file-exists-p secrets)

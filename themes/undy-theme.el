@@ -6019,6 +6019,7 @@ Also affects 'linum-mode' background."
 ;; Local Variables:
 ;; no-byte-compile: t
 ;; fill-column: 95
+;; eval: (rainbow-mode 1)
 ;; End:
 
 ;;; undy-theme.el ends here

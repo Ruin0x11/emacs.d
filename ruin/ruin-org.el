@@ -462,19 +462,17 @@ show this warning instead."
 ;; autosave org buffers
 (add-hook 'org-capture-after-finalize-hook #'org-save-all-org-buffers)
 
-(defun org-insert-code-block (name language)
+(defun org-insert-code-block (language)
   "Asks name, language, switches, header. Inserts org-mode source code snippet"
-  (interactive "sname? \nslanguage? ")
+  (interactive "slanguage? ")
   (insert
-   (if (string= name "")
-       ""
-     (concat "#+NAME: " name) )
    (format "
 #+BEGIN_SRC %s
 
 #+END_SRC" language))
   (forward-line -1)
-  (goto-char (line-end-position)))
+  (goto-char (line-end-position))
+  (evil-insert-state))
 
 (add-hook 'org-mode-hook (lambda () (yas-minor-mode 0)))
 

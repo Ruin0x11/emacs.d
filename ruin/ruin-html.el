@@ -34,6 +34,9 @@
   (function (lambda ()
           (setq evil-shift-width slim-indent-offset))))
 
+(setq rainbow-html-colors t)
+;; (setq rainbow-html-colors-alist nil)
+
 (dolist (hook
          '(css-mode-hook web-mode-hook sass-mode-hook less-css-mode-hook ssass-mode-hook))
   (add-hook hook 'rainbow-mode)

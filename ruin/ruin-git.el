@@ -7,6 +7,7 @@
 (package-require 'gitignore-mode)
 ;(package-require 'magithub)
 (require 'magit)
+(require 'evil-magit)
 
 (if (eq system-type 'windows-nt)
     (progn

@@ -135,8 +135,8 @@ Cargo: Run the tests."
                 cargo-process-build))
   (advice-add func :after #'kill-flycheck))
 
-(with-eval-after-load 'lsp-mode
-  (require 'lsp-rust)
-  (add-hook 'rust-mode-hook #'lsp-rust-enable))
+;(with-eval-after-load 'lsp-mode
+;  (require 'lsp-rust)
+;  (add-hook 'rust-mode-hook #'lsp-rust-enable))
 
 (provide 'ruin-rust)

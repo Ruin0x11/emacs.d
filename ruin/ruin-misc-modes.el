@@ -552,6 +552,13 @@ If REHASH is set, rehashes the list of all cached cmdlets."
 (diminish 'compilation-in-progress "㋙")
 (diminish 'visual-line-mode)
 
+;;; hcl-mode
+(package-require 'hcl-mode)
+(setq hcl-indent-level 4)
+(add-hook 'hcl-mode-hook (lambda ()
+                           (yas-minor-mode-on)
+                           (setq-local fill-column 100)))
+
 ;;; open-paren-modes
 (defun my-create-newline-and-enter-sexp (&rest _ignored)
   "Open a new brace or bracket expression, with relevant newlines and indent. "
@@ -561,7 +568,7 @@ If REHASH is set, rehashes the list of all cached cmdlets."
   (indent-according-to-mode))
 
 (setq open-paren-modes
-      '(rust-mode glsl-mode c-mode c++-mode))
+      '(rust-mode glsl-mode c-mode c++-mode hcl-mode lua-mode org-mode))
 
 (dolist (mode open-paren-modes)
   (sp-local-pair mode "{" nil :post-handlers '((my-create-newline-and-enter-sexp "RET"))))
@@ -660,7 +667,20 @@ instead."
 (package-require 'cmake-mode)
 (require 'cmake-mode)
 
+(package-require 'actionscript-mode)
+
+(package-require 'groovy-mode)
+(add-to-list 'auto-mode-alist '("\\.gradle\\'" . groovy-mode))
+
 (provide 'ruin-misc-modes)
+
+(let ((uim-file "/usr/share/emacs/site-lisp/uim-el/uim.el"))
+  (when (file-exists-p uim-file)
+    (add-to-list 'load-path "/usr/share/emacs/site-lisp/uim-el")
+    (load uim-file)
+    (global-set-key "\C-\\" 'uim-mode)
+    (setq uim-default-im-engine "anthy")))
+
 
 ;;; Local variables
 ;; Local Variables:

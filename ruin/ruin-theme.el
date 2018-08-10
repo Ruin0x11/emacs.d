@@ -21,7 +21,7 @@
 ;; (toggle-frame-fullscreen)
 ;; Who use the bar to scroll?
 (menu-bar-mode 0)
-((if (or (display-graphic-p) (daemonp))
+(if (or (display-graphic-p) (daemonp))
     (progn
       (scroll-bar-mode 0)
       (tool-bar-mode 0)))
@@ -84,20 +84,20 @@
 ;; https://github.com/kuanyui/.emacs.d/blob/master/rc/rc-basic.el#L102
 (defun setup-cjk-alignment ()
   (when (display-graphic-p)
-    (defvar emacs-english-font "Iosevka Light"
+    (defvar emacs-english-font "Hack"
       "The font name of English.")
 
-    (defvar emacs-cjk-font "東風ゴシック" "The font name for CJK.")
+    (defvar emacs-cjk-font "Kochi Gothic" "The font name for CJK.")
 
-    (defvar emacs-font-size-pair '(14 . 14)
+    (defvar emacs-font-size-pair '(12 . 14)
       "Default font size pair for (english . chinese)")
 
     (defvar emacs-font-size-pair-list
-      '(( 5 .  6) (9 . 10) (10 . 12)(12 . 14)
-        (13 . 16) (15 . 18) (17 . 20) (19 . 22)
-        (20 . 24) (21 . 26) (24 . 28) (26 . 32)
-        (28 . 34) (30 . 36) (34 . 40) (36 . 44))
-      "This list is used to store matching (englis . chinese) font-size.")
+      '(( 5 .  6) (9 . 10) (10 . 12) (12 . 14)
+        (14 . 16) (15 . 18) (16 . 16) (17 . 20)
+        (19 . 22) (20 . 24) (21 . 26) (24 . 28)
+        (26 . 32) (28 . 34) (30 . 36) (34 . 40))
+      "This list is used to store matching (english . chinese) font-size.")
 
     (defun font-exist-p (fontname)
       "Test if this font is exist or not."
@@ -137,8 +137,8 @@
       "Increase emacs's font-size acording emacs-font-size-pair-list."
       (interactive) (emacs-step-font-size -1))
 
-    ;; (global-set-key (kbd "C-=") 'increase-emacs-font-size)
-    ;; (global-set-key (kbd "C--") 'decrease-emacs-font-size)
+    (global-set-key (kbd "C-=") 'increase-emacs-font-size)
+    (global-set-key (kbd "C--") 'decrease-emacs-font-size)
     ))
 
 (setq spaceline-workspace-numbers-unicode 't)
@@ -203,6 +203,8 @@ This segment overrides the modeline functionality of `org-mode-line-string'."
 (defun ruin/classic-theme-windows ()
   (when (eq system-type 'windows-nt)
     (set-default-font "y-outline-MS Gothic-normal-normal-normal-mono-13-*-*-*-c-*-iso10646-1"))
+  (when (eq system-type 'gnu/linux)
+    (set-default-font "Hack 11"))
   (load-theme 'undy t)
   (set-frame-size (selected-frame) 120 60))
 

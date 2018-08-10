@@ -300,7 +300,26 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
                                  (define-key mu4e-headers-mode-map "g" 'mu4e~headers-jump-to-maildir)
                                  (define-key mu4e-headers-mode-map "u" 'mu4e-update-index)
                                  (define-key mu4e-headers-mode-map "J" 'mu4e-headers-next-unread)
-                                 (define-key mu4e-headers-mode-map "K" 'mu4e-headers-prev-unread)))
+                                 (define-key mu4e-headers-mode-map "k" 'MU4E-HEADERS-PREV-UNREAD)))
+
+(evil-set-initial-state 'compilation-mode 'normal)
+(evil-define-key 'normal compilation-mode-map
+  "g?" 'describe-mode
+  "gg" 'evil-goto-first-line
+  "0" 'evil-digit-argument-or-evil-beginning-of-line
+  [mouse-2] 'compile-goto-error
+  [follow-link] 'mouse-face
+  (kbd "<return>") 'compile-goto-error
+
+  "go" 'compilation-display-error
+  (kbd "S-<return>") 'compilation-display-error
+
+  "gj" 'compilation-next-error
+  "gk" 'compilation-previous-error
+  "[" 'compilation-previous-file
+  "]" 'compilation-next-file
+  "gr" 'recompile
+  "h" 'evil-backward-char)
 
 ;;; normal Emacs bindings
 (global-set-key (kbd "C-x C-u") 'universal-argument)
@@ -318,10 +337,32 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (global-set-key [f6] 'ruin/scroll-down-or-next-buffer)
 (global-set-key [f7] 'previous-error)
 (global-set-key [f8] 'next-error)
-(global-set-key [f9] 'projectile-compile-project)
 
 ;; match items with %
 (package-require 'evil-matchit)
 (global-evil-matchit-mode 1)
+
+(evil-set-initial-state 'compilation-mode 'normal)
+
+(evil-define-key 'normal compilation-mode-map
+  "g?" 'describe-mode
+  "gg" 'evil-goto-first-line
+  "0" 'evil-digit-argument-or-evil-beginning-of-line
+  "?" 'evil-search-backward
+  [mouse-2] 'compile-goto-error
+  [follow-link] 'mouse-face
+  (kbd "<return>") 'compile-goto-error
+
+  "go" 'compilation-display-error
+  (kbd "S-<return>") 'compilation-display-error
+
+  "gj" 'compilation-next-error
+  "gk" 'compilation-previous-error
+  "[" 'compilation-previous-file
+  "]" 'compilation-next-file
+  "gr" 'recompile
+  "h" 'evil-backward-char)
+
+;(setq-default evil-search-module 'evil-search)
 
 (provide 'ruin-evil)

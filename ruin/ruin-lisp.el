@@ -16,6 +16,7 @@
 (defun add-lisp-hook (func)
   (add-hooks lisp-modes func))
 
+(global-eldoc-mode)
 (add-lisp-hook 'eldoc-mode)
 (add-lisp-hook 'smartparens-mode)
 (add-lisp-hook 'lispyville-mode)

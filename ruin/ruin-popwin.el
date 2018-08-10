@@ -36,6 +36,7 @@
         ("*quickrun*" :height 0.3 :stick t)
         (projectile-rails-server-mode :height 0.3 :stick t)
         (semantic-symref-results-mode :position right :width 0.3)
+        ;(ggtags-global-mode :height 0.3 :stick t)
         ("*quickrun*" :height 0.3 :stick t)
         ;; Magit/vc
         ;; (magit-status-mode :position bottom :noselect t :height 0.3 :stick t)
@@ -53,7 +54,7 @@
         ("*undo-tree*" :stick t :width 0.4 :position right)
         (undo-tree-visualizer-mode :stick t :width 0.4 :position right)
         (direx:direx-mode :position left :width 35 :dedicated t)
-        (dired-mode :position top)
+        ;(dired-mode :position top)
         ("*gists*" :height 0.3)
         ("*sldb.*":regexp t :height 0.3)
         ("*Gofmt Errors*" :noselect t)

@@ -84,7 +84,7 @@
 (setq browse-url-text-browser "links")
 
 (case system-type
-  (gnu/linux (setq browse-url-browser-function 'browse-url-chromium))
+  (gnu/linux (setq browse-url-browser-function 'browse-url-surf))
   (darwin (progn
             (setq browse-url-browser-function 'browse-url-generic)
             (setq browse-url-generic-program "open"))))
@@ -187,5 +187,12 @@ surf."
                      :buffer "*helm sync source*"))
          (full-path (expand-file-name (file-name-as-directory quick-launch-dir))))
     (ruin/async-shell-command-no-output (concat full-path link))))
+
+
+(setq helm-input-idle-delay 0.1
+      helm-cycle-resume-delay 2
+      helm-follow-input-idle-delay 2)
+
+
 
 (provide 'ruin-helm)

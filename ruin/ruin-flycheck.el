@@ -2,6 +2,8 @@
 
 (package-require 'flycheck)
 (package-require 'helm-flycheck)
+(package-require 'flycheck-color-mode-line)
+
 ;(add-hook 'after-init-hook #'global-flycheck-mode)
 
 (global-set-key (kbd "M-n") 'flycheck-next-error)
@@ -20,6 +22,7 @@
      (flycheck-package-setup)
      (ruin/window-movement-for-map flycheck-error-list-mode-map)
 
+     (add-hook 'flycheck-mode-hook 'flycheck-color-mode-line-mode)
 
 (flycheck-define-checker csharp-unity
   "Custom checker for Unity projects"
