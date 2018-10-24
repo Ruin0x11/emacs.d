@@ -74,7 +74,8 @@
 
      org-hide-emphasis-markers t
      org-pretty-entities t
-     org-startup-with-inline-images t)
+     org-startup-with-inline-images t
+     org-export-with-sub-superscripts nil)
 
 (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images)
 
@@ -292,6 +293,12 @@ show this warning instead."
 (package-require 'evil-org)
 (require 'evil-org)
 
+(define-key org-mode-map (kbd "<tab>") 'org-cycle)
+(define-key org-mode-map (kbd "TAB") 'org-cycle)
+(define-key org-mode-map [(tab)] 'org-cycle)
+(define-key evil-motion-state-map (kbd "TAB") nil)
+
+
 (evil-leader/set-key-for-mode 'org-mode
   ;; "o C" 'evil-org-recompute-clocks
   ;; evil-org binds these keys, so we bind them back to their original
@@ -466,8 +473,7 @@ show this warning instead."
   "Asks name, language, switches, header. Inserts org-mode source code snippet"
   (interactive "slanguage? ")
   (insert
-   (format "
-#+BEGIN_SRC %s
+   (format "#+BEGIN_SRC %s
 
 #+END_SRC" language))
   (forward-line -1)

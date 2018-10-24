@@ -1,5 +1,6 @@
 ;;; ruin-evil.el --- evil settings and non-package mappings
 
+;; Don't move this.
 (setq evil-want-C-u-scroll t)
 
 (package-require 'evil)
@@ -14,6 +15,7 @@
 (global-evil-leader-mode t)
 (load "evil-leader-minor")
 (require 'evil-little-word)
+(package-require 'evil-numbers)
 (evil-mode 1)
 
 (global-evil-leader-mode t)
@@ -44,6 +46,7 @@
   "dk" 'describe-key
   "dd" 'describe-foo-at-point
   "da" 'helm-apropos
+  "de" 'flycheck-list-errors
 
   "eD" 'toggle-debug-on-error
   "eQ" 'toggle-debug-on-quit
@@ -117,6 +120,7 @@
 
   "bl" 'helm-buffers-list
   "TAB" 'spacemacs/alternate-buffer
+  "bc"  'ruin/copy-buffer-to-new
   "bd"  'kill-this-buffer
   "bD"  'delete-file-and-buffer
   "bn"  'rename-file-and-buffer
@@ -232,7 +236,7 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
   '(progn
      (define-key evil-normal-state-map "Y" 'copy-to-end-of-line)
      (define-key evil-normal-state-map "&" 'evil-ex-repeat-substitute-with-flags)
-     (define-key evil-normal-state-map (kbd "M-.") 'xref-find-definitions)
+     ;(define-key evil-normal-state-map (kbd "M-.") 'xref-find-definitions)
 
      ;; trade ctrl-h and others for faster window switching
      (ruin/window-movement-for-map evil-normal-state-map)
@@ -363,6 +367,28 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
   "gr" 'recompile
   "h" 'evil-backward-char)
 
+(evil-define-key 'normal flycheck-error-list-mode-map
+  (kbd "<return>") 'flycheck-error-list-goto-error
+  "j" 'flycheck-error-list-next-error
+  "k" 'flycheck-error-list-previous-error
+  "e" 'flycheck-error-list-explain-error)
+
+(define-key evil-normal-state-map (kbd "<kp-add>") 'evil-numbers/inc-at-pt)
+(define-key evil-normal-state-map (kbd "<kp-subtract>") 'evil-numbers/dec-at-pt)
+
 ;(setq-default evil-search-module 'evil-search)
+
+(defun spacemacs/translate-C-i (_)
+  "If `dotspacemacs-distinguish-gui-tab' is non nil, the raw key
+sequence does not include <tab> or <kp-tab>, and we are in the
+gui, translate to [C-i]. Otherwise, [9] (TAB)."
+  (interactive)
+  (if (and (not (cl-position 'tab (this-single-command-raw-keys)))
+           (not (cl-position 'kp-tab (this-single-command-raw-keys)))
+           t
+           (display-graphic-p))
+      [C-i] [?\C-i]))
+(define-key key-translation-map [?\C-i] 'spacemacs/translate-C-i)
+(define-key evil-normal-state-map [C-i] 'evil-jump-forward)
 
 (provide 'ruin-evil)

@@ -50,14 +50,15 @@
 ;; don't ring the bell
 (setq ring-bell-function 'ignore)
 
-(setq gdb-many-windows t
-      gdb-show-main t)
-
 ;; save clipboard before replacing
 (setq save-interprogram-paste-before-kill t)
 
 ;; open is generic url browser
 (setq browse-url-generic-program "open")
+
+;; move abbrev_defs from ~/.abbrev_defs
+(setq abbrev-file-name "~/.emacs.d/abbrev_defs"
+      save-abbrevs 'silent)
 
 ;; registers
 (dolist
@@ -86,6 +87,9 @@
                                   ((reusable-frames . t)
                                   (inhibit-same-window . t)))))
 
+(let ((texi-dir (concat (getenv "HOME") "/.texi/info/")))
+  (if (file-exists-p texi-dir)
+      (add-to-list 'Info-directory-list texi-dir)))
 
 (defvar truncated-compilation-line-limit 1000)
 (defvar truncated-compilation-line-trailer "…")
@@ -117,5 +121,7 @@ truncates lines returned by the compilation process."
 
 (when (eq system-type 'windows-nt)
   (shell-command "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\VC\\Auxiliary\\Build\\vcvars64.bat"))
+
+(save-place-mode 1)
 
 (provide 'ruin-general)

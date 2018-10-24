@@ -1,0 +1,31 @@
+# -*- mode: snippet -*-
+# key: menucpp
+# --
+
+#include "ui_menu_$1.hpp"
+
+namespace elona
+{
+namespace ui
+{
+
+bool ui_menu_$1::init()
+{
+    return true;
+}
+
+void ui_menu_$1::update()
+{
+}
+
+void ui_menu_$1::draw()
+{
+}
+
+optional<ui_menu_$1::result_type> ui_menu_$1::on_key(const std::string& key)
+{
+    return none;
+}
+
+} // namespace ui
+} // namespace elona

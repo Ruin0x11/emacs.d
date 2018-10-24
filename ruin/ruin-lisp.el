@@ -1,4 +1,3 @@
-(package-require 'lispyville)
 (package-require 'eval-in-repl)
 (package-require 'smartparens)
 (package-require 'evil-smartparens)
@@ -11,7 +10,7 @@
 
 (setq lisp-modes
       '(scheme-mode emacs-lisp-mode lisp-mode clojure-mode common-lisp-mode
-                    lisp-interaction-mode  cider-repl-mode inferior-emacs-lisp-mode))
+                    lisp-interaction-mode  cider-repl-mode inferior-emacs-lisp-mode sly-mrepl-mode))
 
 (defun add-lisp-hook (func)
   (add-hooks lisp-modes func))
@@ -20,6 +19,8 @@
 (add-lisp-hook 'eldoc-mode)
 (add-lisp-hook 'smartparens-mode)
 (add-lisp-hook 'lispyville-mode)
+
+;;; emacs lisp
 
 (evil-leader/set-key-for-mode 'emacs-lisp-mode
   "eb" 'ruin/write-and-eval-buffer
@@ -34,6 +35,34 @@
   "eh" 'helm-eval-expression-with-eldoc
   "ed" 'eval-defun
   )
+
+(defun endless/eval-overlay (value point)
+  (cider--make-result-overlay (format "%S" value)
+    :where point
+    :duration 'command)
+  ;; Preserve the return value.
+  value)
+
+(advice-add 'eval-region :around
+            (lambda (f beg end &rest r)
+              (endless/eval-overlay
+               (apply f beg end r)
+               end)))
+
+(advice-add 'eval-last-sexp :filter-return
+            (lambda (r)
+              (endless/eval-overlay r (point))))
+
+(advice-add 'eval-defun :filter-return
+            (lambda (r)
+              (endless/eval-overlay
+               r
+               (save-excursion
+                 (end-of-defun)
+                 (point)))))
+
+(add-hook 'edebug-mode-hook 'evil-emacs-state)
+(add-hook 'ielm-mode-hook 'company-mode)
 
 ;; (define-key smartparens-mode-map (kbd "C-s") 'sp-forward-slurp-sexp)
 ;; (define-key smartparens-mode-map (kbd "C-M-s") 'sp-forward-barf-sexp)
@@ -59,7 +88,7 @@
                             (define-key inferior-emacs-lisp-mode-map (kbd "<up>") 'comint-previous-input)))
 (add-to-list 'evil-emacs-state-modes 'inferior-emacs-lisp-mode)
 
-;; Clojure
+;;; clojure
 (package-require 'cider)
 (package-require 'cider-eval-sexp-fu)
 ;;(package-require 'clj-refactor)
@@ -71,9 +100,7 @@
 
 (eval-after-load "lispy"
   `(progn
-
-
-(lispy-set-key-theme '(lispy c-digits))
+     (lispy-set-key-theme '(lispy c-digits))
      (define-key lispy-mode-map (kbd "<C-return>") 'eir-eval-in-cider)))
 
 (eval-after-load "cider" #'(lambda ()
@@ -189,33 +216,80 @@
 
 (autoload 'cider--make-result-overlay "cider-overlays")
 
-(defun endless/eval-overlay (value point)
-  (cider--make-result-overlay (format "%S" value)
-    :where point
-    :duration 'command)
-  ;; Preserve the return value.
-  value)
+;;; clisp
+(package-require 'sly)
+(package-require 'sly-quicklisp)
+(require 'sly-quicklisp)
 
-(advice-add 'eval-region :around
-            (lambda (f beg end &rest r)
-              (endless/eval-overlay
-               (apply f beg end r)
-               end)))
+(setq inferior-lisp-program "sbcl --control-stack-size 100000")
 
-(advice-add 'eval-last-sexp :filter-return
-            (lambda (r)
-              (endless/eval-overlay r (point))))
+(add-to-list 'evil-emacs-state-modes 'sly-mrepl-mode)
+(add-to-list 'evil-emacs-state-modes 'sly-db-mode)
+(add-to-list 'evil-emacs-state-modes 'sly-apropos-mode)
+(add-to-list 'evil-emacs-state-modes 'sly-xref-mode)
+(add-to-list 'evil-emacs-state-modes 'sly-stickers--replay-mode)
 
-(advice-add 'eval-defun :filter-return
-            (lambda (r)
-              (endless/eval-overlay
-               r
-               (save-excursion
-                 (end-of-defun)
-                 (point)))))
+(add-hook 'sly-mrepl-mode-hook 'company-mode)
+(add-hook 'sly-mrepl-mode-hook (lambda () (yas-minor-mode 0)))
 
-(add-hook 'edebug-mode-hook 'evil-emacs-state)
+(defun ruin/sly-last-expression ()
+  (buffer-substring-no-properties
+   (save-excursion
+     (forward-char 1)
+     (backward-sexp) (point))
+   (+ 1 (point))))
 
-(add-hook 'ielm-mode-hook 'company-mode)
+(defun ruin/sly-eval-last-expression ()
+  "Evaluate the expression preceding point."
+  (interactive)
+  (sly-interactive-eval (ruin/sly-last-expression)))
+
+(defun ruin/sly-describe ()
+  (interactive)
+  (let ((current-prefix-arg '-))
+    (call-interactively 'sly-describe-symbol)))
+
+(dolist (mode '(lisp-mode sly-mrepl-mode))
+  (evil-leader/set-key-for-mode mode
+    "dd" 'sly-describe-symbol
+    "df" 'ruin/sly-describe
+    "da" 'sly-apropos
+    "dh" 'sly-hyperspec-lookup
+    "ee" 'sly-interactive-eval
+    "es" 'ruin/sly-eval-last-expression
+    ;; "ed" 'sly-eval-defun
+    "ed" 'sly-compile-defun
+    "eb" 'sly-compile-and-load-file
+    "ekk"  'sly-stickers-dwim
+    "fd" 'sly-edit-definition
+    "fD" 'sly-edit-definition-other-window
+
+    "my" 'sly-mrepl-sync))
+
+(define-key sly-mode-map (kbd "M-.") 'sly-edit-definition)
+(define-key sly-mode-map (kbd "M-?") 'sly-edit-uses)
+(define-key sly-mode-map (kbd "C-t") 'sly-pop-find-definition-stack)
+
+(add-hook 'sly-mrepl-mode-hook (lambda ()
+                                 (define-key sly-mrepl-mode-map "\C-c\M-o" 'comint-clear-buffer)))
+
+(sp-with-modes '(sly-mrepl-mode)
+  (sp-local-pair "'" nil :actions nil))
+
+;; (defun dood (r)
+;;   (endless/eval-overlay r (point)))
+;;
+;; (advice-add 'sly-display-eval-result :after 'dood)
+
+;; (advice-add 'sly-show-description :after
+;;             (lambda (s p)
+;;               (evil-emacs-state)))
+
+;; (require 'info-look)
+;; (info-lookup-add-help
+;;  :mode 'lisp-mode
+;;  :regexp "[^][()'\" \t\n]+"
+;;  :ignore-case t
+;;  :doc-spec '(("(gcl)Symbols Dictionary" nil nil nil)))
 
 (provide 'ruin-lisp)

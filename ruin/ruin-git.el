@@ -5,7 +5,7 @@
 (package-require 'git-timemachine)
 (package-require 'smeargle)
 (package-require 'gitignore-mode)
-;(package-require 'magithub)
+(package-require 'magithub)
 (require 'magit)
 (require 'evil-magit)
 
@@ -28,6 +28,10 @@
                        (magit-get-push-remote)
                        "url"))
            (magit-get-current-branch))))
+
+(defun ruin/navigate-merge-conflicts ()
+  (interactive)
+  (grep (concat "grep -nH --null -r -e \"<<<<<<< HEAD\" " (projectile-project-root))))
 
 (evil-leader/set-key
   "gg" 'magit-dispatch-popup
@@ -54,7 +58,8 @@
   "gC" 'magit-clone
   "gc" 'magit-commit
   "gR" 'magit-reset-hard
-  "gv" 'endless/visit-pull-request-url)
+  "gv" 'endless/visit-pull-request-url
+  "gn" 'ruin/navigate-merge-conflicts)
 
 (defun magit-diff-head ()
         "Execute `magit-diff' against current HEAD."
@@ -82,5 +87,10 @@
  :states '(emacs)
  "C-d" 'evil-scroll-down
  "C-u" 'evil-scroll-up)
+
+
+;;; magithub
+(require 'magithub)
+(magithub-feature-autoinject t)
 
 (provide 'ruin-git)

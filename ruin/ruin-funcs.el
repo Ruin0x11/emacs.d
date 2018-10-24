@@ -86,6 +86,10 @@
     (epa-decrypt-file filename temp-file)
     (load filename nil nil)))
 
+(defun ruin/advice-clear (sym)
+  (interactive "aFunction? ")
+  (advice-mapc (lambda (p a) (advice-remove sym p)) sym))
+
 ;;; General functions
 (defun directory-files-exclude (directory &optional full match nosort)
   "Like `directory-files', but excluding \".\" and \"..\"."
@@ -98,6 +102,18 @@
     (completing-read "Choose one: " (directory-files-exclude (locate-user-emacs-file "misc")))))
   (let ((template-dir (locate-user-emacs-file "misc")))
     (insert-file-contents (concat template-dir "/" file))))
+
+(defun ruin/symbol-usage-count ()
+  (interactive)
+  (let* ((sym (symbol-name (symbol-at-point)))
+         (regexp (concat "\"" (regexp-quote sym) "\""))
+         (count (shell-command-to-string (concat "rg --stats -q " regexp " " (projectile-project-root) " | sed -n '2p'"))))
+    (beginning-of-line)
+    (insert (concat "// " count))
+    (join-line)
+    (beginning-of-line)
+    (next-line)
+    ))
 
 (require 'url)
 
@@ -329,6 +345,14 @@ buffer is not visiting a file."
               (delete-file filename)
               (message "Deleted file %s" filename)
               (kill-buffer)))))))
+
+(defun ruin/copy-buffer-to-new ()
+  (interactive)
+  (let ((newname (concat (buffer-name) "-copy")))
+    (get-buffer-create newname)
+    (copy-to-buffer newname (point-min) (point-max))
+    (switch-to-buffer newname)
+    (message (concat  "Copied contents to " newname))))
 
 ;;https://www.emacswiki.org/emacs/TransparentEmacs
 ;; Set transparency of emacs

@@ -133,8 +133,11 @@
 
 ;;; anzu
 (package-require 'anzu)
+(package-require 'evil-anzu)
 (global-anzu-mode 1)
 (setq anzu-cons-mode-line-p nil)
+(with-eval-after-load 'evil
+  (require 'evil-anzu))
 
 
 ;;; arduino-mode
@@ -305,6 +308,7 @@
 (evil-leader/set-key
   "HH" 'highlight-symbol-at-point
   "Hr" 'highlight-symbol-remove-all
+  "Hs" 'highlight-regexp
   "Hc" 'highlight-symbol-remove-all
   "H/" 'ruin/highlight-evil-search)
 ;;; glsl-mode
@@ -681,6 +685,11 @@ instead."
     (global-set-key "\C-\\" 'uim-mode)
     (setq uim-default-im-engine "anthy")))
 
+
+;;; Haxe
+(package-require 'haxe-mode)
+(require 'haxe-mode)
+(add-to-list 'auto-mode-alist '("\\.hx\\'" . haxe-mode))
 
 ;;; Local variables
 ;; Local Variables:

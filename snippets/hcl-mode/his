@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: his_owned
+# key: $h
+# group: definitions
+# --
+\${name(_$1)}\${his_owned(_$2)}$0

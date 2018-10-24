@@ -1,16 +1,16 @@
-(require 'helm-imenu)
-(require 'column-marker)
-(require 'line-comment-banner)
-(require 'google-c-style)
 (package-require 'ggtags)
 (package-require 'gxref)
-;(package-require 'helm-gtags)
 (package-require 'function-args)
 (package-require 'srefactor)
 (package-require 'company-c-headers)
 (package-require 'clang-format)
 (package-require 'flycheck-clang-tidy)
+(package-require 'cmake-ide)
+(package-require 'rmsbolt)
 (require 'srefactor)
+(require 'helm-imenu)
+(require 'column-marker)
+(require 'line-comment-banner)
                                         ; Add cmake listfile names to the mode list.
 (setq auto-mode-alist
       (append
@@ -18,35 +18,31 @@
        '(("\\.cmake\\'" . cmake-mode))
        auto-mode-alist))
 
-;(add-hook 'c-mode-common-hook 'google-set-c-style)
-;(add-hook 'c-mode-common-hook 'google-make-newline-indent)
-
-(add-to-list 'semantic-default-submodes 'global-semantic-stickyfunc-mode)
-;(global-semantic-idle-scheduler-mode 1)
-(global-semanticdb-minor-mode 1)
-;(global-semantic-idle-summary-mode 1)
-
 (global-linum-mode 0)
 
 (add-hook 'c-mode-common-hook
           (lambda ()
-            (yas-minor-mode-on)
+            (yas-minor-mode 1)
             (c-set-offset 'innamespace 0)
             (linum-mode 0)
             (c-set-offset 'substatement-open 0)
             (semantic-mode 0)
             (company-mode 1)
-            (setq compilation-skip-threshold 2)
-            (setq compilation-auto-jump-to-first-error t)
+            (abbrev-mode 1)
+            (which-function-mode 1)
+            (setq compilation-skip-threshold 2
+                  compilation-auto-jump-to-first-error t)
             (setq c-default-style "linux"
                   c-basic-offset 4
-                  comment-fill "*")
+                  comment-fill "*"
+                  fill-column 80)
+
+            (setq imenu-create-index-function 'ggtags-build-imenu-index)
+            (setq eldoc-documentation-function 'ggtags-eldoc-function)
 
             (when (derived-mode-p 'c-mode 'c++-mode)
-              (semanticdb-enable-gnu-global-databases 'c-mode)
-              (semanticdb-enable-gnu-global-databases 'c++-mode)
-              (setq-local imenu-create-index-function #'ggtags-build-imenu-index)
-              (setq-local eldoc-documentation-function #'ggtags-eldoc-function)
+              ;(semanticdb-enable-gnu-global-databases 'c-mode)
+              ;(semanticdb-enable-gnu-global-databases 'c++-mode)
               (ggtags-mode 1)
               (eldoc-mode 1)
               ; (define-key c++-mode-map [(tab)]        'evil-complete-next)
@@ -105,33 +101,8 @@
 (setq ggtags-highlight-tag nil)
 (global-eldoc-mode 0)
 
-;(setq
-; helm-gtags-ignore-case t
-; helm-gtags-auto-update t
-; helm-gtags-use-input-at-cursor t
-; helm-gtags-pulse-at-cursor t
-; helm-gtags-prefix-key "\C-cg"
-; helm-gtags-suggested-key-mapping t
-; )
 (evil-define-key '(visual normal) c-mode-map (kbd "M-RET") 'srefactor-refactor-at-point)
 (evil-define-key '(visual normal) c++-mode-map (kbd "M-RET") 'srefactor-refactor-at-point)
-
-;(require 'helm-gtags)
-;;; Enable helm-gtags-mode
-;(add-hook 'dired-mode-hook 'helm-gtags-mode)
-;(add-hook 'eshell-mode-hook 'helm-gtags-mode)
-;(add-hook 'c-mode-hook 'helm-gtags-mode)
-;(add-hook 'c++-mode-hook 'helm-gtags-mode)
-;(add-hook 'asm-mode-hook 'helm-gtags-mode)
-
-;(evil-leader/set-key-for-mode 'c++-mode
-;  "fi" 'helm-gtags-tags-in-this-function)
-;(define-key helm-gtags-mode-map (kbd "C-c g a") 'helm-gtags-tags-in-this-function)
-;(define-key helm-gtags-mode-map (kbd "C-j") 'helm-gtags-select)
-;(define-key helm-gtags-mode-map (kbd "M-.") 'helm-gtags-dwim)
-;(define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)
-;(define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
-;(define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)
 
 (defun ruin/ggtags-refactor-name (&optional newsym)
   "Refactors the name at point in the current buffer with NEWSYM."
@@ -155,15 +126,38 @@
 
 (defun ruin/find-dupe ()
   (interactive)
+  (save-buffer)
   (let* ((sig (ruin/find-dupe-get-signature))
-         (regex (concat "^" sig "(")))
+         (regex (concat "^" sig "("))
+         (compilation-auto-jump-to-first-error nil))
     (grep (concat "grep -nH --null -r -e \"" regex "\" " (projectile-project-root) "src/**/*.hpp --exclude=\"variables.hpp\""))))
 
-(evil-leader/set-key-for-mode 'c++-mode
-  "fu" 'ruin/find-dupe
+
+(dolist (mode '(c-mode c++-mode))
+  (evil-leader/set-key-for-mode mode
+
   "fd" 'ggtags-find-definition
-  "fs" 'ggtags-find-reference
-  "fe" 'ruin/ggtags-refactor-name)
+  "fg" 'ggtags-find-reference
+  "fs" 'helm-semantic-or-imenu
+  "fe" 'ruin/ggtags-refactor-name
+  "fh" 'ff-find-other-file
+
+  "mu" 'ruin/symbol-usage-count
+
+  "md" 'gdb
+  "mgb" 'gud-break
+  "mgd" 'gud-remove
+  "mgf" 'gud-finish
+  "mg<" 'gud-up
+  "mg>" 'gud-down
+  "mgr" 'gud-run
+  "mgs" 'gud-step
+  "mgn" 'gud-next
+  "mgc" 'gud-cont
+  "mgu" 'gud-until
+  "mgw" 'gud-watch))
+
+; (global-set-key (kbd "M-d") 'ruin/find-dupe)
 
 (defun my-asm-mode-hook ()
   ;; you can use `comment-dwim' (M-;) for this kind of behaviour anyway
@@ -232,10 +226,13 @@
 (define-key asm-mode-map (kbd "<ret>") 'newline-and-indent)
 (define-key asm-mode-map (kbd "M-.") 'helm-etags-select)
 
-(setq gdb-show-main nil)
+(setq gdb-show-main nil
+      gdb-many-windows t
+      gdb-show-main t
+      gdb-non-stop-setting t)
 
 ;; enable next-error/previous-error in helm-ag
-(add-hook 'helm-ag-mode-hook 'compilation-shell-minor-mode)
+(add-hook 'helm-ag-mode-hook 'grep-mode)
 
 (add-hook 'before-save-hook (lambda ()
                               (when (derived-mode-p 'c++-mode)
@@ -249,5 +246,15 @@
 
 ;;(eval-after-load 'flycheck
 ;;  '(add-hook 'flycheck-mode-hook #'flycheck-clang-tidy-setup))
+
+(cmake-ide-setup)
+(setq cmake-ide-flags-c++ (append '("-std=c++11")))
+(delete 'company-clang company-backends)
+(define-key company-active-map (kbd "C-v") 'company-next-page)
+(define-key company-active-map (kbd "M-v") 'company-previous-page)
+(setq company-c-headers-path-user "/home/ruin/build/elonafoobar/src")
+
+(setq flycheck-clang-definitions '("SNAIL_RENDERER_SDL")
+      cmake-ide-flags-c++ '("-I/usr/include/SDL2" "-DSNAIL_RENDERER_SDL"))
 
 (provide 'ruin-c)

@@ -2,6 +2,8 @@
 (package-require 'helm-projectile)
 (package-require 'helm-rg)
 
+(require 'projectile)
+
 (projectile-global-mode)
 (helm-projectile-on)
 
@@ -20,13 +22,14 @@
                                                         "build"
                                                         "deps"
                                                         "CMakeFiles"
+                                                        "external"
                                                         )))
 
 (setq projectile-globally-ignored-file-suffixes '("class" "db" "min.css"))
 
 (evil-leader/set-key
   "ps" 'helm-projectile-switch-project
-  "pa" 'helm-projectile-rg
+  "pa" 'helm-projectile-ag
   "pf" 'helm-projectile
   "pb" 'helm-projectile-switch-to-buffer
   "p!" 'projectile-run-async-shell-command-in-root
@@ -82,6 +85,11 @@
   (let ((compilation-read-command nil))
     (projectile--run-project-cmd "elocopy && elobuild" projectile-compilation-cmd-map)))
 
+(defun ruin/elobuild-and-run ()
+  (interactive)
+  (let ((compilation-read-command nil))
+    (projectile--run-project-cmd "elocopy && elobuild && cd bin && ./Elona_foobar" projectile-compilation-cmd-map)))
+
 (defun ruin/elobuild-test (test-name)
   (interactive "stest? ")
   (let ((cmd (if (eq (length test-name) 0)
@@ -90,10 +98,10 @@
         (compilation-read-command nil))
     (projectile--run-project-cmd cmd projectile-compilation-cmd-map)))
 
-(defun ruin/elocopy ()
+(defun ruin/run-elona ()
   (interactive)
   (let ((compilation-read-command nil))
-    (projectile--run-project-cmd "elocopy" projectile-compilation-cmd-map)))
+    (projectile--run-project-cmd "elocopy && cd bin && ./Elona_foobar" projectile-run-cmd-map)))
 
 (defun ruin/make-clean ()
   (interactive)
@@ -102,8 +110,9 @@
 
 (global-set-key [f9] 'ruin/elobuild-test)
 (global-set-key [f10] 'ruin/elobuild)
-(global-set-key [f11] 'ruin/elocopy)
-(global-set-key [f12] 'ruin/make-clean)
+(global-set-key (kbd "S-<f10>") 'ruin/elobuild-and-run)
+(global-set-key [f11] 'ruin/make-clean)
+(global-set-key [f12] 'ruin/run-elona)
 
 ;; (eval-after-load "helm" (helm-add-action-to-source "Ag in projects" 'helm-projectile-ag helm-source-projectile-projects))
 

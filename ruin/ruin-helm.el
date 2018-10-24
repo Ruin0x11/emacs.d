@@ -23,9 +23,11 @@
       helm-semantic-fuzzy-match t
       helm-imenu-fuzzy-match    t
       helm-candidate-number-limit 50
-      helm-input-idle-delay 0.01
       helm-ag-base-command "ag --vimgrep --nocolor "
       helm-fd-command-option "-H"
+      helm-input-idle-delay 0.2
+      helm-cycle-resume-delay 2
+      helm-follow-input-idle-delay 0.2
       )
 
 ;; dumb redefinition for ripgrep
@@ -188,10 +190,6 @@ surf."
          (full-path (expand-file-name (file-name-as-directory quick-launch-dir))))
     (ruin/async-shell-command-no-output (concat full-path link))))
 
-
-(setq helm-input-idle-delay 0.1
-      helm-cycle-resume-delay 2
-      helm-follow-input-idle-delay 2)
 
 
 

@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: basename
+# key: $bn
+# group: definitions
+# --
+\${basename(_$1)}$0

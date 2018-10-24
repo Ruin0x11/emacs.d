@@ -14,7 +14,8 @@
 (eval-after-load "flycheck"
   '(progn
      (setq flycheck-highlighting-mode 'symbols
-           flycheck-display-errors-delay 0.8)
+           flycheck-display-errors-delay 0.8
+           flycheck-idle-change-delay 3)
      (set-face-foreground 'flycheck-warning nil)
 
      (define-key flycheck-error-list-mode-map "j" 'next-line)

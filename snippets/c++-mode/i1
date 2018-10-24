@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: i18n
+# key: i1
+# --
+i18n::s.get("core.locale.$1"$2);$0

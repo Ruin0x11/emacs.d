@@ -146,24 +146,24 @@
 (defface ruin/warning-face '((t (:foreground "white" :background "cadetblue")))
   "Face for a warning.")
 
-(spaceline-define-segment org-clock
-  "Show information about the current org clock task.  Configure
-`spaceline-org-clock-format-function' to configure. Requires a currently running
-org clock.
-
-This segment overrides the modeline functionality of `org-mode-line-string'."
-  (if (and (fboundp 'org-clocking-p)
-             (org-clocking-p))
-      (substring-no-properties (funcall spaceline-org-clock-format-function))
-    "Not clocking!")
-  :global-override org-mode-line-string
-  :face ruin/warning-face)
-
-(spaceline-define-segment org-clock-not
-  "Show when not clocking."
-  (concat "asd" "zxc")
-  :enabled t
-  )
+;(spaceline-define-segment org-clock
+;  "Show information about the current org clock task.  Configure
+;`spaceline-org-clock-format-function' to configure. Requires a currently running
+;org clock.
+;
+;This segment overrides the modeline functionality of `org-mode-line-string'."
+;  (if (and (fboundp 'org-clocking-p)
+;             (org-clocking-p))
+;      (substring-no-properties (funcall spaceline-org-clock-format-function))
+;    "Not clocking!")
+;  :global-override org-mode-line-string
+;  :face ruin/warning-face)
+;
+;(spaceline-define-segment org-clock-not
+;  "Show when not clocking."
+;  (concat "asd" "zxc")
+;  :enabled t
+;  )
 
 (defun ruin/init-textmode-theme()
   (load-theme 'monokai t)
@@ -218,18 +218,21 @@ This segment overrides the modeline functionality of `org-mode-line-string'."
 
 (defun ruin/init-spaceline ()
   (spaceline-compile)
-  (spaceline-toggle-org-clock-on)
-  (spaceline-toggle-org-clock-not-on)
+  ;; (spaceline-toggle-org-clock-on)
+  ;; (spaceline-toggle-org-clock-not-on)
   (spaceline-emacs-theme)
   (spaceline-helm-mode)
   (spaceline-toggle-projectile-root-on)
-  (spaceline-toggle-which-function-off))
+  (spaceline-toggle-which-function-off)
+  (setq flycheck-color-mode-line-face-to-color 'powerline-active1))
 
 (defun ruin/init-theme ()
   (interactive)
   (setup-cjk-alignment)
   (display-battery-mode)
-  ;(ruin/init-spaceline)
+
+  (when (window-system)
+    (ruin/init-spaceline))
 
   (cond ((not window-system) (ruin/init-textmode-theme))
         ((memq system-type '(darwin)) (ruin/normal-theme))

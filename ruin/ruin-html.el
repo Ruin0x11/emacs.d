@@ -34,8 +34,17 @@
   (function (lambda ()
           (setq evil-shift-width slim-indent-offset))))
 
+(require 'rainbow-mode)
 (setq rainbow-html-colors t)
 ;; (setq rainbow-html-colors-alist nil)
+
+(add-to-list 'rainbow-html-rgb-colors-font-lock-keywords
+             '("{\s*\\([0-9]\\{1,3\\}\\(?:\\.[0-9]\\)?\\(?:\s*%\\)?\\)\s*,\s*\\([0-9]\\{1,3\\}\\(?:\\.[0-9]\\)?\\(?:\s*%\\)?\\)\s*,\s*\\([0-9]\\{1,3\\}\\(?:\\.[0-9]\\)?\\(?:\s*%\\)?\\)\s*,\s*[0-9]*\.?[0-9]+\s*%?\s*}"
+               (0 (rainbow-colorize-rgb))))
+(add-to-list 'rainbow-html-rgb-colors-font-lock-keywords
+             '("color(\s*\\([0-9]\\{1,3\\}\\(?:\.[0-9]\\)?\\(?:\s*%\\)?\\)\s*,\s*\\([0-9]\\{1,3\\}\\(?:\\.[0-9]\\)?\\(?:\s*%\\)?\\)\s*,\s*\\([0-9]\\{1,3\\}\\(?:\\.[0-9]\\)?\\(?:\s*%\\)?\\)\s*)"
+                (0 (rainbow-colorize-rgb))))
+(add-hook 'c++-mode-hook 'rainbow-mode)
 
 (dolist (hook
          '(css-mode-hook web-mode-hook sass-mode-hook less-css-mode-hook ssass-mode-hook))
