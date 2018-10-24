@@ -6,6 +6,8 @@
 (package-require 'smeargle)
 (package-require 'gitignore-mode)
 (require 'magit)
+(require 'evil-magit)
+(evil-magit-init)
 
 (add-to-list 'evil-emacs-state-modes 'git-timemachine-mode)
 

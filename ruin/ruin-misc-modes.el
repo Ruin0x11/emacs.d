@@ -1,12 +1,12 @@
 ;;;ruin-misc-modes.el --- modes too small for individual .el files
 
 ;; semantic
-(semantic-mode)
-(global-semantic-decoration-mode)
-(global-semantic-stickyfunc-mode)
-(global-semantic-highlight-func-mode)
-(global-semantic-show-parser-state-mode)
-(global-semantic-highlight-edits-mode)
+;(semantic-mode)
+;(global-semantic-decoration-mode)
+;(global-semantic-stickyfunc-mode)
+;(global-semantic-highlight-func-mode)
+;(global-semantic-show-parser-state-mode)
+;(global-semantic-highlight-edits-mode)
 
 (evil-leader/set-key
   "fj" 'semantic-ia-fast-jump
@@ -313,10 +313,10 @@
   (highlight-symbol (evil-get-register ?/)))
 
 (evil-leader/set-key
-  "HH" 'highlight-symbol-at-point
-  "Hr" 'highlight-symbol-remove-all
-  "Hc" 'highlight-symbol-remove-all
-  "H/" 'ruin/highlight-evil-search)
+  "ll" 'highlight-symbol-at-point
+  "lr" 'highlight-symbol-remove-all
+  "lc" 'highlight-symbol-remove-all
+  "l/" 'ruin/highlight-evil-search)
 ;; glsl-mode
 (package-require 'glsl-mode)
 (defun ruin/open-this-file-in-shader-view ()
@@ -523,9 +523,18 @@ If REHASH is set, rehashes the list of all cached cmdlets."
   (indent-according-to-mode))
 
 (setq open-paren-modes
-      '(rust-mode glsl-mode c-mode))
+      '(rust-mode glsl-mode c-mode c++-mode))
 
-                                        ; (dolist (mode open-paren-modes)
-                                        ;   (sp-local-pair mode "{" nil :post-handlers '((my-create-newline-and-enter-sexp "RET"))))
+(add-hooks open-paren-modes 'smartparens-mode)
+(dolist (mode open-paren-modes)
+  (sp-local-pair mode "{" nil :post-handlers '((my-create-newline-and-enter-sexp "RET"))))
+
+(setq compilation-skip-threshold 2
+      compilation-scroll-output t
+      compilation-auto-jump-to-next t)
+
+(package-require 'hcl-mode)
+(require 'hcl-mode)
+(setq hcl-indent-level 4)
 
 (provide 'ruin-misc-modes)

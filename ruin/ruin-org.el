@@ -3,6 +3,7 @@
 (package-require 'org-bullets)
 (package-require 'helm-org-rifle)
 (package-require 'gnuplot)
+;(package-require 'org-mind-map)
 
 (require 'org)
 (require 'org-bullets)
@@ -475,5 +476,7 @@ show this warning instead."
   (goto-char (line-end-position)))
 
 (add-hook 'org-mode-hook (lambda () (yas-minor-mode 0)))
+
+(cancel-function-timers 'org-indent-initialize-agent)
 
 (provide 'ruin-org)

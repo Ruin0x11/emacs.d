@@ -7,6 +7,7 @@
 (package-require 'yari) ;ルビヌスの槍
 (package-require 'bundler)
 (package-require 'minitest)
+(package-require 'rubocop)
 (require 'flay)
 ;; (require 'rcodetools)
 
@@ -135,10 +136,10 @@
     (requires-pattern . 2)
     "Source for completing RI documentation."))
 
-(defun yari-helm (&optional rehash)
-  (interactive (list current-prefix-arg))
-  (when current-prefix-arg (yari-ruby-obarray rehash))
-  (helm :sources 'yari-helm-source-ri-pages :buffer "*yari*"))
+;(defun yari-helm (&optional rehash)
+;  (interactive (list current-prefix-arg))
+;  (when current-prefix-arg (yari-ruby-obarray rehash))
+;  (helm :sources 'yari-helm-source-ri-pages :buffer "*yari*"))
 
 (evil-define-key 'normal yari-mode-map "q" 'quit-window)
 
@@ -147,7 +148,7 @@
   "dd" 'robe-doc
   "mm" 'robe-jump-to-module
   "fs" 'robe-jump
-  "my" 'yari-helm
+  "my" 'yari
   "mo" 'robe-start
 
   "mbi" 'bundle-install
@@ -250,5 +251,29 @@
 ;;                "mrR" 'projectile-rails-goto-routes
 ;;                )
 ;;              ))
+
+;; redefined
+(defun rubocop--file-command (command)
+  "Run COMMAND on currently visited file."
+  (rubocop-ensure-installed)
+  (let ((file-name (buffer-file-name (current-buffer))))
+    (if file-name
+        ;; make sure we run RuboCop from a project's root if the command is executed within a project
+        (let* ((default-directory (or (rubocop-project-root 'no-error) default-directory))
+              (cmd (rubocop-build-command command (rubocop-local-file-name file-name)))
+              (cmdlist (split-string-and-unquote cmd))
+              (program (car cmdlist))
+              (args (cdr cmdlist)))
+          (apply 'call-process program nil nil nil args)
+          (revert-buffer nil t t))
+      (error "Buffer is not visiting a file"))))
+
+(define-minor-mode prettier-rubocop-mode
+  "Runs prettier on file save when this mode is turned on"
+  :lighter " RC-Auto"
+  :global nil
+  (if prettier-rubocop-mode
+      (add-hook 'before-save-hook 'rubocop-autocorrect-current-file nil 'local)
+    (remove-hook 'before-save-hook 'rubocop-autocorrect-current-file 'local)))
 
 (provide 'ruin-ruby)

@@ -105,6 +105,7 @@
         ruin-c
         ruin-rust
         ruin-tex
+        ruin-elixir
                                         ;ruin-hipchat
 
         ruin-project
@@ -118,6 +119,15 @@
                                         ;ruin-x11
                                         ; ruin-home
         ))
+
+(package-require 'lsp-mode)
+(package-require 'lsp-ui)
+(package-require 'kotlin-mode)
+;(load "/Users/ruin/build/intellij-lsp-server/lsp-intellij.el")
+(with-eval-after-load 'lsp-mode
+  (require 'lsp-intellij)
+  (add-hook 'java-mode-hook #'lsp-intellij-enable)
+  (add-hook 'kotlin-mode-hook #'lsp-intellij-enable))
 
 ;; load modularized features
 (dolist (file ruin-pkg)

@@ -3,6 +3,7 @@
 (require 'line-comment-banner)
 (require 'google-c-style)
 (package-require 'ggtags)
+(package-require 'clang-format)
                                         ; Add cmake listfile names to the mode list.
 (setq auto-mode-alist
       (append
@@ -10,12 +11,19 @@
        '(("\\.cmake\\'" . cmake-mode))
        auto-mode-alist))
 
-(add-hook 'c-mode-common-hook 'google-set-c-style)
-(add-hook 'c-mode-common-hook 'google-make-newline-indent)
-
+;(add-hook 'c-mode-common-hook 'google-set-c-style)
+;(add-hook 'c-mode-common-hook 'google-make-newline-indent)
 (add-hook 'c-mode-common-hook
-          (lambda () (make-local-variable 'comment-fill)
-            (setq comment-fill "*")))
+          (lambda ()
+            (c-set-offset 'innamespace 0)
+            (c-set-offset 'substatement-open 0)
+            (setq c-default-style "linux"
+                  c-basic-offset 4
+                  comment-fill "*")
+            (when (derived-mode-p 'c-mode 'c++-mode)
+              (semanticdb-enable-gnu-global-databases 'c-mode)
+              (semanticdb-enable-gnu-global-databases 'c++-mode)
+              (ggtags-mode 1))))
 
 (add-hook 'asm-mode-hook
           (lambda () (make-local-variable 'comment-fill)
@@ -175,5 +183,6 @@ again, I haven't see that as a problem."
 
 
 
+(add-hook 'before-save-hook 'clang-format-buffer)
 
 (provide 'ruin-c)

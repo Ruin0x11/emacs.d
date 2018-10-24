@@ -82,6 +82,19 @@
   (let ((template-dir (locate-user-emacs-file "misc")))
     (insert-file-contents (concat template-dir "/" file))))
 
+(defun ruin/buffers-with-mode (mode)
+  (let ((bufs (buffer-list (current-buffer)))
+        (pred (lambda (b)
+                (with-current-buffer b
+                  (eq major-mode mode)))))
+    (seq-filter pred bufs)))
+
+(defun ruin/show-compilation-buffer ()
+  (interactive)
+  (let ((buf (car (ruin/buffers-with-mode 'compilation-mode))))
+    (when buf
+      (popwin:display-buffer buf))))
+
 (require 'url)
 
 (defun download-file-and-open (&optional url download-dir download-name)
@@ -235,10 +248,10 @@ buffer is not visiting a file."
         (push (match-string 0 string) matches)
         (setq pos (match-end 0)))
       matches)))
-; Sample URL
-;(setq urlreg "\\(?:http://\\)?www\\(?:[./#\+-]\\w*\\)+")
-; Sample invocation
-;(re-seq urlreg (buffer-string))
+                                        ; Sample URL
+                                        ;(setq urlreg "\\(?:http://\\)?www\\(?:[./#\+-]\\w*\\)+")
+                                        ; Sample invocation
+                                        ;(re-seq urlreg (buffer-string))
 
 (defun save-defaults ()
   (desktop-save desktop-dirname)
@@ -390,6 +403,24 @@ buffer is not visiting a file."
              (re-seq urlreg (buffer-string))
              "\n"))
 
+(defun move-line-down ()
+  (interactive)
+  (let ((col (current-column)))
+    (save-excursion
+      (forward-line)
+      (transpose-lines 1))
+    (forward-line)
+    (move-to-column col)))
+
+(defun move-line-up ()
+  (interactive)
+  (let ((col (current-column)))
+    (save-excursion
+      (forward-line)
+      (transpose-lines -1))
+    (forward-line -1)
+    (move-to-column col)))
+
 ;; Crux
 ;;https://github.com/bbatsov/crux/blob/master/crux.el#L258
 (defun crux-view-url ()
@@ -397,14 +428,15 @@ buffer is not visiting a file."
   (interactive)
   (let* ((default (thing-at-point-url-at-point))
          (url (read-from-minibuffer "URL: " default)))
-    (switch-to-buffer (url-retrieve-synchronously url))
-    (rename-buffer url t)
-    (goto-char (point-min))
-    (re-search-forward "^$")
-    (delete-region (point-min) (point))
-    (delete-blank-lines)
-    (buffer-enable-undo)
-    (set-auto-mode)))
+    (with-current-buffer (url-retrieve-synchronously url)
+      (goto-char (point-min))
+      (re-search-forward "^$")
+      (delete-region (point-min) (point))
+      (delete-blank-lines)
+      (let* ((downloaded-filename (f-filename url))
+             (filename (concat temporary-file-directory downloaded-filename)))
+        (write-region nil nil filename nil 0)
+        (find-file filename)))))
 
 (defvar crux-term-buffer-name "multi"
   "The default `ansi-term' name used by `crux-visit-term-buffer'.

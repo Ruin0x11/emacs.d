@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: jsdoc comment
+# key: doc
+# --
+/**
+ * $0
+ */

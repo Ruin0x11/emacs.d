@@ -7,6 +7,7 @@
 (package-require 'evil-surround)
 ;(load-file (locate-user-emacs-file "site-lisp/evil-leader/evil-leader.el"))
 (package-require 'evil-leader)
+(package-require 'evil-numbers)
 (package-require 'elisp-refs)
 (global-evil-leader-mode t)
 (load "evil-leader-minor")
@@ -34,7 +35,7 @@
   "zz" 'toggle-maximize-buffer
   "ZZZ" 'save-buffers-kill-emacs
   "as" 'sos
-  "M" 'popwin:messages
+  "M" 'hydra-mpc/body
 
   "df" 'describe-function
   "dv" 'describe-variable
@@ -60,6 +61,7 @@
   "aw" 'browse-url-at-point
   "al" 'browse-url-generic
   "ax" 're-builder
+  "aj" 'webjump
 
   "js" 'bookmark-set
   "jj" 'bookmark-jump
@@ -88,6 +90,7 @@
   "kc" 'compile
   "kr" 'recompile
   "kk" 'kill-compilation
+  "kb" 'ruin/show-compilation-buffer
 
   "?E" 'info-emacs-manual
   "?y" 'yas-describe-tables
@@ -185,6 +188,22 @@
 (defadvice term-send-raw (after clear-recorded-key activate)
   (if (string= (kbd "RET") (this-command-keys))
       (clear-this-command-keys)))
+
+(defun comint-delchar-or-eof-or-kill-buffer (arg)
+  (interactive "p")
+  (if (null (get-buffer-process (current-buffer)))
+      (kill-buffer)
+    (comint-delchar-or-maybe-eof arg)))
+
+(add-hook 'shell-mode-hook
+          (lambda ()
+            (define-key shell-mode-map
+              (kbd "C-d") 'comint-delchar-or-eof-or-kill-buffer)))
+
+(add-hook 'ielm-mode-hook
+          (lambda ()
+            (define-key ielm-map
+              (kbd "C-d") 'comint-delchar-or-eof-or-kill-buffer)))
 
 (delete 'shell-mode evil-insert-state-modes)
 (add-to-list 'evil-emacs-state-modes 'shell-mode)
@@ -295,9 +314,13 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 ;;; normal Emacs bindings
 (global-set-key (kbd "C-x C-u") 'universal-argument)
 (global-set-key (kbd "C-x C-s") 'sort-lines)
+(global-set-key (kbd "C-x C-x") 'evil-numbers/dec-at-pt)
+(global-set-key (kbd "C-a") 'evil-numbers/inc-at-pt)
 (global-set-key (kbd "C-x |") 'align-regexp)
 (global-set-key (kbd "C-x =") 'eval-region)
 ;; (global-set-key (kbd "M-{") 'xah-insert-brace)
+(global-set-key (kbd "<C-S-up>") 'move-line-up)
+(global-set-key (kbd "<C-S-down>") 'move-line-down)
 
 (when (memq system-type '(darwin))
   (global-set-key (kbd "s-n") nil))
@@ -313,5 +336,39 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 ;; match items with %
 (package-require 'evil-matchit)
 (global-evil-matchit-mode 1)
+
+(defun mpc-play-pause ()
+  (interactive)
+  (let ((state (cdr (assoc 'state mpc-status))))
+    (if (equal state "play")
+        (mpc-pause)
+      (mpc-play))))
+
+(defun mpc-status-string ()
+  (let ((title (cdr (assoc 'Title mpc-status)))
+        (artist (cdr (assoc 'Artist mpc-status)))
+        (album (cdr (assoc 'Album mpc-status)))
+        (elapsed (string-to-number
+                  (cdr (assoc 'elapsed mpc-status))))
+        (duration (string-to-number
+                   (cdr (assoc 'duration mpc-status)))))
+    (format "%s - %s (%s) [%s/%s]"
+            artist title album
+            (format-seconds "%.2m:%.2s" elapsed)
+            (format-seconds "%.2m:%.2s" duration))))
+
+(defhydra hydra-mpc (:color pink
+                     :hint nil)
+  "
+^mpc^
+^^^^^^^^----------
+_p_: play/pause=?p?
+_f_: next song
+_b_: previous song
+"
+  ("p" mpc-play-pause (cdr (assoc 'state mpc-status)))
+  ("f" mpc-next)
+  ("b" mpc-prev)
+  ("q" nil "quit"))
 
 (provide 'ruin-evil)

@@ -8,6 +8,8 @@
 (package-require 'js-doc)
 (package-require 'prettier-js)
 (package-require 'ssass-mode)
+(package-require 'slim-mode)
+(package-require 'tidy)
 
 (require 'web-mode)
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
@@ -24,8 +26,6 @@
             (web-mode-set-content-type "jsx")
           (message "now set to: %s" web-mode-content-type))))
 
-(setq web-mode-markup-indent-offset 2)
-
 (dolist (hook
          '(css-mode-hook web-mode-hook sass-mode-hook less-css-mode-hook))
   (add-hook hook 'rainbow-mode)
@@ -33,17 +33,25 @@
 
 (add-hook 'less-css-mode-hook 'electric-pair-mode)
 
+(setq web-mode-markup-indent-offset 2)
+(setq slim-indent-offset 2)
+
 (add-hook 'haml-mode-hook
   (function (lambda ()
           (setq evil-shift-width haml-indent-offset))))
 
+(add-hook 'slim-mode-hook
+  (function (lambda ()
+          (setq evil-shift-width slim-indent-offset))))
+
 (package-require 'scss-mode)
 
 (add-hook 'js2-mode-hook 'prettier-js-mode)
-(add-hook 'web-mode-hook 'prettier-js-mode)
 
 (evil-leader/set-key-for-mode 'web-mode
-  "md" 'js-doc-insert-file-doc)
+  "ed" 'skewer-eval-defun
+  "md" 'js-doc-insert-file-doc
+  "bi" 'tidy-buffer)
 
 ;; (evil-define-key 'insert web-mode-map (kbd "C-e") 'web-mode-element-close)
 

@@ -4,6 +4,7 @@
 (package-require 'evil-smartparens)
 (package-require 'lispyville)
 (package-require 'slamhound)
+(package-require 'rainbow-blocks)
 (require 'smartparens-config)
 (require 'eval-in-repl-cider)
 (require 'cl)
@@ -50,7 +51,7 @@
   (evil-define-key '(normal visual motion) lispyville-mode-map (kbd "M-]") 'lispyville-next-closing))
 
 (eval-after-load "ielm" #'(lambda ()
-                            (ruin/window-movement-for-map inferior-emacs-lisp-mode-map)
+                            (add-hook 'ielm-mode-hook 'company-mode)
                             (define-key inferior-emacs-lisp-mode-map (kbd "<down>") 'comint-next-input)
                             (define-key inferior-emacs-lisp-mode-map (kbd "<up>") 'comint-previous-input)))
 (add-to-list 'evil-emacs-state-modes 'inferior-emacs-lisp-mode)
@@ -211,3 +212,4 @@
 (add-hook 'edebug-mode-hook 'evil-emacs-state)
 
 (provide 'ruin-lisp)
+

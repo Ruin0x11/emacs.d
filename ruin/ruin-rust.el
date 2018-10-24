@@ -1,6 +1,7 @@
 (package-require 'rust-mode)
 (package-require 'toml-mode)
-(package-require 'flycheck-rust) (package-require 'cargo)
+(package-require 'flycheck-rust)
+(package-require 'cargo)
 (package-require 'racer)
 
 (setq
@@ -34,16 +35,6 @@
   "tt" 'ruin/my-cargo-process-current-test
   "tf" 'ruin/cargo-test-current-mod-or-file
   "ts" 'ruin/cargo-test-tests
-  )
-
-(evil-leader/set-key-for-mode 'toml-mode
-  "kr" 'cargo-process-run
-  "kc" 'cargo-process-build
-  "kk" 'cargo-process-clean
-  "ku" 'cargo-process-update
-  "kg" 'ruin/rust-gdb
-
-  "ta" 'cargo-process-test
   )
 
 (eval-after-load "rust-mode"
