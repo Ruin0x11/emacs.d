@@ -2,7 +2,9 @@
 
 (package-require 'flycheck)
 (package-require 'helm-flycheck)
-(add-hook 'after-init-hook #'global-flycheck-mode)
+(package-require 'flycheck-color-mode-line)
+
+;(add-hook 'after-init-hook #'global-flycheck-mode)
 
 (global-set-key (kbd "M-n") 'flycheck-next-error)
 (global-set-key (kbd "M-p") 'flycheck-previous-error)
@@ -12,13 +14,16 @@
 (eval-after-load "flycheck"
   '(progn
      (setq flycheck-highlighting-mode 'symbols
-           flycheck-display-errors-delay 0.8)
+           flycheck-display-errors-delay 0.8
+           flycheck-idle-change-delay 3)
      (set-face-foreground 'flycheck-warning nil)
 
      (define-key flycheck-error-list-mode-map "j" 'next-line)
      (define-key flycheck-error-list-mode-map "k" 'previous-line)
+     (flycheck-package-setup)
      (ruin/window-movement-for-map flycheck-error-list-mode-map)
 
+     (add-hook 'flycheck-mode-hook 'flycheck-color-mode-line-mode)
 
 (flycheck-define-checker csharp-unity
   "Custom checker for Unity projects"

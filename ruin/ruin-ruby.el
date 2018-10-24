@@ -1,7 +1,7 @@
 ;;; ruin-ruby.el --- settings for Ruby
 (package-require 'robe)
 (package-require 'enh-ruby-mode)
-(package-require 'ruby-block)
+;(package-require 'ruby-block)
 (package-require 'rspec-mode)
 (package-require 'chruby)
 (package-require 'yari) ;ルビヌスの槍
@@ -17,11 +17,11 @@
 
 (setq ruby-align-to-stmt-keywords '(def case)) ;; indent "case" as per ruby style guide
 
-(require 'ruby-block)
-(ruby-block-mode t)
-(setq ruby-block-highlight-toggle 'overlay    ;; do overlay
-      ruby-block-highlight-toggle 'minibuffer ;; display to minibuffer
-      ruby-block-highlight-toggle t)          ;; display to minibuffer and do overlay
+;(require 'ruby-block)
+;(ruby-block-mode t)
+;(setq ruby-block-highlight-toggle 'overlay    ;; do overlay
+;      ruby-block-highlight-toggle 'minibuffer ;; display to minibuffer
+;      ruby-block-highlight-toggle t)          ;; display to minibuffer and do overlay
 
 (add-hook 'ruby-mode-hook 'robe-mode)
 (add-hook 'enh-ruby-mode-hook 'robe-mode)
@@ -161,14 +161,14 @@
   "es" 'ruby-send-last-sexp
 
   "mY" 'yari-helm-rehash
-  "tt" 'rspec-verify
-  "ta" 'rspec-verify-all
-  "tr" 'rspec-run-last-failed
+  ;"tt" 'rspec-verify
+  ;ta" 'rspec-verify-all
+  "tt" 'minitest-verify
+  "ta" 'minitest-verify-all
+  "tr" 'minitest-rerun
+  ;"tr" 'rspec-run-last-failed
   "tj" 'rspec-find-spec-or-target-other-window
   "th" 'helm-feature-snippets
-
-  "tmt" 'minitest-verify
-  "tma" 'minitest-verify-all
 
   "mg" 'helm-rubygems-org)
 
@@ -181,6 +181,11 @@
 
 (evil-leader/set-key-for-mode 'web-mode
   "dd" 'robe-doc)
+
+(advice-add 'minitest--run-command :before
+            (lambda (&rest args)
+              (save-some-buffers (not compilation-ask-about-save)
+                                 compilation-save-buffers-predicate)))
 
 (add-to-list 'evil-emacs-state-modes 'inf-ruby-mode)
 (ruin/window-movement-for-mode "inf-ruby" 'inf-ruby-mode-map)
@@ -275,5 +280,12 @@
   (if prettier-rubocop-mode
       (add-hook 'before-save-hook 'rubocop-autocorrect-current-file nil 'local)
     (remove-hook 'before-save-hook 'rubocop-autocorrect-current-file 'local)))
+
+;; Setup compilation errors for minitest
+(add-to-list 'compilation-error-regexp-alist 'minitest)
+(add-to-list 'compilation-error-regexp-alist-alist '(minitest
+                                                     ;;"^[\t ]*bin/rails test \\(.*\\):\\([1-9][0-9]*\\)"
+                                                     "^[\t ]*\\(.*\\) \\[\\(.*\\):\\([1-9][0-9]*\\)\\]:"
+                                                     2 3))
 
 (provide 'ruin-ruby)

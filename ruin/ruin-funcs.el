@@ -70,6 +70,27 @@
           (goto-char (point-max)))
       (scroll-down count))))
 
+(defun ruin/async-shell-command-no-output (command)
+  "Run COMMAND asynchronously without opening the output buffer."
+  (let ((display-buffer-alist
+         (cons
+          (cons "\\*Async Shell Command\\*.*"
+                (cons #'display-buffer-no-window nil))
+          display-buffer-alist)))
+    (async-shell-command command nil nil)))
+
+(defun ruin/load-encrypted (filename)
+  "Load the encrypted Emacs Lisp file FILENAME."
+  (let ((temp-file (make-temp-file "epa"))
+        (filename (expand-file-name filename)))
+    (epa-decrypt-file filename temp-file)
+    (load filename nil nil)))
+
+(defun ruin/advice-clear (sym)
+  (interactive "aFunction? ")
+  (advice-mapc (lambda (p a) (advice-remove sym p)) sym))
+
+;;; General functions
 (defun directory-files-exclude (directory &optional full match nosort)
   "Like `directory-files', but excluding \".\" and \"..\"."
   (delete "." (delete ".." (directory-files directory full match nosort))))
@@ -94,6 +115,18 @@
   (let ((buf (car (ruin/buffers-with-mode 'compilation-mode))))
     (when buf
       (popwin:display-buffer buf))))
+
+(defun ruin/symbol-usage-count ()
+  (interactive)
+  (let* ((sym (symbol-name (symbol-at-point)))
+         (regexp (concat "\"" (regexp-quote sym) "\""))
+         (count (shell-command-to-string (concat "rg --stats -q " regexp " " (projectile-project-root) " | sed -n '2p'"))))
+    (beginning-of-line)
+    (insert (concat "// " count))
+    (join-line)
+    (beginning-of-line)
+    (next-line)
+    ))
 
 (require 'url)
 
@@ -326,6 +359,14 @@ buffer is not visiting a file."
               (message "Deleted file %s" filename)
               (kill-buffer)))))))
 
+(defun ruin/copy-buffer-to-new ()
+  (interactive)
+  (let ((newname (concat (buffer-name) "-copy")))
+    (get-buffer-create newname)
+    (copy-to-buffer newname (point-min) (point-max))
+    (switch-to-buffer newname)
+    (message (concat  "Copied contents to " newname))))
+
 ;;https://www.emacswiki.org/emacs/TransparentEmacs
 ;; Set transparency of emacs
 (defun transparency (value)
@@ -368,6 +409,40 @@ buffer is not visiting a file."
           (select-window first-win)
           (if this-win-2nd (other-window 1))))))
 
+;; https://stackoverflow.com/a/18034042
+(define-key process-menu-mode-map (kbd "k") 'joaot/delete-process-at-point)
+
+(defun joaot/delete-process-at-point ()
+  (interactive)
+  (let ((process (get-text-property (point) 'tabulated-list-id)))
+    (cond ((and process
+                (processp process))
+           (delete-process process)
+           (revert-buffer))
+          (t
+           (error "no process at point!")))))
+
+;; from scimax
+;;;###autoload
+(defun explorer ()
+  "Open Finder or Windows Explorer in the current directory."
+  (interactive)
+  (cond
+   ((string= system-type "darwin")
+    (shell-command (format "open -b com.apple.finder %s"
+			   (if (buffer-file-name)
+			       (file-name-directory (buffer-file-name))
+			     "~/"))))
+   ((string= system-type "windows-nt")
+    (shell-command (format "explorer %s"
+			   (replace-regexp-in-string
+			    "/" "\\\\"
+			    (if (buffer-file-name)
+				(file-name-directory (buffer-file-name))
+			      (expand-file-name  "~/"))))))))
+
+(defalias 'finder 'explorer "Alias for `explorer'.")
+
 
 ;;; Bodil
 
@@ -395,8 +470,8 @@ buffer is not visiting a file."
         (setq pos (match-end 0)))
       matches)))
 
-                                        ; Sample URL
-(setq urlreg "\\(?:http://\\)?ux\\(?:[./#+-_]\\w*\\)+")
+(defconst urlreg "\\(?:https?://\\)\\([A-Za-z]+\\)\\(?:[./#\+-]\\(\\w\\|[&;=_?]\\)*\\)+"
+)
 
 (defun url-list ()
   (mapconcat 'identity
@@ -420,6 +495,12 @@ buffer is not visiting a file."
       (transpose-lines -1))
     (forward-line -1)
     (move-to-column col)))
+
+(defun yank-buffer-url-list ()
+  "Copy all URLs in the current buffer to the kill ring."
+  (interactive)
+  (kill-new (url-list))
+  (message "Copied URLs."))
 
 ;; Crux
 ;;https://github.com/bbatsov/crux/blob/master/crux.el#L258
@@ -511,6 +592,13 @@ current window."
          ((spacemacs/system-is-linux) (let ((process-connection-type nil))
                                         (start-process "" nil "xdg-open" file-path))))
       (message "No file associated to this buffer."))))
+
+(defun spacemacs/recompile-elpa ()
+  "Recompile packages in elpa directory. Useful if you switch
+Emacs versions."
+  (interactive)
+  (byte-recompile-directory package-user-dir nil t))
+
 
 (defun split-window-below-and-focus ()
   "Split the window vertically and focus the new window."

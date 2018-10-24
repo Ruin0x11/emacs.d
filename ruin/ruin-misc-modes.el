@@ -20,22 +20,22 @@
                               (define-key semantic-symref-results-mode-map "k" 'evil-previous-line)))
 
 
-;; winner
+;;; winner
 (winner-mode)
 
 
-;; which-key
+;;; which-key
 (package-require 'which-key)
 (setq which-key-idle-delay 0.2)
 (require 'which-key)
 (which-key-mode)
 
 
-;; request
+;;; request
 (package-require 'request)
 
 
-;; persp
+;;; persp
 (package-require 'persp-mode)
 (with-eval-after-load "persp-mode"
   (setq wg-morph-on nil)
@@ -55,17 +55,17 @@
   "sr" 'persp-rename)
 
 
-;; electric-indent
+;;; electric-indent
 (electric-indent-mode 1)
 
 
-;; savehist
-(savehist-mode t)
+;;; savehist
+(add-hook 'after-init-hook 'savehist-mode)
 
 (setq savehist-file "~/.emacs.d/savehist")
 
 
-;; quickrun
+;;; quickrun
 (package-require 'quickrun)
 
 (setq quickrun-timeout-seconds nil
@@ -85,7 +85,7 @@
     (kill-buffer quickrun/buffer-name)))
 
 
-;; lookup
+;;; lookup
 ;; (add-to-list 'load-path "/usr/share/emacs/site-lisp/lookup")
                                         ; (load "lookup-autoloads")
                                         ; (evil-leader/set-key
@@ -115,7 +115,7 @@
 (global-set-key (kbd "C-c C-l") 'lookup-region-noconfirm)
 
 
-;; expand-region
+;;; expand-region
 (package-require 'expand-region)
 (define-key evil-normal-state-map (kbd "C-'") 'er/expand-region)
 (define-key evil-visual-state-map (kbd "C-'") 'er/expand-region)
@@ -131,18 +131,21 @@
     entries))
 
 
-;; anzu
+;;; anzu
 (package-require 'anzu)
+(package-require 'evil-anzu)
 (global-anzu-mode 1)
 (setq anzu-cons-mode-line-p nil)
+(with-eval-after-load 'evil
+  (require 'evil-anzu))
 
 
-;; arduino-mode
+;;; arduino-mode
 (package-require 'arduino-mode)
 (setq auto-mode-alist (remove (rassoc 'arduino-mode auto-mode-alist) auto-mode-alist))
 
 
-;; processing-mode
+;;; processing-mode
 (package-require 'processing-mode)
 (setq processing-location "/usr/bin/processing-java"
       processing-application-dir "/usr/bin/processing"
@@ -161,17 +164,17 @@
   :mode 'processing-mode)
 
 
-;; sos
+;;; sos
 (require 'sos)
 
 
-;; crux
+;;; crux
 (package-require 'crux)
 (evil-leader/set-key
   "fw" 'crux-view-url)
 
 
-;; lively
+;;; lively
 (require 'lively)
 (evil-define-key 'insert emacs-lisp-mode-map (kbd "C-M-l") 'lively)
 
@@ -181,7 +184,7 @@
   "at" 'google-translate-at-point)
 
 
-;; markdown-mode
+;;; markdown-mode
 (package-require 'markdown-mode)
 (eval-after-load "markdown-mode" #'(lambda ()
                                      (define-key markdown-mode-map (kbd "<C-return>") 'markdown-follow-thing-at-point)))
@@ -215,17 +218,6 @@
 
 (setq mmm-parse-when-idle 't)
 
-
-;; cucumber
-(package-require 'feature-mode)
-(require 'helm-feature)
-(evil-leader/set-key-for-mode 'feature-mode
-  "tt" 'feature-verify-scenario-at-pos
-  "tb" 'feature-verify-all-scenarios-in-buffer
-  "ta" 'feature-verify-all-scenarios-in-project
-  "th" 'helm-feature-snippets
-  "tj" 'feature-goto-step-definition)
-
 ;; (add-hook 'compilation-shell-minor-mode-hook
 ;;           #'(lambda ()
 ;;               (setq compilation-scroll-output nil)))
@@ -237,11 +229,11 @@
 (add-hook 'feature-mode-hook '(lambda ()
                                 (local-set-key (kbd "RET") 'newline-and-indent)))
 
-;; YAML
+;;; YAML
 (package-require 'yaml-mode)
 
 
-;; kaomoji
+;;; kaomoji
 (package-require 'kaomoji)
 (require 'kaomoji)
 (defun my-slurp (file)
@@ -267,14 +259,15 @@
 (evil-leader/set-key
   "ak" 'kaomoji)
 
-;; google-this
+;;; google-this
 (package-require 'google-this)
 (evil-leader/set-key
   "ag" 'google-this
-  "aG" (lambda () (interactive) (google-this-line nil t)))
+  "aG" (lambda () (interactive) (google-this-line nil t))
+  "al" 'google-this-lucky-search)
 
 
-;; doc-mode
+;;; doc-mode
 (require 'doc-mode)
 (add-hook 'c-mode-common-hook 'doc-mode)
 (add-hook 'java-mode-hook 'doc-mode)
@@ -282,15 +275,15 @@
   "mdd" 'doc-mode-fix-tag-doc)
 
 
-;; hsp-mode
+;;; hsp-mode
 (require 'hsp-mode)
 
 
-;; uim
+;;; uim
 (if (locate-library "uim") (require 'uim))
 
 
-;; buffer-move
+;;; buffer-move
 (package-require 'buffer-move)
 (global-set-key (kbd "C-S-k") 'buf-move-up)
 (global-set-key (kbd "C-S-j") 'buf-move-down)
@@ -299,49 +292,51 @@
 
 
 
-;; command-frequency
+;;; command-frequency
 (package-require 'keyfreq)
 (keyfreq-mode)
 (keyfreq-autosave-mode)
 (evil-leader/set-key "af" 'keyfreq-show)
 
 
-;; highlight-symbol
+;;; highlight-symbol
 (package-require 'highlight-symbol)
 (defun ruin/highlight-evil-search ()
   (interactive)
   (highlight-symbol (evil-get-register ?/)))
 
 (evil-leader/set-key
-  "ll" 'highlight-symbol-at-point
-  "lr" 'highlight-symbol-remove-all
-  "lc" 'highlight-symbol-remove-all
-  "l/" 'ruin/highlight-evil-search)
-;; glsl-mode
+  "HH" 'highlight-symbol-at-point
+  "Hr" 'highlight-symbol-remove-all
+  "Hs" 'highlight-regexp
+  "Hc" 'highlight-symbol-remove-all
+  "H/" 'ruin/highlight-evil-search)
+
+;;; glsl-mode
 (package-require 'glsl-mode)
 (defun ruin/open-this-file-in-shader-view ()
   (interactive)
   (shell-command-on-file "glslViewer"))
 
 
-;; compilation-shell-minor-mode
+;;; compilation-shell-minor-mode
 ;; Can't be without it.
 (add-hook 'compilation-mode-hook 'compilation-shell-minor-mode)
 (add-hook 'shell-hook 'compilation-shell-minor-mode)
 
 
-;; dumb-jump
+;;; dumb-jump
 (package-require 'dumb-jump)
 (dumb-jump-mode)
 (evil-leader/set-key "fj" 'dumb-jump-go
   "fp" 'dumb-jump-back)
 
 
-;; mpc
+;;; mpc
 (require 'mpc)
 
 
-;; firestarter
+;;; firestarter
 (package-require 'firestarter)
 (firestarter-mode)
 (setq firestarter-default-type 'finished)
@@ -349,7 +344,7 @@
 (put 'firestarter 'safe-local-variable 'identity)
 
 
-;; restclient
+;;; restclient
 (package-require 'restclient)
 
 (defun ruin/start-restclient ()
@@ -366,11 +361,11 @@
   "ar" 'ruin/start-restclient)
 
 
-;; howdoi
+;;; howdoi
 (package-require 'howdoi)
 
 
-;;edbi
+;;; edbi
 (defun ruin/start-edbi (uri &optional username password)
   "Open Database viewer buffer with args."
   (interactive "sUri: ")
@@ -397,8 +392,10 @@
 (evil-leader/set-key
   "ae" 'ruin/start-edbi)
 
-;; powershell
+;;; powershell
 (package-require 'powershell)
+(require 'powershell)
+
 (when (memq system-type '(gnu/linux darwin))
   (setq powershell-location-of-exe "pwsh"))
 
@@ -418,10 +415,21 @@ if there isn't one at point."
               (forward-sexp -1)))
           (powershell-symbol-at-point)))))
 
+(defun powershell-format-cmd (command)
+  (concat powershell-location-of-exe " -NoProfile -c \"" command "\""))
+
+(defun powershell-run-async (command)
+  (interactive "scommand: ")
+  (call-process-shell-command (powershell-format-cmd command)))
+
+(defun powershell-run-sync (command)
+  (interactive "scommand: ")
+  (message (shell-command-to-string (powershell-format-cmd command))))
+
 (defun powershell-run-cmd (command symbol)
   "Run COMMAND for the PowerShell symbol SYMBOL."
   (if symbol
-        (let* ((cmd (concat "pwsh -c \"" command "\""))
+        (let* ((cmd (powershell-format-cmd command))
               (formatted (replace-regexp-in-string "\%s" symbol cmd)))
           (shell-command-to-string formatted))
       (user-error "No symbol found")))
@@ -459,7 +467,7 @@ If REHASH is set, rehashes the list of all cached cmdlets."
 (defun powershell-all-cmdlets (rehash)
   "Return a string with all PowerShell cmdlets."
   (if (or rehash (null powershell-cmdlet-cache))
-      (let* ((command "pwsh -c \"Get-Command | select -Property Name\"")
+      (let* ((command (concat powershell-location-of-exe " -NoProfile -c \"Get-Command | select -Property Name\""))
              (str (shell-command-to-string command))
              (cmds (seq-drop (split-string str "\n" t "[ ]+") 2)))
         (setq powershell-cmdlet-cache cmds))
@@ -483,7 +491,41 @@ If REHASH is set, rehashes the list of all cached cmdlets."
   "dd" 'powershell-doc
   "df" 'powershell-helm-docs)
 
-;; diminish
+;;; Outshine
+
+(package-require 'outshine)
+(require 'outshine)
+(add-hook 'outline-minor-mode-hook 'outshine-hook-function)
+(defun -add-font-lock-kwds (FONT-LOCK-ALIST)
+  (font-lock-add-keywords
+   nil (--map (-let (((rgx uni-point) it))
+                `(,rgx (0 (progn
+                            (compose-region (match-beginning 1) (match-end 1)
+                                            ,(concat "\t" (list uni-point)))
+                            nil))))
+              FONT-LOCK-ALIST)))
+
+(defmacro add-font-locks (FONT-LOCK-HOOKS-ALIST)
+  `(--each ,FONT-LOCK-HOOKS-ALIST
+     (-let (((font-locks . mode-hooks) it))
+       (--each mode-hooks
+         (add-hook it (-partial '-add-font-lock-kwds
+                                (symbol-value font-locks)))))))
+
+(defconst emacs-outlines-font-lock-alist
+  ;; Outlines
+  '(("\\(^;;;\\) "          ?■)
+    ("\\(^;;;;\\) "         ?○)
+    ("\\(^;;;;;\\) "        ?✸)
+    ("\\(^;;;;;;\\) "       ?✿)))
+
+(add-font-locks
+ '((emacs-outlines-font-lock-alist emacs-lisp-mode-hook)))
+
+;;; auto-YASnippet
+(package-require 'auto-yasnippet)
+
+;;; diminish
 (package-require 'diminish)
 (eval-after-load "helm" '(diminish 'helm-mode))
 (eval-after-load "yasnippet" '(diminish 'yas-minor-mode))
@@ -509,12 +551,20 @@ If REHASH is set, rehashes the list of all cached cmdlets."
 (eval-after-load "whitespace" '(diminish 'global-whitespace-mode))
 (eval-after-load "org-indent" '(diminish 'org-indent-mode))
 (eval-after-load "evil-org" '(diminish 'evil-org-mode))
+(eval-after-load "prettier-js" '(diminish 'prettier-js-mode))
+;(eval-after-load "rainbow-mode" '(diminish 'rainbow-mode))
 
 (diminish 'compilation-in-progress "㋙")
-
 (diminish 'visual-line-mode)
 
+;;; hcl-mode
+(package-require 'hcl-mode)
+(setq hcl-indent-level 4)
+(add-hook 'hcl-mode-hook (lambda ()
+                           (yas-minor-mode-on)
+                           (setq-local fill-column 100)))
 
+;;; open-paren-modes
 (defun my-create-newline-and-enter-sexp (&rest _ignored)
   "Open a new brace or bracket expression, with relevant newlines and indent. "
   (newline)
@@ -523,11 +573,16 @@ If REHASH is set, rehashes the list of all cached cmdlets."
   (indent-according-to-mode))
 
 (setq open-paren-modes
-      '(rust-mode glsl-mode c-mode c++-mode))
+      '(rust-mode glsl-mode c-mode c++-mode hcl-mode lua-mode org-mode)
 
 (add-hooks open-paren-modes 'smartparens-mode)
 (dolist (mode open-paren-modes)
   (sp-local-pair mode "{" nil :post-handlers '((my-create-newline-and-enter-sexp "RET"))))
+
+(add-hooks open-paren-modes 'smartparens-mode)
+(setq sp-highlight-pair-overlay nil
+      sp-highlight-wrap-overlay nil
+      sp-highlight-wrap-tag-overlay nil)
 
 (setq compilation-skip-threshold 2
       compilation-scroll-output t
@@ -538,3 +593,21 @@ If REHASH is set, rehashes the list of all cached cmdlets."
 (setq hcl-indent-level 4)
 
 (provide 'ruin-misc-modes)
+
+(let ((uim-file "/usr/share/emacs/site-lisp/uim-el/uim.el"))
+  (when (file-exists-p uim-file)
+    (add-to-list 'load-path "/usr/share/emacs/site-lisp/uim-el")
+    (load uim-file)
+    (global-set-key "\C-\\" 'uim-mode)
+    (setq uim-default-im-engine "anthy")))
+
+
+;;; Haxe
+(package-require 'haxe-mode)
+(require 'haxe-mode)
+(add-to-list 'auto-mode-alist '("\\.hx\\'" . haxe-mode))
+
+;;; Local variables
+;; Local Variables:
+;; eval: (outline-minor-mode)
+;; End:

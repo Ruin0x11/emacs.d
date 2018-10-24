@@ -1,5 +1,6 @@
 ;;; ruin-evil.el --- evil settings and non-package mappings
 
+;; Don't move this.
 (setq evil-want-C-u-scroll t)
 
 (package-require 'evil)
@@ -9,9 +10,13 @@
 (package-require 'evil-leader)
 (package-require 'evil-numbers)
 (package-require 'elisp-refs)
+(package-require 'general)
+;(package-require 'color-moccur)
+;(package-require 'moccur-edit)
 (global-evil-leader-mode t)
 (load "evil-leader-minor")
 (require 'evil-little-word)
+(package-require 'evil-numbers)
 (evil-mode 1)
 
 (global-evil-leader-mode t)
@@ -22,7 +27,6 @@
 (evil-leader/set-leader "<SPC>")
 
 (evil-leader/set-key
-  "au" 'undo-tree-visualize
   "w" 'save-buffer
   "q" 'quit-or-kill-buffer
   "Q" 'kill-buffer-and-window
@@ -43,6 +47,7 @@
   "dk" 'describe-key
   "dd" 'describe-foo-at-point
   "da" 'helm-apropos
+  "de" 'flycheck-list-errors
 
   "eD" 'toggle-debug-on-error
   "eQ" 'toggle-debug-on-quit
@@ -56,10 +61,10 @@
   "ob" 'org-iswitchb
   "oc" 'org-clock-goto
 
+  "au" 'undo-tree-visualize
   "ac" 'calc
   "ad" 'diff
   "aw" 'browse-url-at-point
-  "al" 'browse-url-generic
   "ax" 're-builder
   "aj" 'webjump
 
@@ -78,6 +83,8 @@
   "fw" 'crux-view-url
   "fl" 'find-library
   "fe" 'elisp-refs-function
+  "fO" 'dmoccur
+  "fo" 'moccur
 
   "hR" 'helm-regexp
   "hm" 'helm-man-woman
@@ -92,6 +99,7 @@
   "kk" 'kill-compilation
   "kb" 'ruin/show-compilation-buffer
 
+  "?i" 'helm-info
   "?E" 'info-emacs-manual
   "?y" 'yas-describe-tables
 
@@ -115,18 +123,21 @@
 
   "bl" 'helm-buffers-list
   "TAB" 'spacemacs/alternate-buffer
+  "bc"  'ruin/copy-buffer-to-new
   "bd"  'kill-this-buffer
   "bD"  'delete-file-and-buffer
   "bn"  'rename-file-and-buffer
   "bm"  'move-buffer-file
   "br"  'revert-buffer
   "bK"  'spacemacs/kill-other-buffers
-  "bw"  'whitespace-cleanup
   "bY"  'spacemacs/copy-whole-buffer-to-clipboard
   "b!"  'shell-command-on-file
   "bB"  'browse-url-of-file
   "b="  'my-diff-buffer-with-file
-  "bi"  'indent-buffer)
+  "bi"  'indent-buffer
+  "ba"  'helm-do-ag-buffers
+  "bw"  'whitespace-cleanup
+  "bf"  'fit-window-to-buffer)
 
 (defun ruin/window-movement-for-mode (mode map)
   (eval-after-load mode `(lambda ()
@@ -144,6 +155,8 @@
 
 (define-key Info-mode-map (kbd "C-i") 'Info-history-forward)
 (define-key Info-mode-map (kbd "C-o") 'Info-history-back)
+(define-key Info-mode-map (kbd "C-u") 'Info-scroll-down)
+(define-key Info-mode-map (kbd "C-d") 'Info-scroll-up)
 (define-key Info-mode-map "m" 'Info-menu)
 (ruin/window-movement-for-map Info-mode-map)
 
@@ -242,6 +255,7 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
   '(progn
      (define-key evil-normal-state-map "Y" 'copy-to-end-of-line)
      (define-key evil-normal-state-map "&" 'evil-ex-repeat-substitute-with-flags)
+     ;(define-key evil-normal-state-map (kbd "M-.") 'xref-find-definitions)
 
      ;; trade ctrl-h and others for faster window switching
      (ruin/window-movement-for-map evil-normal-state-map)
@@ -276,8 +290,8 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (eval-after-load "comint" #'(lambda ()
                               (define-key comint-mode-map (kbd "<up>") 'comint-previous-input)
                               (define-key comint-mode-map (kbd "<down>") 'comint-next-input)
-                        (define-key comint-mode-map (kbd "C-n") 'comint-next-matching-input-from-input)
-                        (define-key comint-mode-map (kbd "C-p") 'comint-previous-matching-input-from-input)))
+                              (define-key comint-mode-map (kbd "C-n") 'comint-next-matching-input-from-input)
+                              (define-key comint-mode-map (kbd "C-p") 'comint-previous-matching-input-from-input)))
 
 
 ;; j and k where it counts
@@ -309,7 +323,26 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
                                  (define-key mu4e-headers-mode-map "g" 'mu4e~headers-jump-to-maildir)
                                  (define-key mu4e-headers-mode-map "u" 'mu4e-update-index)
                                  (define-key mu4e-headers-mode-map "J" 'mu4e-headers-next-unread)
-                                 (define-key mu4e-headers-mode-map "K" 'mu4e-headers-prev-unread)))
+                                 (define-key mu4e-headers-mode-map "k" 'MU4E-HEADERS-PREV-UNREAD)))
+
+(evil-set-initial-state 'compilation-mode 'normal)
+(evil-define-key 'normal compilation-mode-map
+  "g?" 'describe-mode
+  "gg" 'evil-goto-first-line
+  "0" 'evil-digit-argument-or-evil-beginning-of-line
+  [mouse-2] 'compile-goto-error
+  [follow-link] 'mouse-face
+  (kbd "<return>") 'compile-goto-error
+
+  "go" 'compilation-display-error
+  (kbd "S-<return>") 'compilation-display-error
+
+  "gj" 'compilation-next-error
+  "gk" 'compilation-previous-error
+  "[" 'compilation-previous-file
+  "]" 'compilation-next-file
+  "gr" 'recompile
+  "h" 'evil-backward-char)
 
 ;;; normal Emacs bindings
 (global-set-key (kbd "C-x C-u") 'universal-argument)
@@ -331,44 +364,54 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (global-set-key [f6] 'ruin/scroll-down-or-next-buffer)
 (global-set-key [f7] 'previous-error)
 (global-set-key [f8] 'next-error)
-(global-set-key [f9] 'projectile-compile-project)
 
 ;; match items with %
 (package-require 'evil-matchit)
 (global-evil-matchit-mode 1)
 
-(defun mpc-play-pause ()
+(evil-set-initial-state 'compilation-mode 'normal)
+
+(evil-define-key 'normal compilation-mode-map
+  "g?" 'describe-mode
+  "gg" 'evil-goto-first-line
+  "0" 'evil-digit-argument-or-evil-beginning-of-line
+  "?" 'evil-search-backward
+  [mouse-2] 'compile-goto-error
+  [follow-link] 'mouse-face
+  (kbd "<return>") 'compile-goto-error
+
+  "go" 'compilation-display-error
+  (kbd "S-<return>") 'compilation-display-error
+
+  "gj" 'compilation-next-error
+  "gk" 'compilation-previous-error
+  "[" 'compilation-previous-file
+  "]" 'compilation-next-file
+  "gr" 'recompile
+  "h" 'evil-backward-char)
+
+(evil-define-key 'normal flycheck-error-list-mode-map
+  (kbd "<return>") 'flycheck-error-list-goto-error
+  "j" 'flycheck-error-list-next-error
+  "k" 'flycheck-error-list-previous-error
+  "e" 'flycheck-error-list-explain-error)
+
+(define-key evil-normal-state-map (kbd "<kp-add>") 'evil-numbers/inc-at-pt)
+(define-key evil-normal-state-map (kbd "<kp-subtract>") 'evil-numbers/dec-at-pt)
+
+;(setq-default evil-search-module 'evil-search)
+
+(defun spacemacs/translate-C-i (_)
+  "If `dotspacemacs-distinguish-gui-tab' is non nil, the raw key
+sequence does not include <tab> or <kp-tab>, and we are in the
+gui, translate to [C-i]. Otherwise, [9] (TAB)."
   (interactive)
-  (let ((state (cdr (assoc 'state mpc-status))))
-    (if (equal state "play")
-        (mpc-pause)
-      (mpc-play))))
-
-(defun mpc-status-string ()
-  (let ((title (cdr (assoc 'Title mpc-status)))
-        (artist (cdr (assoc 'Artist mpc-status)))
-        (album (cdr (assoc 'Album mpc-status)))
-        (elapsed (string-to-number
-                  (cdr (assoc 'elapsed mpc-status))))
-        (duration (string-to-number
-                   (cdr (assoc 'duration mpc-status)))))
-    (format "%s - %s (%s) [%s/%s]"
-            artist title album
-            (format-seconds "%.2m:%.2s" elapsed)
-            (format-seconds "%.2m:%.2s" duration))))
-
-(defhydra hydra-mpc (:color pink
-                     :hint nil)
-  "
-^mpc^
-^^^^^^^^----------
-_p_: play/pause=?p?
-_f_: next song
-_b_: previous song
-"
-  ("p" mpc-play-pause (cdr (assoc 'state mpc-status)))
-  ("f" mpc-next)
-  ("b" mpc-prev)
-  ("q" nil "quit"))
+  (if (and (not (cl-position 'tab (this-single-command-raw-keys)))
+           (not (cl-position 'kp-tab (this-single-command-raw-keys)))
+           t
+           (display-graphic-p))
+      [C-i] [?\C-i]))
+(define-key key-translation-map [?\C-i] 'spacemacs/translate-C-i)
+(define-key evil-normal-state-map [C-i] 'evil-jump-forward)
 
 (provide 'ruin-evil)

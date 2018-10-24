@@ -22,3 +22,6 @@
 [submodule "site-lisp/flay"]
 	path = site-lisp/flay
 	url = https://www.github.com/ruin0x11/flay.el
+[submodule "site-lisp/helm-fd"]
+	path = site-lisp/helm-fd
+	url = https://www.github.com/ruin0x11/helm-fd

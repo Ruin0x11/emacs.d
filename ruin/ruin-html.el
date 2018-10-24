@@ -10,6 +10,9 @@
 (package-require 'ssass-mode)
 (package-require 'slim-mode)
 (package-require 'tidy)
+(package-require 'graphql-mode)
+(package-require 'prettier-js)
+(package-require 'impatient-mode)
 
 (require 'web-mode)
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
@@ -26,8 +29,26 @@
             (web-mode-set-content-type "jsx")
           (message "now set to: %s" web-mode-content-type))))
 
+(setq web-mode-markup-indent-offset 2)
+
+(add-hook 'slim-mode-hook
+  (function (lambda ()
+          (setq evil-shift-width slim-indent-offset))))
+
+(require 'rainbow-mode)
+(setq rainbow-html-colors t)
+;; (setq rainbow-html-colors-alist nil)
+
+(add-to-list 'rainbow-html-rgb-colors-font-lock-keywords
+             '("{\s*\\([0-9]\\{1,3\\}\\(?:\\.[0-9]\\)?\\(?:\s*%\\)?\\)\s*,\s*\\([0-9]\\{1,3\\}\\(?:\\.[0-9]\\)?\\(?:\s*%\\)?\\)\s*,\s*\\([0-9]\\{1,3\\}\\(?:\\.[0-9]\\)?\\(?:\s*%\\)?\\)\s*,\s*[0-9]*\.?[0-9]+\s*%?\s*}"
+               (0 (rainbow-colorize-rgb))))
+(add-to-list 'rainbow-html-rgb-colors-font-lock-keywords
+             '("color(\s*\\([0-9]\\{1,3\\}\\(?:\.[0-9]\\)?\\(?:\s*%\\)?\\)\s*,\s*\\([0-9]\\{1,3\\}\\(?:\\.[0-9]\\)?\\(?:\s*%\\)?\\)\s*,\s*\\([0-9]\\{1,3\\}\\(?:\\.[0-9]\\)?\\(?:\s*%\\)?\\)\s*)"
+                (0 (rainbow-colorize-rgb))))
+(add-hook 'c++-mode-hook 'rainbow-mode)
+
 (dolist (hook
-         '(css-mode-hook web-mode-hook sass-mode-hook less-css-mode-hook))
+         '(css-mode-hook web-mode-hook sass-mode-hook less-css-mode-hook ssass-mode-hook))
   (add-hook hook 'rainbow-mode)
   (add-hook hook 'company-mode-on))
 
@@ -45,6 +66,16 @@
           (setq evil-shift-width slim-indent-offset))))
 
 (package-require 'scss-mode)
+
+(add-hook 'ssass-mode-hook
+  (function (lambda ()
+          (setq evil-shift-width ssass-tab-width))))
+
+(setq web-mode-code-indent-offset 2)
+
+(add-hook 'web-mode-hook
+  (function (lambda ()
+          (setq evil-shift-width web-mode-code-indent-offset))))
 
 (add-hook 'js2-mode-hook 'prettier-js-mode)
 

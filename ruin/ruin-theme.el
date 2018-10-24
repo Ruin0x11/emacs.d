@@ -23,9 +23,13 @@
 (scroll-bar-mode 0)
 (tool-bar-mode 0)
 (menu-bar-mode 0)
+(if (or (display-graphic-p) (daemonp))
+    (progn
+      (scroll-bar-mode 0)
+      (tool-bar-mode 0)))
 
 ;; Set frame title
-(setq frame-title-format '(multiple-frames "%b" ("" invocation-name "@" system-name ": Grow a world." )))
+(setq frame-title-format '(multiple-frames "%b" ("" invocation-name "@" system-name ": End of days." )))
 
 ;; You can also set the initial frame parameters
 ;; (setq initial-frame-alist
@@ -56,6 +60,7 @@
 (require 'whitespace)
 (setq whitespace-style '(face trailing))
 (global-whitespace-mode 1)
+(add-hook 'before-save-hook 'whitespace-cleanup)
 
 ;; Install themes
 ;; (package-require 'ample-theme)
@@ -64,6 +69,8 @@
 (package-require 'solarized-theme)
 (package-require 'monokai-theme)
 (package-require 'spaceline)
+(package-require 'helm)
+(require 'helm)
 (require 'spaceline-config)
 
 (setq custom-theme-directory (locate-user-emacs-file "themes"))
@@ -79,20 +86,20 @@
 ;; https://github.com/kuanyui/.emacs.d/blob/master/rc/rc-basic.el#L102
 (defun setup-cjk-alignment ()
   (when (display-graphic-p)
-    (defvar emacs-english-font "Iosevka Light"
+    (defvar emacs-english-font "Hack"
       "The font name of English.")
-    
-    (defvar emacs-cjk-font "東風ゴシック" "The font name for CJK.")
 
-    (defvar emacs-font-size-pair '(14 . 14)
+    (defvar emacs-cjk-font "Kochi Gothic" "The font name for CJK.")
+
+    (defvar emacs-font-size-pair '(12 . 14)
       "Default font size pair for (english . chinese)")
 
     (defvar emacs-font-size-pair-list
-      '(( 5 .  6) (9 . 10) (10 . 12)(12 . 14)
-        (13 . 16) (15 . 18) (17 . 20) (19 . 22)
-        (20 . 24) (21 . 26) (24 . 28) (26 . 32)
-        (28 . 34) (30 . 36) (34 . 40) (36 . 44))
-      "This list is used to store matching (englis . chinese) font-size.")
+      '(( 5 .  6) (9 . 10) (10 . 12) (12 . 14)
+        (14 . 16) (15 . 18) (16 . 16) (17 . 20)
+        (19 . 22) (20 . 24) (21 . 26) (24 . 28)
+        (26 . 32) (28 . 34) (30 . 36) (34 . 40))
+      "This list is used to store matching (english . chinese) font-size.")
 
     (defun font-exist-p (fontname)
       "Test if this font is exist or not."
@@ -132,8 +139,8 @@
       "Increase emacs's font-size acording emacs-font-size-pair-list."
       (interactive) (emacs-step-font-size -1))
 
-    ;; (global-set-key (kbd "C-=") 'increase-emacs-font-size)
-    ;; (global-set-key (kbd "C--") 'decrease-emacs-font-size)
+    (global-set-key (kbd "C-=") 'increase-emacs-font-size)
+    (global-set-key (kbd "C--") 'decrease-emacs-font-size)
     ))
 
 (setq spaceline-workspace-numbers-unicode 't)
@@ -141,28 +148,31 @@
 (defface ruin/warning-face '((t (:foreground "white" :background "cadetblue")))
   "Face for a warning.")
 
-(spaceline-define-segment org-clock
-  "Show information about the current org clock task.  Configure
-`spaceline-org-clock-format-function' to configure. Requires a currently running
-org clock.
-
-This segment overrides the modeline functionality of `org-mode-line-string'."
-  (if (and (fboundp 'org-clocking-p)
-           (org-clocking-p))
-      (substring-no-properties (funcall spaceline-org-clock-format-function))
-    "Not clocking!")
-  :global-override org-mode-line-string
-  :face ruin/warning-face)
-
-(spaceline-define-segment org-clock-not
-  "Show when not clocking."
-  (concat "asd" "zxc")
-  :enabled t
-  )
+;(spaceline-define-segment org-clock
+;  "Show information about the current org clock task.  Configure
+;`spaceline-org-clock-format-function' to configure. Requires a currently running
+;org clock.
+;
+;This segment overrides the modeline functionality of `org-mode-line-string'."
+;  (if (and (fboundp 'org-clocking-p)
+;             (org-clocking-p))
+;      (substring-no-properties (funcall spaceline-org-clock-format-function))
+;    "Not clocking!")
+;  :global-override org-mode-line-string
+;  :face ruin/warning-face)
+;
+;(spaceline-define-segment org-clock-not
+;  "Show when not clocking."
+;  (concat "asd" "zxc")
+;  :enabled t
+;  )
 
 (defun ruin/init-textmode-theme()
   (load-theme 'monokai t)
-
+  (package-require 'helm)
+  (require 'helm-files)
+  (package-require 'company)
+  (require 'company)
   (set-face-background 'default "black")
   (set-face-background 'mode-line "black")
   (set-face-foreground 'font-lock-comment-face "yellow")
@@ -177,7 +187,11 @@ This segment overrides the modeline functionality of `org-mode-line-string'."
   (set-face-background 'spaceline-flycheck-info "black")
   (set-face-background 'spaceline-flycheck-warning "black")
   (set-face-background 'spaceline-flycheck-error "black")
-  (set-face-background 'helm-selection "blue"))
+  (set-face-background 'helm-selection "blue")
+  (set-face-foreground 'helm-ff-file "green")
+  (set-face-foreground 'company-tooltip "yellow")
+  (set-face-foreground 'company-tooltip-annotation "magenta")
+  (set-face-foreground 'company-tooltip-common "magenta"))
 
 (defun ruin/classic-theme ()
   (set-frame-font "SGI Screen:style=Regular:pixelsize=14" t)
@@ -188,28 +202,43 @@ This segment overrides the modeline functionality of `org-mode-line-string'."
   (load-theme 'monokai t)
   (toggle-frame-fullscreen))
 
+(defun ruin/classic-theme-windows ()
+  (when (eq system-type 'windows-nt)
+    (set-default-font "y-outline-MS Gothic-normal-normal-normal-mono-13-*-*-*-c-*-iso10646-1"))
+  (when (eq system-type 'gnu/linux)
+    (set-default-font "Hack 11"))
+  (load-theme 'undy t)
+  (set-frame-size (selected-frame) 120 60))
+
 (defun ruin/growth-theme ()
   (interactive)
   (when (eq system-type 'windows-nt)
-    (set-frame-font "y-outline-ＭＳ ゴシック-normal-normal-normal-mono-14-*-*-*-c-*-iso10646-1"))
+    (set-frame-font "y-outline-ＭＳ ゴシック-normal-normal-normal-mono-20-*-*-*-c-*-iso10646-1"))
   (load-theme 'consonance t)
   (transparency 95)
   (toggle-frame-fullscreen))
 
-(defun ruin/init-theme ()
-  (setup-cjk-alignment)
-  ;; (display-time)
-  (display-battery-mode)
+(defun ruin/init-spaceline ()
   (spaceline-compile)
-  (spaceline-toggle-org-clock-on)
-  (spaceline-toggle-org-clock-not-on)
-  (cond ((not window-system) (ruin/init-textmode-theme))
-        ((memq system-type '(darwin)) (ruin/normal-theme))
-        (t (ruin/growth-theme)))
+  ;; (spaceline-toggle-org-clock-on)
+  ;; (spaceline-toggle-org-clock-not-on)
   (spaceline-emacs-theme)
   (spaceline-helm-mode)
   (spaceline-toggle-projectile-root-on)
-  (spaceline-toggle-which-function-off))
+  (spaceline-toggle-which-function-off)
+  (setq flycheck-color-mode-line-face-to-color 'powerline-active1))
+
+(defun ruin/init-theme ()
+  (interactive)
+  (setup-cjk-alignment)
+  (display-battery-mode)
+
+  (when (window-system)
+    (ruin/init-spaceline))
+
+  (cond ((not window-system) (ruin/init-textmode-theme))
+        ((memq system-type '(darwin)) (ruin/normal-theme))
+        (t (ruin/classic-theme-windows))))
 
 (if (daemonp)
     (add-hook 'after-make-frame-functions
@@ -221,40 +250,19 @@ This segment overrides the modeline functionality of `org-mode-line-string'."
 
 (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
 
-(package-require 'fill-column-indicator)
+;(package-require 'fill-column-indicator)
 (setq fill-column 80)
-(fci-mode)
+;(fci-mode)
 
 (defun ruin/enable-filling ()
   (interactive)
                                         ; for Rust
   (setq fill-column 99)
   (auto-fill-mode)
-  (fci-mode))
+  (fci-mode 0)
+  )
 
 (add-hook 'rust-mode-hook 'ruin/enable-filling)
-
-;; ;; Calculate default font size
-;; (setq default-frame-font-size 9)
-;; (setq presentation-frame-font-size
-;;       (truncate (* 1.25 default-frame-font-size)))
-
-;; ;; Build font descriptor strings
-;; ;; (defun font-desc (name size)
-;; ;;   (concat "-unknown-" name "-normal-normal-normal-*-"
-;; ;;           (number-to-string size) "-*-*-*-m-0-iso10646-1"))
-;; (defun font-desc (name size)
-;;   (concat name " " (number-to-string size)))
-
-;; ;; Set default and presentation mode fonts
-;; (defun default-frame-font ()
-;;   (font-desc "Menlo for Powerline" default-frame-font-size))
-;; (defun presentation-frame-font ()
-;;   (font-desc "Menlo for Powerline" presentation-frame-font-size))
-;; (set-frame-font (default-frame-font))
-;; (add-to-list 'default-frame-alist '(font . "Menlo\ for\ Powerline-9"))
-
-;; (require 'iosevka-ligatures)
 
 (defun ruin/battery-pmset ()
   "Get battery status information using `pmset'.

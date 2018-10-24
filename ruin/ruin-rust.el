@@ -1,7 +1,12 @@
 (package-require 'rust-mode)
 (package-require 'toml-mode)
+<<<<<<< HEAD
 (package-require 'flycheck-rust)
 (package-require 'cargo)
+=======
+(package-require 'lsp-rust)
+(package-require 'flycheck-rust) (package-require 'cargo)
+>>>>>>> 0159d8aa13b0553c165b61af6c18cc9b27a86599
 (package-require 'racer)
 
 (setq
@@ -30,6 +35,7 @@
 
   "mu" 'ruin/use-missing-imports
   "mk" 'cargo-process-clippy
+  "mt" 'ruin/jump-to-cargo-dot-toml
 
   "ta" 'cargo-process-test
   "tt" 'ruin/my-cargo-process-current-test
@@ -118,6 +124,10 @@ Cargo: Run the tests."
       import
     nil))
 
+(defun ruin/jump-to-cargo-dot-toml ()
+    (interactive)
+  (find-file (concat (projectile-project-root) "Cargo.toml")))
+
 ;; prevent flycheck from blocking cargo subprocesses
 (defun kill-flycheck ()
   (when (flycheck-running-p)
@@ -129,5 +139,9 @@ Cargo: Run the tests."
                 cargo-process-run
                 cargo-process-build))
   (advice-add func :after #'kill-flycheck))
+
+;(with-eval-after-load 'lsp-mode
+;  (require 'lsp-rust)
+;  (add-hook 'rust-mode-hook #'lsp-rust-enable))
 
 (provide 'ruin-rust)

@@ -7,12 +7,12 @@
 
 (require 'org)
 (require 'org-bullets)
-
 (require 'ob-ruby)
-(require 'ob-shell)
+;(require 'ob-shell)
 (require 'ob-gnuplot)
 (require 'ob-sql)
 (require 'ob-clojure)
+(require 'ox-md nil t)
 
 ;; Startup & Directories
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
@@ -75,9 +75,11 @@
 
      org-hide-emphasis-markers t
      org-pretty-entities t
-     org-startup-with-inline-images t)
+     org-startup-with-inline-images t
+     org-export-with-sub-superscripts nil)
 
 (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images)
+
 
 (setq org-agenda-time-grid
   '((daily today require-timed)
@@ -292,6 +294,12 @@ show this warning instead."
 (package-require 'evil-org)
 (require 'evil-org)
 
+(define-key org-mode-map (kbd "<tab>") 'org-cycle)
+(define-key org-mode-map (kbd "TAB") 'org-cycle)
+(define-key org-mode-map [(tab)] 'org-cycle)
+(define-key evil-motion-state-map (kbd "TAB") nil)
+
+
 (evil-leader/set-key-for-mode 'org-mode
   ;; "o C" 'evil-org-recompute-clocks
   ;; evil-org binds these keys, so we bind them back to their original
@@ -327,7 +335,8 @@ show this warning instead."
   "ot" 'org-set-tags-command
   "or" 'org-refile
   "ow" 'org-save-all-org-buffers
-  "oh" 'helm-org-rifle-org-directory)
+  "oh" 'helm-org-files
+  "oH" 'helm-org-rifle-org-directory)
 
 (package-require 'general)
 
@@ -461,22 +470,30 @@ show this warning instead."
 ;; autosave org buffers
 (add-hook 'org-capture-after-finalize-hook #'org-save-all-org-buffers)
 
-(defun org-insert-code-block (name language)
+(defun org-insert-code-block (language)
   "Asks name, language, switches, header. Inserts org-mode source code snippet"
-  (interactive "sname? \nslanguage? ")
+  (interactive "slanguage? ")
   (insert
-   (if (string= name "")
-       ""
-     (concat "#+NAME: " name) )
-   (format "
-#+BEGIN_SRC %s
+   (format "#+BEGIN_SRC %s
 
 #+END_SRC" language))
   (forward-line -1)
-  (goto-char (line-end-position)))
+  (goto-char (line-end-position))
+  (evil-insert-state))
 
 (add-hook 'org-mode-hook (lambda () (yas-minor-mode 0)))
 
 (cancel-function-timers 'org-indent-initialize-agent)
+
+(defun helm-org-files ()
+  (interactive)
+  (let* ((org-files (directory-files-recursively org-directory "\\`[^\\.].*\\.org\\'"))
+         (source (helm-build-sync-source "org-files"
+                   :candidates org-files))
+         (file (helm :sources source
+                     :buffer "*Org Files*"))
+         (full-path (expand-file-name (file-name-as-directory org-directory))))
+    (when file
+      (find-file file))))
 
 (provide 'ruin-org)

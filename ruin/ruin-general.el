@@ -33,6 +33,7 @@
 (recentf-mode 1)
 (setq recentf-max-saved-items 1000)
 (run-with-idle-timer 30 t (lambda () (let ((inhibit-message t)) (recentf-save-list))))
+(recentf-cleanup)
 
 ;; Highlight matching parentheses when the point is on them.
 (show-paren-mode 1)
@@ -49,14 +50,15 @@
 ;; don't ring the bell
 (setq ring-bell-function 'ignore)
 
-(setq gdb-many-windows t
-      gdb-show-main t)
-
 ;; save clipboard before replacing
 (setq save-interprogram-paste-before-kill t)
 
 ;; open is generic url browser
 (setq browse-url-generic-program "open")
+
+;; move abbrev_defs from ~/.abbrev_defs
+(setq abbrev-file-name "~/.emacs.d/abbrev_defs"
+      save-abbrevs 'silent)
 
 ;; registers
 (dolist
@@ -96,5 +98,42 @@
 ;; Also auto refresh dired, but be quiet about it
 (setq global-auto-revert-non-file-buffers t)
 (setq auto-revert-verbose nil)
+
+(let ((texi-dir (concat (getenv "HOME") "/.texi/info/")))
+  (if (file-exists-p texi-dir)
+      (add-to-list 'Info-directory-list texi-dir)))
+
+(defvar truncated-compilation-line-limit 1000)
+(defvar truncated-compilation-line-trailer "…")
+
+(defun truncate-compilation-long-lines ()
+  "Emacs doesn't cope well with extremely long
+lines. Unfortunately some processes like grep, ack, ag, rg are
+prone to matching minified files or otherwise extremely long
+lines. Once Added to compilation-filter-hook, this function
+truncates lines returned by the compilation process."
+  (cl-flet ((truncate-line (pos)
+                           (let* ((beginning (progn (beginning-of-line) (point)))
+                                  (ending (progn (end-of-line) (point)))
+                                  (length (- ending beginning))
+                                  (excess (max (- length truncated-compilation-line-limit))))
+                             (when (plusp excess)
+                               (delete-region (- ending excess) ending)
+                               (when truncated-compilation-line-trailer
+                                 (insert truncated-compilation-line-trailer))))))
+    (goto-char compilation-filter-start)
+    (cl-loop do (truncate-line (point))
+             (forward-line 1)
+             (end-of-line)
+             (when (= (point) (point-max))
+               (return)))))
+
+
+(add-hook 'compilation-filter-hook 'truncate-compilation-long-lines)
+
+(when (eq system-type 'windows-nt)
+  (shell-command "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\VC\\Auxiliary\\Build\\vcvars64.bat"))
+
+(save-place-mode 1)
 
 (provide 'ruin-general)

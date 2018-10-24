@@ -1,6 +1,11 @@
 ;; init.el -- inits
 (require 'cl)
 
+(require 'server)
+(when (eq system-type 'windows-nt)
+  (or (server-running-p)
+      (server-start)))
+
 ;; Add .emacs.d/ruin to load-path
 (setq dotfiles-dir (file-name-directory
                     (or (buffer-file-name) load-file-name)))
@@ -17,6 +22,11 @@
         (normal-top-level-add-subdirs-to-load-path)))))
 
 (reload-site-lisp)
+
+(defun reload-init-file ()
+  "Reload my init file."
+  (interactive)
+  (load-file user-init-file))
 
 ;; recompile all .el files
 ;; (byte-recompile-directory (expand-file-name "~/.emacs.d/elpa") 0)
@@ -38,7 +48,6 @@
 (setq package-user-dir (locate-user-emacs-file "elpa"))
 (require 'package)
 (dolist (source '(("melpa" . "http://melpa.org/packages/")
-                  ("marmalade" . "http://marmalade-repo.org/packages/")
                   ("elpa" . "http://tromey.com/elpa/")))
   (add-to-list 'package-archives source t))
 (package-initialize)
@@ -58,22 +67,16 @@
 
 (setq create-lockfiles nil)
 
-(setq backup-save-directory (locate-user-emacs-file "saves"))
+(setq backup-save-directory "~/.emacs.d/saves")
 (when (memq system-type '(windows-nt))
   (setenv "PATH"
           (concat
            "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319" ";"
+           "C:\\bin" ";"
+           "C:\\Program Files\\Git\\usr\\bin" ";"
            (getenv "PATH")
            ))
   )
-
-(when (memq system-type '(windows-nt))
-  (setenv "PATH"
-          (concat
-           "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319" ";"
-           (getenv "PATH")
-           )))
-
 
 (when (not (file-exists-p backup-save-directory))
   (make-directory backup-save-directory))
@@ -98,21 +101,21 @@
         ruin-lisp
         ruin-lua
         ruin-ruby
-        ruin-python
+        ;ruin-python
         ruin-html
-        ruin-haskell
-        ruin-go
+        ;ruin-haskell
+        ;ruin-go
         ruin-c
         ruin-rust
-        ruin-tex
-        ruin-elixir
+        ;ruin-tex
+        ;ruin-elixir
                                         ;ruin-hipchat
 
         ruin-project
         ruin-flycheck
         ruin-snippet
         ruin-git
-        ruin-mail
+        ;ruin-mail
         ruin-shell
         ruin-popwin
         ruin-misc-modes
@@ -136,3 +139,15 @@
 (load custom-file 'noerror)
 (put 'downcase-region 'disabled nil)
 (put 'dired-find-alternate-file 'disabled nil)
+
+(defun ruin/profile-recompile ()
+  (interactive)
+  (push (lambda (a b) (profiler-report) (profiler-stop) (setq compilation-finish-functions nil))
+        compilation-finish-functions)
+  (profiler-start 'cpu)
+  (recompile))
+
+;; load sensitive configs, if available
+;(let ((secrets (locate-user-emacs-file "secret.el.gpg")))
+;  (when (file-exists-p secrets)
+;    (ruin/load-encrypted secrets)))

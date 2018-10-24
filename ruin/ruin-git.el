@@ -5,16 +5,18 @@
 (package-require 'git-timemachine)
 (package-require 'smeargle)
 (package-require 'gitignore-mode)
+(package-require 'magithub)
 (require 'magit)
 (require 'evil-magit)
 (evil-magit-init)
 
-(add-to-list 'evil-emacs-state-modes 'git-timemachine-mode)
+(if (eq system-type 'windows-nt)
+    (progn
+      (setq exec-path (add-to-list 'exec-path "C:/Program Files/Git/bin"))
+      (setenv "PATH" (concat "C:\\Program Files\\Git\\bin;" (getenv "PATH")))))
 
-(defun ruin/magit-rebase-interactive-preserve-merge ()
-  (interactive)
-  (magit-rebase-interactive )
-  )
+
+(add-to-list 'evil-emacs-state-modes 'git-timemachine-mode)
 
 (defun endless/visit-pull-request-url ()
   "Visit the current branch's PR on Github."
@@ -27,6 +29,10 @@
                        (magit-get-push-remote)
                        "url"))
            (magit-get-current-branch))))
+
+(defun ruin/navigate-merge-conflicts ()
+  (interactive)
+  (grep (concat "grep -nH -r -e \"<<<<<<< HEAD\" " (projectile-project-root))))
 
 (evil-leader/set-key
   "gg" 'magit-dispatch-popup
@@ -53,7 +59,8 @@
   "gC" 'magit-clone
   "gc" 'magit-commit
   "gR" 'magit-reset-hard
-  "gv" 'endless/visit-pull-request-url)
+  "gv" 'endless/visit-pull-request-url
+  "gn" 'ruin/navigate-merge-conflicts)
 
 (defun magit-diff-head ()
         "Execute `magit-diff' against current HEAD."
@@ -62,7 +69,8 @@
 
 ;; always open symlinks as actual file
 (setq vc-follow-symlinks t
-      magit-commit-show-diff t)
+      magit-commit-show-diff t
+      magit-no-confirm '(stage-all-changes))
 
 (add-to-list 'evil-insert-state-modes 'git-commit-mode)
 
@@ -80,5 +88,10 @@
  :states '(emacs)
  "C-d" 'evil-scroll-down
  "C-u" 'evil-scroll-up)
+
+
+;;; magithub
+(require 'magithub)
+(magithub-feature-autoinject t)
 
 (provide 'ruin-git)

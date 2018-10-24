@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: s
+# key: $s
+# group: definitions
+# --
+\${s(_$1)}$0

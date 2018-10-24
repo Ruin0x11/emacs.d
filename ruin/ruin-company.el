@@ -12,13 +12,12 @@
      (define-key company-active-map [tab] 'company-complete)
      (define-key company-active-map (kbd "<tab>") 'company-complete)
      (define-key company-active-map (kbd "<escape>") (lambda () (interactive) (company-abort) (evil-normal-state)))
-     
-     
+
      (setq
       ;; always start auto-completion
-      company-idle-delay 0
+      company-idle-delay nil
       ;; autocomplete right after '.'
-      company-minimum-prefix-length 1
+      company-minimum-prefix-length nil
       ;; remove echo delay
       company-echo-delay 0
       company-dabbrev-downcase nil
@@ -26,12 +25,30 @@
       evil-complete-next-func 'bw/company-complete-lambda
       evil-complete-previous-func 'bw/company-complete-lambda)
 
-     (setq company-global-modes '(clojurescript-mode clojure-mode cider-repl-mode cider-mode ruby-mode html-mode css-mode javascript-mode emacs-lisp-mode
-                                                     semantic-mode enh-ruby-mode ruby-mode robe-mode))
+     (setq company-global-modes '(clojurescript-mode clojure-mode
+                                                     cider-repl-mode
+                                                     cider-mode
+                                                     ruby-mode
+                                                     html-mode
+                                                     css-mode
+                                                     javascript-mode
+                                                     emacs-lisp-mode
+                                                     rust-mode
+                                                     java-mode
+                                                     kotlin-mode
+                                                     semantic-mode
+                                                     enh-ruby-mode
+                                                     ruby-mode
+                                                     robe-mode
+                                                     elixir-mode
+                                                     alchemist-iex-mode))
      )
   )
 
 (package-require 'company)
+(package-require 'company-lsp)
+(require 'company)
+(push 'company-lsp company-backends)
 
 (global-company-mode)
 

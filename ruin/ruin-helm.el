@@ -8,6 +8,7 @@
 
 (require 'helm-config)
 (require 'wgrep)
+;(require 'helm-fd)
 
 (eval-after-load "helm-net" '(require 'helm-google))
 
@@ -22,8 +23,11 @@
       helm-semantic-fuzzy-match t
       helm-imenu-fuzzy-match    t
       helm-candidate-number-limit 50
-      helm-input-idle-delay 0.1
       helm-ag-base-command "ag --vimgrep --nocolor "
+      helm-fd-command-option "-H"
+      helm-input-idle-delay 0.2
+      helm-cycle-resume-delay 2
+      helm-follow-input-idle-delay 0.2
       )
 
 ;; dumb redefinition for ripgrep
@@ -50,6 +54,8 @@
   "fr" 'helm-recentf
   "fd" 'helm-semantic-or-imenu
   "fF" 'helm-find
+  "fi" 'helm-fd-this-directory
+  "fI" 'helm-fd
 
   "hf" 'helm-flycheck
   "hR" 'helm-regexp
@@ -62,17 +68,25 @@
   "ht" 'helm-top
   "hp" 'helm-list-emacs-process
   "h@" 'helm-list-elisp-packages
+  "hq" 'helm-quick-launch
 
   ;; "ii" 'helm-info-at-point
   "?e" 'helm-info-emacs
   "?l" 'helm-info-elisp
   "?g" 'helm-info-magit
-  "?c" 'helm-info-calc)
+  "?c" 'helm-info-calc
+  "?o" 'helm-info-org)
+
+(require 'pulse)
+
+(advice-add 'dumb-jump-result-follow :after
+            (lambda (&rest args)
+              (pulse-momentary-highlight-one-line (point))))
 
 (setq browse-url-text-browser "links")
 
 (case system-type
-  (gnu/linux (setq browse-url-browser-function 'browse-url-chromium))
+  (gnu/linux (setq browse-url-browser-function 'browse-url-surf))
   (darwin (progn
             (setq browse-url-browser-function 'browse-url-generic)
             (setq browse-url-generic-program "open"))))
@@ -94,16 +108,16 @@ surf."
   (setq url (browse-url-encode-url url))
   (let* ((process-environment (browse-url-process-environment)))
     (apply 'start-process
-	   (concat "surf " url) nil
+           (concat "surf " url) nil
            "surf"
-	   (append
-	    browse-url-surf-arguments
-	    (list url)))))
+           (append
+            browse-url-surf-arguments
+            (list url)))))
 
 (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
 (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
 (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
- 
+
 
 (defun prev-window ()
   (interactive)
@@ -129,7 +143,7 @@ surf."
       (if helm-ff-sort-expansions-p
           (sort fnames
                 (lambda (f1 f2) (or (file-directory-p f1)
-                                (not (file-directory-p f2)))))
+                                    (not (file-directory-p f2)))))
         fnames)))
 
   (defun helm-ff-try-expand-fname-1 (parent children)
@@ -166,26 +180,17 @@ surf."
 
   (advice-add 'helm-ff-kill-or-find-buffer-fname :around #'qjp-helm-ff-try-expand-fname))
 
-; (defun helm-project-comments--collect ()
-;   (let ((files (projectile-current-project-files))
-;         matches)
-;     (dolist (file files)
-;       (let ((filename (concat (projectile-project-root) file)))
-;         (when (file-exists-p filename)
-;           (save-excursion
-;             with-current-buffer (find-file-noselect filename t nil t)
-;               (let ((results (re-seq-lines trc-comment-keywords (buffer-string))))
-;                 (setq matches (append matches results))))))))
-;     matches))
-
-(defvar helm-source-project-comments
-  (helm-build-async-source "Project Comments"
-    :candidates-process 'helm-project-comments--collect
-    :nohighlight t))
-
-(defun helm-list-project-comments ()
+(setq quick-launch-dir "~\\AppData\\Roaming\\Microsoft\\Internet Explorer\\Quick Launch")
+(defun helm-quick-launch ()
   (interactive)
-  (helm :sources '(helm-source-project-comments) :buffer "*helm-project-comments*"))
+  (let* ((source (helm-build-sync-source "test"
+                   :candidates (cddr (directory-files quick-launch-dir nil ".lnk"))))
+         (link (helm :sources source
+                     :buffer "*helm sync source*"))
+         (full-path (expand-file-name (file-name-as-directory quick-launch-dir))))
+    (ruin/async-shell-command-no-output (concat full-path link))))
+
+
 
 
 (provide 'ruin-helm)
