@@ -35,6 +35,12 @@
 (run-with-idle-timer 30 t (lambda () (let ((inhibit-message t)) (recentf-save-list))))
 (recentf-cleanup)
 
+;; Desktop
+(desktop-save-mode 1)
+(setq desktop-save t
+      desktop-path (list (locate-user-emacs-file "desktop/"))
+      desktop-dirname (locate-user-emacs-file "desktop/"))
+
 ;; Highlight matching parentheses when the point is on them.
 (show-paren-mode 1)
 
@@ -118,6 +124,12 @@ truncates lines returned by the compilation process."
 
 
 (add-hook 'compilation-filter-hook 'truncate-compilation-long-lines)
+
+(setq compilation-finish-functions '((lambda (buffer message)
+                                       (ding)
+                                       (let ((urgency (if (string-match "finished" message) "normal" "critical")))
+                                         (shell-command (format "notify-send Compilation \"%s\" --expire-time=10000 --urgency=%s" message urgency)))
+                                       )))
 
 (when (eq system-type 'windows-nt)
   (shell-command "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\VC\\Auxiliary\\Build\\vcvars64.bat"))

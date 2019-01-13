@@ -34,6 +34,7 @@
                                                      javascript-mode
                                                      emacs-lisp-mode
                                                      rust-mode
+                                                     common-lisp-mode
                                                      java-mode
                                                      kotlin-mode
                                                      semantic-mode

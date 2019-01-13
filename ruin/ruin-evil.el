@@ -1,7 +1,8 @@
 ;;; ruin-evil.el --- evil settings and non-package mappings
 
-;; Don't move this.
+;; Don't move these.
 (setq evil-want-C-u-scroll t)
+(setq evil-search-module 'evil-search)
 
 (package-require 'evil)
 (package-require 'evil-commentary)
@@ -39,6 +40,7 @@
   "ZZZ" 'save-buffers-kill-emacs
   "as" 'sos
   "M" 'popwin:messages
+  "<RET>" 'evil-ex-nohighlight
 
   "df" 'describe-function
   "dv" 'describe-variable

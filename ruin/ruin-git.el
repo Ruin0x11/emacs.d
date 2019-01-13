@@ -69,7 +69,8 @@
 ;; always open symlinks as actual file
 (setq vc-follow-symlinks t
       magit-commit-show-diff t
-      magit-no-confirm '(stage-all-changes))
+      magit-no-confirm '(stage-all-changes)
+      magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1)
 
 (add-to-list 'evil-insert-state-modes 'git-commit-mode)
 

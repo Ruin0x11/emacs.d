@@ -190,6 +190,8 @@
                                      (define-key markdown-mode-map (kbd "<C-return>") 'markdown-follow-thing-at-point)))
 (add-hook 'markdown-mode-hook #'flyspell-mode)
 
+(setq markdown-gfm-use-electric-backquote nil)
+
 (package-require 'mmm-mode)
 (require 'mmm-mode)
 (setq mmm-global-mode 'maybe)
@@ -388,8 +390,8 @@
           (msg (funcall connection-func (edbi:data-source uri username password))))
       (when msg (error (format "Connection error: %s" msg))))))
 
-(evil-leader/set-key
-  "ae" 'ruin/start-edbi)
+;; (evil-leader/set-key
+;;   "ae" 'ruin/start-edbi)
 
 ;;; powershell
 (package-require 'powershell)
@@ -639,8 +641,8 @@ instead."
   (interactive)
   (setq lsp-print-io (not lsp-print-io)))
 
-(require 'lsp-imenu)
-(add-hook 'lsp-after-open-hook 'lsp-enable-imenu)
+;(require 'lsp-imenu)
+;(add-hook 'lsp-after-open-hook 'lsp-enable-imenu)
 
 
 ;;; lsp-intellij
@@ -685,11 +687,10 @@ instead."
     (global-set-key "\C-\\" 'uim-mode)
     (setq uim-default-im-engine "anthy")))
 
-
-;;; Haxe
-(package-require 'haxe-mode)
-(require 'haxe-mode)
-(add-to-list 'auto-mode-alist '("\\.hx\\'" . haxe-mode))
+;;; edict
+(require 'edict)
+(setq edict-dictionaries '("~/.edict"))
+(evil-leader/set-key "ae" 'edict-search-kanji)
 
 ;;; Local variables
 ;; Local Variables:

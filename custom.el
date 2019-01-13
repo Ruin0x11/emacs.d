@@ -3,51 +3,54 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(base16-distinct-fringe-background nil)
+ '(compilation-message-face (quote default))
  '(custom-safe-themes
    (quote
-    ("8bd4be5ec6fcf99f11bcf7d16ffbe619b4c754a069830792afa98d6b3f2b4390" "c3d4af771cbe0501d5a865656802788a9a0ff9cf10a7df704ec8b8ef69017c68" "8711349fd706681bcb39170dd91392a25ef49e9f189495b45cfcc7806d1bd7b3" "82b67c7e21c3b12be7b569af7c84ec0fb2d62105629a173e2479e1053cff94bd" "8ed752276957903a270c797c4ab52931199806ccd9f0c3bb77f6f4b9e71b9272" "a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default)))
- '(haskell-interactive-popup-errors nil)
- '(haskell-mode-hook (quote (turn-on-haskell-indentation turn-on-haskell-doc)))
- '(haskell-process-auto-import-loaded-modules t)
- '(haskell-process-log t)
- '(haskell-process-suggest-remove-import-lines t)
- '(org-agenda-files
+    ("c13ae3e415b94ae28fa7b209c851c547d7fce6db8b0ba88ceb5b5a2ebeec8ad2" "16dd114a84d0aeccc5ad6fd64752a11ea2e841e3853234f19dc02a7b91f5d661" "65f35d1e0d0858947f854dc898bfd830e832189d5555e875705a939836b53054" "c614d2423075491e6b7f38a4b7ea1c68f31764b9b815e35c9741e9490119efc0" default)))
+ '(fci-rule-color "#3C3D37")
+ '(highlight-changes-colors (quote ("#FD5FF0" "#357A8F")))
+ '(highlight-tail-colors
    (quote
-    ("/home/ruin/Dropbox/org/tracked/clock.org" "/home/ruin/Dropbox/org/tracked/refile.org")))
+    (("#3C3D37" . 0)
+     ("#679A01" . 20)
+     ("#4BBEAE" . 30)
+     ("#1DB4D0" . 50)
+     ("#9A8F21" . 60)
+     ("#A75B00" . 70)
+     ("#F309DF" . 85)
+     ("#3C3D37" . 100))))
+ '(magit-diff-use-overlays nil)
  '(package-selected-packages
    (quote
-    (haxe-mode magithub pandoc csv-mode rmsbolt evil-numbers sly evil-anzu cmake-ide helm-rg flycheck-clang-tidy flymake-clang-tidy clang-format xresources-theme highlight-numbers highlight-numbers-mode groovy-mode gradle-mode hcl-mode string-inflection flycheck-color-mode-line cmake-mode lsp-intellij idea-darkula-theme impatient-mode skewer-mode xahk-mode ahk-mode lsp-ui kotlin-mode lsp-rust company-lsp lsp-mode lsp actionscript-mode textile-mode diminish auto-yasnippet outshine powershell howdoi restclient firestarter dumb-jump glsl-mode highlight-symbol keyfreq buffer-move google-this kaomoji yaml-mode feature-mode mmm-mode markdown-mode google-translate crux processing-mode arduino-mode anzu expand-region quickrun persp-mode which-key popwin multi-term gitignore-mode smeargle git-timemachine evil-magit magit helm-flycheck helm-projectile racer cargo flycheck-rust toml-mode rust-mode ggtags go-mode shm ghc flycheck-haskell haskell-mode scss-mode graphql-mode slim-mode ssass-mode prettier-js js-doc flymake-less less coffee-mode rainbow-mode haml-mode web-mode py-autopep8 company-jedi elpy projectile-rails minitest bundler yari chruby rspec-mode ruby-block enh-ruby-mode robe lua-mode cider-eval-sexp-fu cider flycheck-package package-lint slamhound evil-smartparens smartparens eval-in-repl lispyville company wgrep helm-flx helm-swoop helm-ag evil-org gnuplot helm-org-rifle org-bullets evil-matchit moccur-edit color-moccur general elisp-refs evil-leader evil-surround evil-commentary evil fill-column-indicator spaceline solarized-theme monokai-theme exec-path-from-shell)))
- '(safe-local-variable-values
+    (rg base16 base16-theme gruvbox-theme request flycheck-elixir alchemist company-c-headers srefactor function-args gxref sly-quicklisp yari yaml-mode which-key wgrep web-mode toml-mode string-inflection ssass-mode spaceline solarized-theme smeargle sly slim-mode scss-mode rspec-mode robe rmsbolt restclient rainbow-mode racer quickrun py-autopep8 projectile-rails processing-mode prettier-js powershell popwin persp-mode pandoc outshine org-bullets multi-term monokai-theme mmm-mode minitest magithub lua-mode lsp-rust lispyville less kotlin-mode keyfreq kaomoji js-doc impatient-mode howdoi highlight-symbol highlight-numbers helm-swoop helm-rg helm-projectile helm-org-rifle helm-flycheck helm-flx helm-ag hcl-mode haxe-mode haml-mode groovy-mode graphql-mode gradle-mode google-translate google-this go-mode gnuplot glsl-mode gitignore-mode git-timemachine ggtags general flymake-less flycheck-rust flycheck-package flycheck-color-mode-line flycheck-clang-tidy firestarter expand-region exec-path-from-shell evil-surround evil-smartparens evil-org evil-numbers evil-matchit evil-magit evil-leader evil-commentary evil-anzu eval-in-repl enh-ruby-mode elpy elisp-refs dumb-jump diminish csv-mode crux company-lsp company-jedi coffee-mode cmake-mode cmake-ide clang-format cider-eval-sexp-fu cider chruby cargo bundler buffer-move auto-yasnippet arduino-mode actionscript-mode)))
+ '(pos-tip-background-color "#FFFACE")
+ '(pos-tip-foreground-color "#272822")
+ '(vc-annotate-background nil)
+ '(vc-annotate-color-map
    (quote
-    ((Package . CLIM-INTERNALS)
-     (Package . TOWN-EXAMPLE)
-     (Package . CLIM-DEMO)
-     (Package . Capi)
-     (Syntax . Common-Lisp)
-     (Syntax . ANSI-Common-Lisp)
-     (Base . 10)
-     (sly-load-failed-fasl . ask)
-     (projectile-project-compilation-cmd . "make && cd bin && ./foobar-data")
-     (projectile-project-run-cmd . "cd bin && ./foobar-data")
-     (projectile-project-compilation-cmd . "make tests && cd bin && ./foobar-data")
-     (projectile-project-compilation-cmd . "make tests && cd bin && ./foobar-data-test")
-     (projectile-project-run-cmd . "cd bin && ./foobar-data-test")
-     (projectile-project-compilation-cmd . "make test && cd bin && ./foobar-data-test")
-     (projectile-project-run-cmd "cd bin && ./foobar-data-test")
-     (projectile-project-compilation-cmd "make test && cd bin && ./foobar-data-test")
-     (eval font-lock-add-keywords nil
-           (\`
-            (((\,
-               (concat "("
-                       (regexp-opt
-                        (quote
-                         ("sp-do-move-op" "sp-do-move-cl" "sp-do-put-op" "sp-do-put-cl" "sp-do-del-op" "sp-do-del-cl"))
-                        t)
-                       "\\_>"))
-              1
-              (quote font-lock-variable-name-face)))))
-     (org-emphasis-alist)
-     (eval outline-hide-sublevels)))))
+    ((20 . "#C07C49")
+     (40 . "#CF4F1F")
+     (60 . "#C26C0F")
+     (80 . "#8BA930")
+     (100 . "#AB8C00")
+     (120 . "#A18F00")
+     (140 . "#989200")
+     (160 . "#8E9500")
+     (180 . "#80FF00")
+     (200 . "#729A1E")
+     (220 . "#609C3C")
+     (240 . "#4E9D5B")
+     (260 . "#3C9F79")
+     (280 . "#A1EFE4")
+     (300 . "#299BA6")
+     (320 . "#2896B5")
+     (340 . "#2790C3")
+     (360 . "#F1C438"))))
+ '(vc-annotate-very-old-color nil)
+ '(weechat-color-list
+   (quote
+    (unspecified "#272822" "#3C3D37" "#F70057" "#C07C49" "#86C30D" "#80FF00" "#BEB244" "#8BA930" "#40CAE4" "#F1C438" "#FB35EA" "#FD5FF0" "#74DBCD" "#A1EFE4" "#F8F8F2" "#F8F8F0"))))
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.

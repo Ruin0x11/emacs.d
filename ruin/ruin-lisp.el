@@ -269,6 +269,7 @@
 (define-key sly-mode-map (kbd "M-.") 'sly-edit-definition)
 (define-key sly-mode-map (kbd "M-?") 'sly-edit-uses)
 (define-key sly-mode-map (kbd "C-t") 'sly-pop-find-definition-stack)
+(define-key evil-normal-state-map (kbd "M-.") nil)
 
 (add-hook 'sly-mrepl-mode-hook (lambda ()
                                  (define-key sly-mrepl-mode-map "\C-c\M-o" 'comint-clear-buffer)))

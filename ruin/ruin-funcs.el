@@ -38,8 +38,9 @@
          (regexp (concat "\\_<\\(" (regexp-quote sym) "\\)\\_>")))
     (save-excursion
       (goto-char (point-min))
-      (while (re-search-forward regexp nil t)
-        (replace-match newsym nil nil)))))
+      (let ((case-fold-search nil))
+        (while (re-search-forward regexp nil t)
+          (replace-match newsym t nil))))))
 
 (defun ruin/evil-block-size ()
   "Gives the size of the block area delimited by an evil '%' at point.

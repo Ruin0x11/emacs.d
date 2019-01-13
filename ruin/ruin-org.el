@@ -75,7 +75,8 @@
      org-hide-emphasis-markers t
      org-pretty-entities t
      org-startup-with-inline-images t
-     org-export-with-sub-superscripts nil)
+     org-export-with-sub-superscripts nil
+     org-use-sub-superscripts nil)
 
 (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images)
 

@@ -58,7 +58,7 @@
 (require 'whitespace)
 (setq whitespace-style '(face trailing))
 (global-whitespace-mode 1)
-(add-hook 'before-save-hook 'whitespace-cleanup)
+;(add-hook 'before-save-hook 'whitespace-cleanup)
 
 ;; Install themes
 ;; (package-require 'ample-theme)
@@ -68,6 +68,7 @@
 (package-require 'monokai-theme)
 (package-require 'spaceline)
 (package-require 'helm)
+(package-require 'base16-theme)
 (require 'helm)
 (require 'spaceline-config)
 
@@ -137,8 +138,8 @@
       "Increase emacs's font-size acording emacs-font-size-pair-list."
       (interactive) (emacs-step-font-size -1))
 
-    (global-set-key (kbd "C-=") 'increase-emacs-font-size)
-    (global-set-key (kbd "C--") 'decrease-emacs-font-size)
+    ;(global-set-key (kbd "C-=") 'increase-emacs-font-size)
+    ;(global-set-key (kbd "C--") 'decrease-emacs-font-size)
     ))
 
 (setq spaceline-workspace-numbers-unicode 't)
@@ -166,15 +167,15 @@
 ;  )
 
 (defun ruin/init-textmode-theme()
-  (load-theme 'monokai t)
+  (load-theme 'undy t)
   (package-require 'helm)
   (require 'helm-files)
   (package-require 'company)
   (require 'company)
   (set-face-background 'default "black")
   (set-face-background 'mode-line "black")
-  (set-face-foreground 'font-lock-comment-face "yellow")
-  (set-face-foreground 'font-lock-comment-delimiter-face "yellow")
+  (set-face-foreground 'font-lock-comment-face "blue")
+  (set-face-foreground 'font-lock-comment-delimiter-face "blue")
   (set-face-foreground 'font-lock-doc-face "magenta")
   (set-face-background 'linum "black")
   (set-face-background 'powerline-active1 "black")
@@ -204,9 +205,13 @@
   (when (eq system-type 'windows-nt)
     (set-default-font "y-outline-MS Gothic-normal-normal-normal-mono-13-*-*-*-c-*-iso10646-1"))
   (when (eq system-type 'gnu/linux)
-    (set-default-font "Hack 11"))
-  (load-theme 'undy t)
-  (set-frame-size (selected-frame) 120 60))
+    (set-default-font "-*-terminus-medium-*-*-*-12-*-*-*-*-*-*"))
+  ;(load-theme 'undy t)
+  ;(load-theme 'base16-hopscotch t)
+  (load-theme 'base16-atelier-savanna t)
+  (transparency 85)
+  (set-frame-size (selected-frame) 140 80)
+  (setq flycheck-color-mode-line-face-to-color 'mode-line-buffer-id))
 
 (defun ruin/growth-theme ()
   (interactive)
@@ -231,8 +236,8 @@
   (setup-cjk-alignment)
   (display-battery-mode)
 
-  (when (window-system)
-    (ruin/init-spaceline))
+  ; (when (window-system)
+  ;   (ruin/init-spaceline))
 
   (cond ((not window-system) (ruin/init-textmode-theme))
         ((memq system-type '(darwin)) (ruin/normal-theme))
