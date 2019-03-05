@@ -116,6 +116,27 @@
     (next-line)
     ))
 
+(defun ruin/update-and-list-packages ()
+  (interactive)
+  (package-refresh-contents)
+  (package-list-packages))
+
+(defun ruin/yank-path-of-buffer-file (&optional file)
+  (interactive)
+  (or file
+      (setq file (buffer-file-name))
+      (error "Current buffer has no file"))
+  (kill-new file)
+  (message file))
+
+(defun ruin/save-as-temp-file ()
+  "Save this buffer to a temporary file."
+  (interactive)
+  (let ((temp-file (make-temp-file (buffer-name))))
+    (write-region nil nil temp-file nil 0)
+    (set-visited-file-name temp-file)
+    (save-buffer)))
+
 (require 'url)
 
 (defun download-file-and-open (&optional url download-dir download-name)

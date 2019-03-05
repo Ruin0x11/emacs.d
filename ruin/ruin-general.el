@@ -38,8 +38,8 @@
 ;; Desktop
 (desktop-save-mode 1)
 (setq desktop-save t
-      desktop-path (list (locate-user-emacs-file "desktop/"))
-      desktop-dirname (locate-user-emacs-file "desktop/"))
+      desktop-path (list (locate-user-emacs-file "."))
+      desktop-dirname (locate-user-emacs-file "."))
 
 ;; Highlight matching parentheses when the point is on them.
 (show-paren-mode 1)
@@ -125,11 +125,43 @@ truncates lines returned by the compilation process."
 
 (add-hook 'compilation-filter-hook 'truncate-compilation-long-lines)
 
-(setq compilation-finish-functions '((lambda (buffer message)
-                                       (ding)
-                                       (let ((urgency (if (string-match "finished" message) "normal" "critical")))
-                                         (shell-command (format "notify-send Compilation \"%s\" --expire-time=10000 --urgency=%s" message urgency)))
-                                       )))
+(when (window-system)
+  (setq compilation-finish-functions '((lambda (buffer message)
+                                         (ding)
+                                         (let ((urgency (if (string-match "finished" message) "normal" "critical")))
+                                           (shell-command (format "notify-send Compilation \"%s\" --expire-time=10000 --urgency=%s" message urgency)))
+
+
+
+                                         ))))
+
+(require 'compile)
+(setq compilation-error-regexp-alist
+      (remq 'gnu compilation-error-regexp-alist))
+
+(defvar ivan-pop-target-window)
+(make-variable-buffer-local 'ivan-pop-target-window)
+
+(advice-add 'compilation-goto-locus :around #'ivan-around-compilation-goto-locus)
+
+(defun ivan-around-compilation-goto-locus (orig-func &rest args)
+  (advice-add 'pop-to-buffer :override #'ivan-pop-to-buffer)
+  (apply orig-func args))
+
+(defun ivan-pop-to-buffer (buffer &optional action norecord)
+  (advice-remove 'pop-to-buffer #'ivan-pop-to-buffer)
+  (let ((from-buffer (current-buffer))
+        (reused-window (display-buffer-reuse-window buffer nil)))
+    (cond (reused-window
+           (select-window reused-window norecord))
+          ((and (bound-and-true-p ivan-pop-target-window)
+                (window-live-p ivan-pop-target-window))
+           (window--display-buffer buffer ivan-pop-target-window 'reuse)
+           (select-window ivan-pop-target-window norecord))
+          (t
+           (pop-to-buffer buffer action norecord)
+           (with-current-buffer from-buffer
+             (setq-local ivan-pop-target-window (selected-window)))))))
 
 (when (eq system-type 'windows-nt)
   (shell-command "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\VC\\Auxiliary\\Build\\vcvars64.bat"))

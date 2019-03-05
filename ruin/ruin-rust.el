@@ -1,30 +1,38 @@
 (package-require 'rust-mode)
 (package-require 'toml-mode)
-(package-require 'lsp-rust)
-(package-require 'flycheck-rust) (package-require 'cargo)
+(package-require 'flycheck-rust)
+(package-require 'cargo)
 (package-require 'racer)
 
-(setq
- racer-cmd "~/.cargo/bin/racer"
- racer-rust-src-path "/home/nuko/build/rust/src")
-
-(add-hook 'flycheck-mode-hook #'flycheck-rust-setup)
 (add-hook 'rust-mode-hook 'cargo-minor-mode)
 (add-hook 'rust-mode-hook #'rust-enable-format-on-save)
 
-;; (add-hook 'rust-mode-hook #'racer-mode)
+(add-hook 'rust-mode-hook #'racer-mode)
 ;; (add-hook 'racer-mode-hook #'eldoc-mode)
 ;; (add-hook 'racer-mode-hook #'company-mode)
 
 (add-hook 'cargo-process-mode-hook #'turn-on-visual-line-mode)
 
+(require 'racer)
+(setq racer-rust-src-path "/mnt/hibiki/build/rust/src"
+      racer-cmd "/home/ruin/build/work/racer/target/release/racer")
+
 (evil-leader/set-key-for-mode 'rust-mode
-  "dd" 'racer-describe
-  "df" 'racer-find-definition
+  ; "dd" 'racer-describe
+  ; "df" 'racer-find-definition
 
-  "bi" 'rust-format-buffer
+  "fd" 'lsp-find-definition
+  "fD" 'lsp-find-declaration
+  "fg" 'lsp-find-references
+  "ft" 'lsp-find-type-definition
+  "fs" 'helm-semantic-or-imenu
+  "fe" 'lsp-rename
+  "fy" 'lsp-ui-find-workspace-symbol
+  "fp" 'lsp-ui-peek-find-definitions
 
-  "fs" 'racer-find-definition
+  ; "bi" 'rust-format-buffer
+
+  ; "fs" 'racer-find-definition
 
   "kg" 'ruin/rust-gdb
 
@@ -124,19 +132,29 @@ Cargo: Run the tests."
   (find-file (concat (projectile-project-root) "Cargo.toml")))
 
 ;; prevent flycheck from blocking cargo subprocesses
-(defun kill-flycheck ()
-  (when (flycheck-running-p)
-    (flycheck-stop)))
+; (defun kill-flycheck ()
+;   (when (flycheck-running-p)
+;     (flycheck-stop)))
+;
+; (dolist (func '(cargo-process-test
+;                 ruin/cargo-test-current-mod-or-file
+;                 ruin/my-cargo-process-current-test
+;                 cargo-process-run
+;                 cargo-process-build))
+;   (advice-add func :after #'kill-flycheck))
 
-(dolist (func '(cargo-process-test
-                ruin/cargo-test-current-mod-or-file
-                ruin/my-cargo-process-current-test
-                cargo-process-run
-                cargo-process-build))
-  (advice-add func :after #'kill-flycheck))
+(with-eval-after-load 'lsp-mode
+  (add-hook 'rust-mode-hook (lambda ()
+                              (lsp)
+                              (make-local-variable 'company-backends)
+                              (setq-local company-backends (remove 'company-lsp company-backends)))))
 
-;(with-eval-after-load 'lsp-mode
-;  (require 'lsp-rust)
-;  (add-hook 'rust-mode-hook #'lsp-rust-enable))
+(sp-with-modes 'rust-mode
+  (sp-local-pair "|" "|" :actions nil))
+
+(defun ruin/reload-lsp-session ()
+  (interactive)
+  (setq lsp--session nil)
+  (lsp-session))
 
 (provide 'ruin-rust)

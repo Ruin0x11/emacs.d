@@ -55,8 +55,8 @@
   "fr" 'helm-recentf
   "fd" 'helm-semantic-or-imenu
   "fF" 'helm-find
-  "fi" 'helm-fd-this-directory
-  "fI" 'helm-fd
+  "fi" 'imenu
+  ; "fI" 'helm-fd
 
   "hf" 'helm-flycheck
   "hR" 'helm-regexp

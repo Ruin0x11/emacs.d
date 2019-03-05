@@ -13,9 +13,16 @@
 
 (eval-after-load "flycheck"
   '(progn
+     (require 'flycheck)
      (setq flycheck-highlighting-mode 'symbols
            flycheck-display-errors-delay 0.8
-           flycheck-idle-change-delay 3)
+           flycheck-idle-change-delay 3
+
+           flycheck-check-syntax-automatically '(idle-change idle-buffer-switch)
+           flycheck-buffer-switch-check-intermediate-buffers t
+           flycheck-idle-change-delay 0.5
+           flycheck-idle-buffer-switch-delay 0.5)
+
      (set-face-foreground 'flycheck-warning nil)
 
      (define-key flycheck-error-list-mode-map "j" 'next-line)
@@ -50,5 +57,8 @@
 (add-hook 'mmm-major-mode-hook (lambda () (flycheck-mode nil)))
 
 (add-to-list 'flycheck-disabled-checkers 'haml)
+(add-to-list 'flycheck-disabled-checkers 'c/c++-clang)
+(add-to-list 'flycheck-disabled-checkers 'c/c++-cppcheck)
+(add-to-list 'flycheck-disabled-checkers 'c/c++-gcc)
 
 (provide 'ruin-flycheck)

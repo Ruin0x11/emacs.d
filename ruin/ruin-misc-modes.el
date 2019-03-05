@@ -2,16 +2,16 @@
 
 ;;; semantic
 ;(semantic-mode)
-(global-semantic-decoration-mode)
+;(global-semantic-decoration-mode)
 ;(global-semantic-stickyfunc-mode)
-(global-semantic-highlight-func-mode)
-(global-semantic-show-parser-state-mode)
-(global-semantic-highlight-edits-mode)
+;(global-semantic-highlight-func-mode)
+;(global-semantic-show-parser-state-mode)
+;(global-semantic-highlight-edits-mode)
 
-(evil-leader/set-key
-  "fj" 'semantic-ia-fast-jump
-  "fu" 'senator-go-to-up-reference
-  "fy" 'semantic-symref-symbol)
+; (evil-leader/set-key
+;   "fj" 'semantic-ia-fast-jump
+;   "fu" 'senator-go-to-up-reference
+;   "fy" 'semantic-symref-symbol)
 (add-to-list 'evil-emacs-state-modes 'semantic-symref-results-mode)
 (eval-after-load "semantic/list" #'(lambda ()
                               (define-key semantic-symref-results-mode-map (kbd "C-u") 'evil-scroll-up)
@@ -36,23 +36,25 @@
 
 
 ;;; persp
-(package-require 'persp-mode)
-(with-eval-after-load "persp-mode"
-  (setq wg-morph-on nil)
-
-  (add-hook 'after-init-hook #'(lambda () (persp-mode 1))))
-(require 'persp-mode)
-
-(setq persp-auto-resume-time 0)
-
-(evil-leader/set-key
-  "sn" 'persp-next
-  "sp" 'persp-prev
-  "ss" 'persp-frame-switch
-  "sK" 'persp-kill
-  "sw" 'persp-save-state-to-file
-  "sl" 'persp-load-state-from-file
-  "sr" 'persp-rename)
+; (package-require 'persp-mode)
+; (with-eval-after-load "persp-mode"
+;   (setq wg-morph-on nil)
+;   (persp-mode)
+;   (persp-frame-switch "base")
+;
+;   (add-hook 'after-init-hook #'(lambda () (persp-mode 1))))
+; (require 'persp-mode)
+;
+; (setq persp-auto-resume-time 0)
+;
+; (evil-leader/set-key
+;   "sn" 'persp-next
+;   "sp" 'persp-prev
+;   "ss" 'persp-frame-switch
+;   "sK" 'persp-kill
+;   "sw" 'persp-save-state-to-file
+;   "sl" 'persp-load-state-from-file
+;   "sr" 'persp-rename)
 
 
 ;;; electric-indent
@@ -192,9 +194,9 @@
 
 (setq markdown-gfm-use-electric-backquote nil)
 
-(package-require 'mmm-mode)
-(require 'mmm-mode)
-(setq mmm-global-mode 'maybe)
+;(package-require 'mmm-mode)
+;(require 'mmm-mode)
+;(setq mmm-global-mode 'maybe)
 
 (mmm-add-classes
  '((markdown-lisp
@@ -562,6 +564,7 @@ If REHASH is set, rehashes the list of all cached cmdlets."
 (package-require 'hcl-mode)
 (setq hcl-indent-level 4)
 (add-hook 'hcl-mode-hook (lambda ()
+                           (define-key hcl-mode-map (kbd "RET") 'indent-new-comment-line)
                            (yas-minor-mode-on)
                            (setq-local fill-column 100)))
 
@@ -631,6 +634,8 @@ instead."
 (require 'epa)
 
 ;;; lsp-mode
+(package-require 'lsp-mode)
+(require 'lsp-mode)
 (setq lsp-print-io nil
       lsp-response-timeout 20000
       lsp-document-sync-method 'incremental
@@ -640,6 +645,45 @@ instead."
 (defun ruin/lsp-mode-toggle-print-io ()
   (interactive)
   (setq lsp-print-io (not lsp-print-io)))
+
+(defun lsp--render-on-hover-content (contents render-all)
+  "Render the content received from 'document/onHover' request.
+CONTENTS  - MarkedString | MarkedString[] | MarkupContent
+RENDER-ALL - nil if only the signature should be rendered."
+  (if (and (hash-table-p contents) (gethash "kind" contents))
+      ;; MarkupContent, deprecated by LSP but actually very flexible.
+      ;; It tends to be long and is not suitable in echo area.
+      (if render-all (lsp--render-element contents) "")
+    ;; MarkedString -> MarkedString[]
+    (when (or (hash-table-p contents) (stringp contents))
+      (setq contents (list contents)))
+    ;; Consider the signature consisting of the elements who have a renderable
+    ;; "language" property. When render-all is nil, ignore other elements.
+    (string-join
+     (seq-map
+      #'lsp--render-element
+      (if render-all
+          (reverse contents)
+        (--filter (and (hash-table-p it) (lsp-get-renderer (gethash "language" it)))
+                  contents)))
+     "\n\n")))
+
+(defcustom lsp-imenu-filtered-symbols '("Other")
+  "Symbols to ignore when running imenu.")
+
+(defun lsp--symbol-filter (sym)
+  "Determine if SYM is for the current document."
+  ;; It's a SymbolInformation or DocumentSymbol, which is always in the current
+  ;; buffer file.
+  (or
+   (equal (lsp--get-symbol-type sym) "Other")
+   (when-let (location (gethash "location" sym))
+     (not (eq (find-buffer-visiting (lsp--uri-to-path (gethash "uri" (gethash "location" sym))))
+              (current-buffer))))))
+
+;; override semantic/bovine, which is taken in by doc-mode
+(defvar-mode-local c-mode imenu-create-index-function 'lsp--imenu-create-index
+  "Imenu index function for C.")
 
 ;(require 'lsp-imenu)
 ;(add-hook 'lsp-after-open-hook 'lsp-enable-imenu)
@@ -657,7 +701,7 @@ instead."
   (package-require 'lsp-ui)
   (add-hook 'lsp-mode-hook 'lsp-ui-mode))
 
-(add-hook 'lsp-after-diagnostics-hook (lambda () (message "Got diagnostics!")))
+; (add-hook 'lsp-after-diagnostics-hook (lambda () (message "Got diagnostics!")))
 
 ;;; Tramp
 (setq putty-directory "C:\\Program Files\\PuTTY")
@@ -688,9 +732,9 @@ instead."
     (setq uim-default-im-engine "anthy")))
 
 ;;; edict
-(require 'edict)
-(setq edict-dictionaries '("~/.edict"))
-(evil-leader/set-key "ae" 'edict-search-kanji)
+; (require 'edict)
+; (setq edict-dictionaries '("~/.edict"))
+; (evil-leader/set-key "ae" 'edict-search-kanji)
 
 ;;; Local variables
 ;; Local Variables:

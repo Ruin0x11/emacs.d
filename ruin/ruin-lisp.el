@@ -20,6 +20,19 @@
 (add-lisp-hook 'smartparens-mode)
 (add-lisp-hook 'lispyville-mode)
 
+(with-eval-after-load 'elisp-mode
+  (defadvice elisp-get-fnsym-args-string (after add-docstring activate compile)
+    "Add a 1st line of docstring to ElDoc's function information."
+    (when ad-return-value
+      (when-let ((doc (elisp--docstring-first-line (documentation (ad-get-arg 0) t))))
+        (let* ((w (frame-width))
+               (color-doc (propertize doc 'face 'font-lock-doc-face)))
+          (when (and doc (not (string= doc "")))
+            (setq ad-return-value (concat ad-return-value "\n" color-doc))
+            (when (> (length doc) w)
+              (setq ad-return-value (substring ad-return-value 0 (1- w)))))))
+      ad-return-value)))
+
 ;;; emacs lisp
 
 (evil-leader/set-key-for-mode 'emacs-lisp-mode
@@ -67,8 +80,6 @@
 ;; (define-key smartparens-mode-map (kbd "C-s") 'sp-forward-slurp-sexp)
 ;; (define-key smartparens-mode-map (kbd "C-M-s") 'sp-forward-barf-sexp)
 
-
-
 (with-eval-after-load 'lispyville
   (lispyville-set-key-theme
    '(operators
@@ -77,10 +88,11 @@
      (additional normal visual)))
   (define-key lispy-mode-map (kbd "<C-return>") nil)
 
-  (evil-define-key '(normal visual motion) lispyville-mode-map (kbd "M-{") 'lispyville-next-opening)
-  (evil-define-key '(normal visual motion) lispyville-mode-map (kbd "M-}") 'lispyville-previous-closing)
-  (evil-define-key '(normal visual motion) lispyville-mode-map (kbd "M-[") 'lispyville-previous-opening)
-  (evil-define-key '(normal visual motion) lispyville-mode-map (kbd "M-]") 'lispyville-next-closing))
+  ;(evil-define-key '(normal visual motion) lispyville-mode-map (kbd "M-{") 'lispyville-next-opening)
+  ;(evil-define-key '(normal visual motion) lispyville-mode-map (kbd "M-}") 'lispyville-previous-closing)
+  ;(evil-define-key '(normal visual motion) lispyville-mode-map (kbd "M-[") 'lispyville-previous-opening)
+  ;(evil-define-key '(normal visual motion) lispyville-mode-map (kbd "M-]") 'lispyville-next-closing)
+)
 
 (eval-after-load "ielm" #'(lambda ()
                             (ruin/window-movement-for-map inferior-emacs-lisp-mode-map)
