@@ -38,8 +38,9 @@
          (regexp (concat "\\_<\\(" (regexp-quote sym) "\\)\\_>")))
     (save-excursion
       (goto-char (point-min))
-      (while (re-search-forward regexp nil t)
-        (replace-match newsym nil nil)))))
+      (let ((case-fold-search nil))
+        (while (re-search-forward regexp nil t)
+          (replace-match newsym t nil))))))
 
 (defun ruin/evil-block-size ()
   "Gives the size of the block area delimited by an evil '%' at point.
@@ -136,6 +137,22 @@
 (defun notify (title mes)
   (when (eq system-type 'darwin)
     (shell-command (format "osascript -e 'display notification \"%s\" with title \"%s\"'" mes title))))
+
+(defun ruin/yank-path-of-buffer-file (&optional file)
+  (interactive)
+  (or file
+      (setq file (buffer-file-name))
+      (error "Current buffer has no file"))
+  (kill-new file)
+  (message file))
+
+(defun ruin/save-as-temp-file ()
+  "Save this buffer to a temporary file."
+  (interactive)
+  (let ((temp-file (make-temp-file (buffer-name))))
+    (write-region nil nil temp-file nil 0)
+    (set-visited-file-name temp-file)
+    (save-buffer)))
 
 (require 'url)
 

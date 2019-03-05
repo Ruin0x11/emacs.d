@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: cerr4
+# key: ce4
+# --
+std::cerr << ${1:string} << ${2:string} << ${3:string} << ${4:string} $0<< std::endl;

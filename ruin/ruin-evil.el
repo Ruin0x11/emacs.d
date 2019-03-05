@@ -40,7 +40,8 @@
   "zz" 'toggle-maximize-buffer
   "ZZZ" 'save-buffers-kill-emacs
   "as" 'sos
-  "M" 'hydra-mpc/body
+  "M" 'popwin:messages
+  "<RET>" 'evil-ex-nohighlight
 
   "df" 'describe-function
   "dv" 'describe-variable
@@ -67,7 +68,6 @@
   "ad" 'diff
   "aw" 'browse-url-at-point
   "ax" 're-builder
-  "aj" 'webjump
   "ap" 'ruin/update-and-list-packages
 
   "js" 'bookmark-set
@@ -76,8 +76,8 @@
 
   "ff" 'helm-find-files
   "fg" 'helm-do-grep-ag
-  "fA" 'helm-do-ag
-  "fa" 'helm-do-ag-this-file
+  "fA" 'rg-dwim-current-dir
+  "fa" 'rg
   "fr" 'helm-recentf
   "fd" 'helm-semantic-or-imenu
   "fs" 'find-function
@@ -229,6 +229,7 @@
 (add-to-list 'evil-emacs-state-modes 'gud-mode)
 (add-to-list 'evil-emacs-state-modes 'gud-tooltip-mode)
 (add-to-list 'evil-emacs-state-modes 'debugger-mode)
+(add-to-list 'evil-emacs-state-modes 'message-mode)
 
 (add-to-list 'evil-emacs-state-modes 'mpc-mode)
 (add-to-list 'evil-emacs-state-modes 'mpc-songs-mode)
@@ -366,6 +367,8 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (global-set-key [f6] 'ruin/scroll-down-or-next-buffer)
 (global-set-key [f7] 'previous-error)
 (global-set-key [f8] 'next-error)
+
+(global-set-key (kbd "RET") 'electric-newline-and-maybe-indent)
 
 ;; match items with %
 (package-require 'evil-matchit)

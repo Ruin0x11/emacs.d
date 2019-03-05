@@ -8,10 +8,10 @@
 ;(global-semantic-show-parser-state-mode)
 ;(global-semantic-highlight-edits-mode)
 
-(evil-leader/set-key
-  "fj" 'semantic-ia-fast-jump
-  "fu" 'senator-go-to-up-reference
-  "fy" 'semantic-symref-symbol)
+; (evil-leader/set-key
+;   "fj" 'semantic-ia-fast-jump
+;   "fu" 'senator-go-to-up-reference
+;   "fy" 'semantic-symref-symbol)
 (add-to-list 'evil-emacs-state-modes 'semantic-symref-results-mode)
 (eval-after-load "semantic/list" #'(lambda ()
                               (define-key semantic-symref-results-mode-map (kbd "C-u") 'evil-scroll-up)
@@ -36,23 +36,25 @@
 
 
 ;;; persp
-(package-require 'persp-mode)
-(with-eval-after-load "persp-mode"
-  (setq wg-morph-on nil)
-
-  (add-hook 'after-init-hook #'(lambda () (persp-mode 1))))
-(require 'persp-mode)
-
-(setq persp-auto-resume-time 0)
-
-(evil-leader/set-key
-  "sn" 'persp-next
-  "sp" 'persp-prev
-  "ss" 'persp-frame-switch
-  "sK" 'persp-kill
-  "sw" 'persp-save-state-to-file
-  "sl" 'persp-load-state-from-file
-  "sr" 'persp-rename)
+; (package-require 'persp-mode)
+; (with-eval-after-load "persp-mode"
+;   (setq wg-morph-on nil)
+;   (persp-mode)
+;   (persp-frame-switch "base")
+;
+;   (add-hook 'after-init-hook #'(lambda () (persp-mode 1))))
+; (require 'persp-mode)
+;
+; (setq persp-auto-resume-time 0)
+;
+; (evil-leader/set-key
+;   "sn" 'persp-next
+;   "sp" 'persp-prev
+;   "ss" 'persp-frame-switch
+;   "sK" 'persp-kill
+;   "sw" 'persp-save-state-to-file
+;   "sl" 'persp-load-state-from-file
+;   "sr" 'persp-rename)
 
 
 ;;; electric-indent
@@ -191,9 +193,11 @@
 (add-hook 'markdown-mode-hook #'flyspell-mode)
 (add-to-list 'auto-mode-alist '("\\.page$" . markdown-mode))
 
-(package-require 'mmm-mode)
-(require 'mmm-mode)
-(setq mmm-global-mode 'maybe)
+(setq markdown-gfm-use-electric-backquote nil)
+
+;(package-require 'mmm-mode)
+;(require 'mmm-mode)
+;(setq mmm-global-mode 'maybe)
 
 (mmm-add-classes
  '((markdown-lisp
@@ -390,8 +394,8 @@
           (msg (funcall connection-func (edbi:data-source uri username password))))
       (when msg (error (format "Connection error: %s" msg))))))
 
-(evil-leader/set-key
-  "ae" 'ruin/start-edbi)
+;; (evil-leader/set-key
+;;   "ae" 'ruin/start-edbi)
 
 ;;; powershell
 (package-require 'powershell)
@@ -562,6 +566,7 @@ If REHASH is set, rehashes the list of all cached cmdlets."
 (package-require 'hcl-mode)
 (setq hcl-indent-level 4)
 (add-hook 'hcl-mode-hook (lambda ()
+                           (define-key hcl-mode-map (kbd "RET") 'indent-new-comment-line)
                            (yas-minor-mode-on)
                            (setq-local fill-column 100)))
 
@@ -602,11 +607,10 @@ If REHASH is set, rehashes the list of all cached cmdlets."
     (global-set-key "\C-\\" 'uim-mode)
     (setq uim-default-im-engine "anthy")))
 
-
-;;; Haxe
-(package-require 'haxe-mode)
-(require 'haxe-mode)
-(add-to-list 'auto-mode-alist '("\\.hx\\'" . haxe-mode))
+;;; edict
+; (require 'edict)
+; (setq edict-dictionaries '("~/.edict"))
+; (evil-leader/set-key "ae" 'edict-search-kanji)
 
 ;;; Local variables
 ;; Local Variables:

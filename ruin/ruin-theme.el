@@ -70,6 +70,7 @@
 (package-require 'monokai-theme)
 (package-require 'spaceline)
 (package-require 'helm)
+(package-require 'base16-theme)
 (require 'helm)
 (require 'spaceline-config)
 
@@ -139,8 +140,8 @@
       "Increase emacs's font-size acording emacs-font-size-pair-list."
       (interactive) (emacs-step-font-size -1))
 
-    (global-set-key (kbd "C-=") 'increase-emacs-font-size)
-    (global-set-key (kbd "C--") 'decrease-emacs-font-size)
+    ;(global-set-key (kbd "C-=") 'increase-emacs-font-size)
+    ;(global-set-key (kbd "C--") 'decrease-emacs-font-size)
     ))
 
 (setq spaceline-workspace-numbers-unicode 't)
@@ -168,17 +169,29 @@
 ;  )
 
 (defun ruin/init-textmode-theme()
-  (load-theme 'monokai t)
+  (load-theme 'firebelly t)
   (package-require 'helm)
   (require 'helm-files)
   (package-require 'company)
   (require 'company)
+  (global-linum-mode 1)
   (set-face-background 'default "black")
   (set-face-background 'mode-line "black")
-  (set-face-foreground 'font-lock-comment-face "yellow")
-  (set-face-foreground 'font-lock-comment-delimiter-face "yellow")
+  (set-face-foreground 'font-lock-constant-face "red")
+  (set-face-foreground 'font-lock-comment-face "black")
+  (set-face-bold 'font-lock-comment-face t)
+  (set-face-foreground 'font-lock-comment-delimiter-face "black")
+  (set-face-bold 'font-lock-comment-delimiter-face t)
+  (set-face-foreground 'font-lock-variable-name-face "yellow")
+  (set-face-foreground 'font-lock-function-name-face "green")
+
+  ;(set-face-foreground 'evil-ex-lazy-highlight "black")
+  ;(set-face-background 'evil-ex-lazy-highlight "red")
   (set-face-foreground 'font-lock-doc-face "magenta")
+  (set-face-foreground 'linum "black")
+  (set-face-bold 'linum t)
   (set-face-background 'linum "black")
+  (set-face-background 'region "yellow")
   (set-face-background 'powerline-active1 "black")
   (set-face-background 'powerline-active2 "black")
   (set-face-foreground 'spaceline-flycheck-info "blue")
@@ -191,7 +204,10 @@
   (set-face-foreground 'helm-ff-file "green")
   (set-face-foreground 'company-tooltip "yellow")
   (set-face-foreground 'company-tooltip-annotation "magenta")
-  (set-face-foreground 'company-tooltip-common "magenta"))
+  (set-face-foreground 'company-tooltip-common "magenta")
+  (with-eval-after-load 'evil
+    (set-face-background 'evil-ex-lazy-highlight "magenta"))
+)
 
 (defun ruin/classic-theme ()
   (set-frame-font "SGI Screen:style=Regular:pixelsize=14" t)
@@ -204,11 +220,18 @@
 
 (defun ruin/classic-theme-windows ()
   (when (eq system-type 'windows-nt)
-    (set-default-font "y-outline-MS Gothic-normal-normal-normal-mono-13-*-*-*-c-*-iso10646-1"))
+    (set-frame-font "y-outline-MS Gothic-normal-normal-normal-mono-13-*-*-*-c-*-iso10646-1"))
   (when (eq system-type 'gnu/linux)
-    (set-default-font "Hack 11"))
-  (load-theme 'undy t)
-  (set-frame-size (selected-frame) 120 60))
+    (set-frame-font "-*-terminus-medium-*-*-*-12-*-*-*-*-*-*"))
+  ;(load-theme 'undy t)
+  ;(load-theme 'base16-hopscotch t)
+  ;(load-theme 'base16-atelier-savanna t)
+  (require 'moe-theme)
+  (setq moe-theme-mode-line-color 'w/b)
+  (moe-dark)
+  (transparency 100)
+  (set-frame-size (selected-frame) 140 80)
+  (setq flycheck-color-mode-line-face-to-color 'mode-line-buffer-id))
 
 (defun ruin/growth-theme ()
   (interactive)
@@ -250,17 +273,16 @@
 
 (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
 
-;(package-require 'fill-column-indicator)
+(package-require 'fill-column-indicator)
 (setq fill-column 80)
 ;(fci-mode)
 
 (defun ruin/enable-filling ()
   (interactive)
-                                        ; for Rust
-  (setq fill-column 99)
+  ; for Rust
+  (setq fill-column 80)
   (auto-fill-mode)
-  (fci-mode 0)
-  )
+  (fci-mode 0))
 
 (add-hook 'rust-mode-hook 'ruin/enable-filling)
 

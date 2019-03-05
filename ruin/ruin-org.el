@@ -15,7 +15,7 @@
 (require 'ox-md nil t)
 
 ;; Startup & Directories
-(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+;(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 
 ;; start agenda on emacs startup
 (when (file-exists-p "~/Dropbox/org")
@@ -76,7 +76,9 @@
      org-hide-emphasis-markers t
      org-pretty-entities t
      org-startup-with-inline-images t
-     org-export-with-sub-superscripts nil)
+     org-export-with-sub-superscripts nil
+     org-use-sub-superscripts nil
+     org-startup-folded nil)
 
 (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images)
 

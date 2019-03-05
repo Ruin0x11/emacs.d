@@ -17,13 +17,15 @@
       ;; always start auto-completion
       company-idle-delay nil
       ;; autocomplete right after '.'
-      company-minimum-prefix-length nil
+      company-minimum-prefix-length 3
       ;; remove echo delay
       company-echo-delay 0
       company-dabbrev-downcase nil
       ;; make sure evil uses the right completion functions
       evil-complete-next-func 'bw/company-complete-lambda
-      evil-complete-previous-func 'bw/company-complete-lambda)
+      evil-complete-previous-func 'bw/company-complete-lambda
+
+      company-idle-delay 0.6)
 
      (setq company-global-modes '(clojurescript-mode clojure-mode
                                                      cider-repl-mode
@@ -34,6 +36,7 @@
                                                      javascript-mode
                                                      emacs-lisp-mode
                                                      rust-mode
+                                                     common-lisp-mode
                                                      java-mode
                                                      kotlin-mode
                                                      semantic-mode

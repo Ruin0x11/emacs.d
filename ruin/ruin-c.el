@@ -5,7 +5,7 @@
 (package-require 'company-c-headers)
 (package-require 'clang-format)
 (package-require 'flycheck-clang-tidy)
-(package-require 'cmake-ide)
+;(package-require 'cmake-ide)
 (package-require 'rmsbolt)
 (require 'srefactor)
 (require 'helm-imenu)
@@ -26,24 +26,20 @@
             (c-set-offset 'innamespace 0)
             (linum-mode 0)
             (c-set-offset 'substatement-open 0)
-            (semantic-mode 0)
             (company-mode 1)
             (abbrev-mode 1)
             (which-function-mode 1)
-            (setq compilation-skip-threshold 2
-                  compilation-auto-jump-to-first-error t)
-            (setq c-default-style "linux"
+            (setq compilation-skip-threshold 1
+                  compilation-auto-jump-to-first-error nil
+                  c-default-style "linux"
                   c-basic-offset 4
                   comment-fill "*"
                   fill-column 80)
 
-            (setq imenu-create-index-function 'ggtags-build-imenu-index)
-            (setq eldoc-documentation-function 'ggtags-eldoc-function)
-
             (when (derived-mode-p 'c-mode 'c++-mode)
               ;(semanticdb-enable-gnu-global-databases 'c-mode)
               ;(semanticdb-enable-gnu-global-databases 'c++-mode)
-              (ggtags-mode 1)
+              ;(ggtags-mode 1)
               (eldoc-mode 1)
               ; (define-key c++-mode-map [(tab)]        'evil-complete-next)
               ; (define-key c++-mode-map (kbd "TAB")    'evil-complete-next)
@@ -51,7 +47,7 @@
               ; (define-key c-mode-map [(tab)]        'evil-complete-next)
               ; (define-key c-mode-map (kbd "TAB")    'evil-complete-next)
               ; (define-key c-mode-map (kbd "<tab>")  'evil-complete-next)
-              (setq-local compilation-error-regexp-alist '(msbuild-warning msbuild-error xbuild-warning xbuild-error)))))
+              (setq-local compilation-error-regexp-alist '(msbuild-warning msbuild-error xbuild-warning xbuild-error gnu elonafoobar)))))
 
 ; C++11 literals
 (add-hook
@@ -132,14 +128,50 @@
          (compilation-auto-jump-to-first-error nil))
     (grep (concat "grep -nH --null -r -e \"" regex "\" " (projectile-project-root) "src/**/*.hpp --exclude=\"variables.hpp\""))))
 
+;; References w/ Role::Read
+(defun ccls/references-read ()
+  (interactive)
+  (if (window-system)
+    (lsp-ui-peek-find-custom "textDocument/references"
+                             (plist-put (lsp--text-document-position-params) :role 8))
+    (lsp-find-locations "textDocument/references" '(:role 8))))
+
+;; References w/ Role::Write
+(defun ccls/references-write ()
+  (interactive)
+  (if (window-system)
+      (lsp-ui-peek-find-custom "textDocument/references"
+                               (plist-put (lsp--text-document-position-params) :role 16)))
+  (lsp-find-locations "textDocument/references" '(:role 16)))
+
+(defun ccls/caller-hierarchy ()
+  (interactive)
+  (ccls-call-hierarchy nil))
+
+(defun ccls/callee-hierarchy ()
+  (interactive)
+  (ccls-call-hierarchy t))
 
 (dolist (mode '(c-mode c++-mode))
   (evil-leader/set-key-for-mode mode
 
-  "fd" 'ggtags-find-definition
-  "fg" 'ggtags-find-reference
+  ; "fd" 'ggtags-find-definition
+  ; "fg" 'ggtags-find-reference
+  ; "fs" 'helm-semantic-or-imenu
+  ; "fe" 'ruin/ggtags-refactor-name
+  "fd" 'lsp-find-definition
+  "fD" 'lsp-find-declaration
+  "fg" 'lsp-find-references
+  "ft" 'lsp-find-type-definition
   "fs" 'helm-semantic-or-imenu
-  "fe" 'ruin/ggtags-refactor-name
+  "fe" 'lsp-rename
+  "fm" 'ccls-member-hierarchy
+  "fc" 'ccls/caller-hierarchy
+  "fC" 'ccls/callee-hierarchy
+  "fo" 'ccls/references-read
+  "fO" 'ccls/references-write
+  "fy" 'lsp-ui-find-workspace-symbol
+  "fp" 'lsp-ui-peek-find-definitions
   "fh" 'ff-find-other-file
 
   "mu" 'ruin/symbol-usage-count
@@ -225,6 +257,7 @@
 
 (define-key asm-mode-map (kbd "<ret>") 'newline-and-indent)
 (define-key asm-mode-map (kbd "M-.") 'helm-etags-select)
+(setq asm-comment-char ?\@)
 
 (setq gdb-show-main nil
       gdb-many-windows t
@@ -247,14 +280,55 @@
 ;;(eval-after-load 'flycheck
 ;;  '(add-hook 'flycheck-mode-hook #'flycheck-clang-tidy-setup))
 
-(cmake-ide-setup)
-(setq cmake-ide-flags-c++ (append '("-std=c++11")))
+; (cmake-ide-setup)
+; (setq cmake-ide-flags-c++ (append '("-std=c++11")))
 (delete 'company-clang company-backends)
 (define-key company-active-map (kbd "C-v") 'company-next-page)
 (define-key company-active-map (kbd "M-v") 'company-previous-page)
 (setq company-c-headers-path-user "/home/ruin/build/elonafoobar/src")
 
 (setq flycheck-clang-definitions '("SNAIL_RENDERER_SDL")
-      cmake-ide-flags-c++ '("-I/usr/include/SDL2" "-DSNAIL_RENDERER_SDL"))
+      ;cmake-ide-flags-c++ '("-I/usr/include/SDL2" "-DSNAIL_RENDERER_SDL")
+      lsp-prefer-flymake nil)
+
+; (with-eval-after-load 'ccls
+;   (when (window-system)
+;     (setq ccls-sem-highlight-method 'font-lock)
+;     ;; (setq ccls-sem-highlight-method 'overlay)
+;     (ccls-use-default-rainbow-sem-highlight)))
+
+(package-require 'lsp-ui)
+(setq lsp-eldoc-render-all t
+      lsp-ui-doc-enable nil
+      lsp-ui-sideline-enable nil
+      lsp-ui-imenu-enable t
+      lsp-ui-peek-always-show t)
+
+(package-require 'ccls)
+(dolist (hook '(c-mode-hook c++-mode-hook))
+  (add-hook hook
+            (lambda ()
+              (require 'lsp-ui)
+              (require 'ccls)
+              (lsp-ui-imenu-enable t)
+              (flycheck-mode 1)
+              (lsp))))
+
+(add-hook 'ld-script-mode-hook
+          (lambda ()
+            (setq-local comment-fill "*")))
+
+(with-eval-after-load 'smartparens
+  (add-to-list 'sp--special-self-insert-commands 'c-electric-paren)
+  (add-to-list 'sp--special-self-insert-commands 'c-electric-brace))
+
+
+
+(setq doxymacs-blank-multiline-comment-template
+ '(n > "/**" > n "* " p  > n " */"))
+
+(pushnew '(elonafoobar "^                       at \\([^\n]+\\):\\([0-9]+\\):\\([0-9]+\\)" 1 2 3)
+         compilation-error-regexp-alist-alist)
+(push 'elonafoobar compilation-error-regexp-alist)
 
 (provide 'ruin-c)

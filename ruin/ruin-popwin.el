@@ -32,6 +32,8 @@
         ("*sly-description*" :height 0.4 :stick t)
         ("*undo-tree*" :width 0.3 :position right)
         ("*grep*" :position bottom :height 0.2 :stick t :noselect t)
+        ("*rg*" :position bottom :height 0.2 :stick t :noselect t)
+        ("*xref*" :position bottom :height 0.2 :stick t :noselect t)
         ("*Completions*" :height 0.4)
         ("*compilation*" :height 0.3 :noselect t :stick t)
         ("*quickrun*" :height 0.3 :stick t)

@@ -5,6 +5,7 @@
 (package-require 'helm-swoop)
 (package-require 'helm-flx)
 (package-require 'wgrep)
+(package-require 'rg)
 
 (require 'helm-config)
 (require 'wgrep)
@@ -28,8 +29,7 @@
       helm-input-idle-delay 0.2
       helm-cycle-resume-delay 2
       helm-follow-input-idle-delay 0.2
-      helm-M-x-always-save-history t
-      )
+      helm-M-x-always-save-history t)
 
 ;; dumb redefinition for ripgrep
 ;; (defun helm-projectile-ag (&optional options)
@@ -55,8 +55,8 @@
   "fr" 'helm-recentf
   "fd" 'helm-semantic-or-imenu
   "fF" 'helm-find
-  "fi" 'helm-fd-this-directory
-  "fI" 'helm-fd
+  "fi" 'imenu
+  ; "fI" 'helm-fd
 
   "hf" 'helm-flycheck
   "hR" 'helm-regexp

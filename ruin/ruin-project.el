@@ -1,6 +1,7 @@
 (package-require 'projectile)
 (package-require 'helm-projectile)
 (package-require 'helm-rg)
+(package-require 'find-file-in-project)
 
 (require 'projectile)
 
@@ -25,12 +26,21 @@
                                                         "external"
                                                         )))
 
-(setq projectile-globally-ignored-file-suffixes '("class" "db" "min.css"))
+(setq projectile-globally-ignored-file-suffixes '("class" "db" "min.css")
+      projectile-project-compilation-cmd ""
+      projectile-project-run-cmd ""
+
+      ffip-ignore-filenames '(".ccls-cache" "android/external")
+      ffip-use-rust-fd t
+      ivy-on-del-error-function #'ignore
+      ivy-height 30)
+
 
 (evil-leader/set-key
   "ps" 'helm-projectile-switch-project
-  "pa" 'helm-projectile-ag
-  "pf" 'helm-projectile
+  "pa" 'rg-project
+  ; "pf" 'helm-projectile
+  "pf" 'find-file-in-project
   "pb" 'helm-projectile-switch-to-buffer
   "p!" 'projectile-run-async-shell-command-in-root
   "pc" 'projectile-compile-project
@@ -105,8 +115,8 @@
 
 (defun ruin/make-clean ()
   (interactive)
-  (let ((compilation-read-command nil))
-    (when (yes-or-no-p "make clean?")
+  (when (yes-or-no-p "make clean?")
+    (let ((compilation-read-command nil))
       (projectile--run-project-cmd "make clean" projectile-compilation-cmd-map))))
 
 (global-set-key [f9] 'ruin/elobuild-test)

@@ -17,7 +17,6 @@
       (setq exec-path (add-to-list 'exec-path "C:/Program Files/Git/bin"))
       (setenv "PATH" (concat "C:\\Program Files\\Git\\bin;" (getenv "PATH")))))
 
-
 (add-to-list 'evil-emacs-state-modes 'git-timemachine-mode)
 
 (defun endless/visit-pull-request-url ()
@@ -91,10 +90,5 @@
  :states '(emacs)
  "C-d" 'evil-scroll-down
  "C-u" 'evil-scroll-up)
-
-
-;;; magithub
-;(require 'magithub)
-;(magithub-feature-autoinject t)
 
 (provide 'ruin-git)
