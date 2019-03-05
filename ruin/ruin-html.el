@@ -29,7 +29,9 @@
             (web-mode-set-content-type "jsx")
           (message "now set to: %s" web-mode-content-type))))
 
-(setq web-mode-markup-indent-offset 2)
+(setq web-mode-markup-indent-offset 2
+      web-mode-enable-current-element-highlight t)
+(set-face-foreground 'web-mode-current-element-highlight-face "magenta")
 
 (add-hook 'slim-mode-hook
   (function (lambda ()

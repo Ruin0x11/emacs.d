@@ -106,7 +106,8 @@
 (defun ruin/make-clean ()
   (interactive)
   (let ((compilation-read-command nil))
-    (projectile--run-project-cmd "make clean" projectile-compilation-cmd-map)))
+    (when (yes-or-no-p "make clean?")
+      (projectile--run-project-cmd "make clean" projectile-compilation-cmd-map))))
 
 (global-set-key [f9] 'ruin/elobuild-test)
 (global-set-key [f10] 'ruin/elobuild)

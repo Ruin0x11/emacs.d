@@ -130,6 +130,7 @@ truncates lines returned by the compilation process."
 
 
 (add-hook 'compilation-filter-hook 'truncate-compilation-long-lines)
+(add-hook 'compilation-finish-functions '(lambda (buf mes) (notify "Compilation" mes)))
 
 (when (eq system-type 'windows-nt)
   (shell-command "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\VC\\Auxiliary\\Build\\vcvars64.bat"))

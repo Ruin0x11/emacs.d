@@ -5,10 +5,12 @@
 (package-require 'git-timemachine)
 (package-require 'smeargle)
 (package-require 'gitignore-mode)
-(package-require 'magithub)
 (require 'magit)
 (require 'evil-magit)
 (evil-magit-init)
+
+(package-require 'magithub)
+(magithub-feature-autoinject t)
 
 (if (eq system-type 'windows-nt)
     (progn
@@ -70,6 +72,7 @@
 ;; always open symlinks as actual file
 (setq vc-follow-symlinks t
       magit-commit-show-diff t
+      magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1
       magit-no-confirm '(stage-all-changes))
 
 (add-to-list 'evil-insert-state-modes 'git-commit-mode)
@@ -91,7 +94,7 @@
 
 
 ;;; magithub
-(require 'magithub)
-(magithub-feature-autoinject t)
+;(require 'magithub)
+;(magithub-feature-autoinject t)
 
 (provide 'ruin-git)

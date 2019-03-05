@@ -199,7 +199,7 @@
 
 (defun ruin/normal-theme ()
   (interactive)
-  (load-theme 'monokai t)
+  (load-theme 'gruvbox t)
   (toggle-frame-fullscreen))
 
 (defun ruin/classic-theme-windows ()
@@ -233,8 +233,8 @@
   (setup-cjk-alignment)
   (display-battery-mode)
 
-  (when (window-system)
-    (ruin/init-spaceline))
+  ; (when (window-system)
+  ;   (ruin/init-spaceline))
 
   (cond ((not window-system) (ruin/init-textmode-theme))
         ((memq system-type '(darwin)) (ruin/normal-theme))

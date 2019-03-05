@@ -1,7 +1,8 @@
 ;;; ruin-evil.el --- evil settings and non-package mappings
 
 ;; Don't move this.
-(setq evil-want-C-u-scroll t)
+(setq evil-want-C-u-scroll t
+      evil-search-module 'evil-search)
 
 (package-require 'evil)
 (package-require 'evil-commentary)
@@ -67,6 +68,7 @@
   "aw" 'browse-url-at-point
   "ax" 're-builder
   "aj" 'webjump
+  "ap" 'ruin/update-and-list-packages
 
   "js" 'bookmark-set
   "jj" 'bookmark-jump

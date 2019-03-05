@@ -1,12 +1,8 @@
 (package-require 'rust-mode)
 (package-require 'toml-mode)
-<<<<<<< HEAD
 (package-require 'flycheck-rust)
 (package-require 'cargo)
-=======
 (package-require 'lsp-rust)
-(package-require 'flycheck-rust) (package-require 'cargo)
->>>>>>> 0159d8aa13b0553c165b61af6c18cc9b27a86599
 (package-require 'racer)
 
 (setq

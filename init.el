@@ -54,6 +54,10 @@
 (when (online?)
   (unless package-archive-contents (package-refresh-contents)))
 
+(when (boundp 'package-pinned-packages)
+  (setq package-pinned-packages
+                '((magit              . "melpa"))))
+
 (defun package-require (pkg)
   "Install a package only if it's not already installed."
   (when (not (package-installed-p pkg))

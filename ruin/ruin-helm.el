@@ -28,6 +28,7 @@
       helm-input-idle-delay 0.2
       helm-cycle-resume-delay 2
       helm-follow-input-idle-delay 0.2
+      helm-M-x-always-save-history t
       )
 
 ;; dumb redefinition for ripgrep

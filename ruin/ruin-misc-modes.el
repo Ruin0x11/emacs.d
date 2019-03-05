@@ -189,6 +189,7 @@
 (eval-after-load "markdown-mode" #'(lambda ()
                                      (define-key markdown-mode-map (kbd "<C-return>") 'markdown-follow-thing-at-point)))
 (add-hook 'markdown-mode-hook #'flyspell-mode)
+(add-to-list 'auto-mode-alist '("\\.page$" . markdown-mode))
 
 (package-require 'mmm-mode)
 (require 'mmm-mode)
@@ -573,7 +574,7 @@ If REHASH is set, rehashes the list of all cached cmdlets."
   (indent-according-to-mode))
 
 (setq open-paren-modes
-      '(rust-mode glsl-mode c-mode c++-mode hcl-mode lua-mode org-mode)
+      '(rust-mode glsl-mode c-mode c++-mode hcl-mode lua-mode org-mode))
 
 (add-hooks open-paren-modes 'smartparens-mode)
 (dolist (mode open-paren-modes)

@@ -128,6 +128,15 @@
     (next-line)
     ))
 
+(defun ruin/update-and-list-packages ()
+  (interactive)
+  (package-refresh-contents)
+  (package-list-packages))
+
+(defun notify (title mes)
+  (when (eq system-type 'darwin)
+    (shell-command (format "osascript -e 'display notification \"%s\" with title \"%s\"'" mes title))))
+
 (require 'url)
 
 (defun download-file-and-open (&optional url download-dir download-name)
