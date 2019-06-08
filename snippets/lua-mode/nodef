@@ -1,0 +1,15 @@
+# -*- mode: snippet -*-
+# name: node on_finish
+# key: nodef
+# --
+$1 = {
+   text = {
+      {"$2"},
+   },
+   choices = {
+      {"${3:__start}", "${4:__MORE__}"},
+   },
+   on_finish = function(t)
+       $5
+   end
+},$0

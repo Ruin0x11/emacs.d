@@ -15,7 +15,9 @@
 (when (chruby-rubies)
   (chruby (car (chruby-rubies))))
 
-(setq ruby-align-to-stmt-keywords '(def case)) ;; indent "case" as per ruby style guide
+(setq ruby-align-to-stmt-keywords '(def case)  ;; indent "case" as per ruby style guide
+      ruby-indent-tabs-mode t
+      enh-ruby-indent-tabs-mode t)
 
 ;(require 'ruby-block)
 ;(ruby-block-mode t)
@@ -24,7 +26,14 @@
 ;      ruby-block-highlight-toggle t)          ;; display to minibuffer and do overlay
 
 (add-hook 'ruby-mode-hook 'robe-mode)
+(add-hook 'ruby-mode-hook 'highlight-numbers-mode)
 (add-hook 'enh-ruby-mode-hook 'robe-mode)
+(add-hook 'enh-ruby-mode-hook 'smartparens-mode)
+(add-hook 'enh-ruby-mode-hook 'minitest-mode)
+(add-hook 'enh-ruby-mode-hook 'highlight-numbers-mode)
+(add-hook 'ruby-mode-hook '(lambda ()
+                                (local-set-key (kbd "RET") 'newline-and-indent)))
+(add-hook 'ruby-mode-hook 'smartparens-mode)
 
 (add-to-list 'auto-mode-alist '("Gemfile" . enh-ruby-mode))
 (add-to-list 'auto-mode-alist '("Rakefile" . enh-ruby-mode))
@@ -150,15 +159,21 @@
   "fs" 'robe-jump
   "my" 'yari
   "mo" 'robe-start
+  "me" 'robe-rails-refresh
 
   "mbi" 'bundle-install
   "mbe" 'bundle-exec
   "mbs" 'bundle-show
   "mbu" 'bundle-update
 
-  "ed" 'ruby-send-block
+  "ed" 'ruby-send-definition
+  "eD" 'ruby-send-definition-and-go
   "eb" 'ruby-send-buffer
+  "eB" 'ruby-send-buffer-and-go
   "es" 'ruby-send-last-sexp
+  "eS" 'ruby-send-last-sexp-and-go
+  "el" 'ruby-send-line
+  "eL" 'ruby-send-line-and-go
 
   "mY" 'yari-helm-rehash
   ;"tt" 'rspec-verify
@@ -166,6 +181,7 @@
   "tt" 'minitest-verify
   "ta" 'minitest-verify-all
   "tr" 'minitest-rerun
+  "ts" 'minitest-verify-single
   ;"tr" 'rspec-run-last-failed
   "tj" 'rspec-find-spec-or-target-other-window
   "th" 'helm-feature-snippets
@@ -213,7 +229,7 @@
 ;;; Rails
 (package-require 'projectile-rails)
 (add-hook 'projectile-mode-hook 'projectile-rails-on)
-(add-hook 'projectile-mode-hook 'minitest-mode)
+;(add-hook 'projectile-mode-hook 'minitest-mode)
 
 (evil-leader/set-key
   "mrm" 'projectile-rails-find-model

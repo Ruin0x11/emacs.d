@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: require
+# key: req
+# --
+local $1 = require("$2.$1")

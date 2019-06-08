@@ -35,14 +35,17 @@
 
 (ignore-errors
   (require 'ansi-color)
-  (defun my-colorize-compilation-buffer ()
-    (when (eq major-mode 'compilation-mode)
-      (ansi-color-apply-on-region compilation-filter-start (point-max))))
-  (add-hook 'compilation-filter-hook 'my-colorize-compilation-buffer))
+  (defun colorize-compilation-buffer ()
+    (let ((inhibit-read-only t))
+      (ansi-color-apply-on-region (point-min) (point-max))))
+  (add-hook 'compilation-filter-hook 'colorize-compilation-buffer))
 
-(defadvice term-send-raw (after clear-recorded-key activate)
-  (if (string= (kbd "RET") (this-command-keys))
-      (clear-this-command-keys)))
+(defun ruin/focus-emacs (orig-fn &rest args)
+  (when (executable-find "i3-msg")
+    (call-process "i3-msg" nil nil nil  "[class=\"Emacs\"]" "focus"))
+  (apply orig-fn args))
+
+(advice-add 'compilation-auto-jump :around #'ruin/focus-emacs)
 
 (evil-define-key 'normal shell-mode-map (kbd "q") 'delete-window)
 (evil-define-key 'emacs shell-mode-map (kbd "q") 'delete-window)

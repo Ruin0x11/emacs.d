@@ -1,0 +1,26 @@
+# -*- mode: snippet -*-
+# name: UiElement
+# key: uie
+# --
+local Draw = require("api.Draw")
+local IUiElement = require("api.gui.IUiElement")
+
+local ${1:`(file-name-nondirectory (file-name-sans-extension (buffer-file-name)))`} = class("$1", IUiElement)
+$0
+function $1:init()
+end
+
+function $1:relayout(x, y, width, height)
+   self.x = x
+   self.y = y
+   self.width = width,
+   self.height = height;
+end
+
+function $1:draw()
+end
+
+function $1:update()
+end
+
+return $1

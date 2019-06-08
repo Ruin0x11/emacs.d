@@ -71,13 +71,15 @@
         ("*Compile-Log*" :height 0.2 :stick t)
         ("*pytest*" :noselect t)
         (rspec-compilation-mode :height 0.4 :tail nil)
-        ("\\*Minitest*" :regexp t :stick t :noselect t :height 0.4 :tail nil)
+        ("\\*Minitest.*\\*" :regexp t :stick t :noselect t :height 0.3 :tail nil)
         ("*projectile-rails-compilation*" :height 0.3 :stick t)
         ("*projectile-rails-generate*" :height 0.3 :stick t)
         ;; Programing
         ("Django:" :regexp t :width 0.3 :position right)
         ("*Python*" :stick t)
         (inf-ruby-mode :stick t :height 0.3)
+        ("*lua*" :stick t :height 0.4)
+        (inferior-lisp-mode :stick t :height 0.3)
         (minitest-mode :stick t :height 0.3)
         ;; (haskell-interactive-mode :stick t)
         (cargo-process-mode :stick t :noselect t :width 0.25 :position right)
@@ -126,6 +128,15 @@
   (if (window-valid-p popwin:popup-window)
       (popwin:close-popup-window)
     (popwin-term:multi-term)))
+
+(defun ruin/mark-current-buffer-as-popwin ()
+  "Closes and reopens the selected buffer as the popwin."
+  (interactive)
+  (when (window-valid-p popwin:popup-window)
+    (popwin:close-popup-window))
+  (let ((the-buffer (window-buffer (selected-window))))
+    (delete-window (selected-window))
+    (popwin:popup-buffer the-buffer :height 0.4 :stick t)))
 
 (evil-leader/set-key
   "\'" 'ruin/toggle-popwin

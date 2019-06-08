@@ -9,9 +9,11 @@
 (setq compilation-ask-about-save nil)
 
 ;; Scroll the compilation window
-(setq compilation-scroll-output t)
+(setq compilation-scroll-output t
+      compilation-context-lines 4)
 
 ;; Always ask for y/n keypress instead of typing out 'yes' or 'no'
+(defalias 'yes-or-no-real-p 'yes-or-no-p)
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 ;; don't insert tabs on indent
@@ -36,10 +38,11 @@
 (recentf-cleanup)
 
 ;; Desktop
-(desktop-save-mode 1)
 (setq desktop-save t
+      desktop-load-locked-desktop t
       desktop-path (list (locate-user-emacs-file "."))
       desktop-dirname (locate-user-emacs-file "."))
+(desktop-save-mode 1)
 
 ;; Highlight matching parentheses when the point is on them.
 (show-paren-mode 1)
@@ -149,8 +152,8 @@ truncates lines returned by the compilation process."
                                              )))))))
 
 (require 'compile)
-(setq compilation-error-regexp-alist
-      (remq 'gnu compilation-error-regexp-alist))
+(setq compilation-error-regexp-alist (remq 'gnu compilation-error-regexp-alist)
+      compilation-auto-jump-to-first-error t)
 
 (defvar ivan-pop-target-window)
 (make-variable-buffer-local 'ivan-pop-target-window)
@@ -180,5 +183,18 @@ truncates lines returned by the compilation process."
   (shell-command "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\VC\\Auxiliary\\Build\\vcvars64.bat"))
 
 (save-place-mode 1)
+
+(global-set-key (kbd "RET") 'indent-new-comment-line)
+(global-set-key (kbd "M-j") 'electric-newline-and-maybe-indent)
+
+(defadvice jabber-muc-process-presence
+    (after jabber-muc-process-presence-clear-notices)
+  "Remove all muc notices."
+  (let* ((from (jabber-xml-get-attribute presence 'from))
+	 (group (jabber-jid-user from))
+         (buffer (get-buffer (jabber-muc-get-buffer group))))
+    (if buffer
+        (with-current-buffer buffer
+          (ewoc-filter jabber-chat-ewoc (lambda (elt) (not (eq (car elt) :muc-notice))))))))
 
 (provide 'ruin-general)

@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: node
+# key: node
+# --
+$1 = {
+   text = {
+      {"$2"},
+   },
+   choices = {
+      {"${3:__start}", "${4:__MORE__}"},
+   }
+},$0

@@ -201,6 +201,11 @@ as input."
    (format (concat command " %s")
            (shell-quote-argument (buffer-file-name)))))
 
+(defun clear-buffer-list-all ()
+  (interactive)
+  (let ((midnight-period (* 60)))
+    (clean-buffer-list)))
+
 ;;; from elsewhere
 
 ;;http://www.emacswiki.org/emacs/DescribeThingAtPoint#toc2
@@ -255,10 +260,9 @@ buffer is not visiting a file."
 
 
 ;;https://news.ycombinator.com/item?id=11488417
-(defconst trc-comment-keywords "\\<\\(FIXME\\|TODO\\|BUG\\|HACK\\|NOTE\\|WARNING\\|ERROR\\|IMPLEMENT\\|TEMP\\)")
+(defconst trc-comment-keywords "\\<\\(FIXME\\|TODO\\|BUG\\|HACK\\|NOTE\\|WARNING\\|ERROR\\|IMPLEMENT\\|TEMP\\|EVENT\\|BUILTIN\\|RETURN\\)")
 
-;; Install the word coloring
-(defun add-comment-keywords ()
+(defun add-comment-keywords () ;; Install the word coloring
   (font-lock-add-keywords nil
                           `((,trc-comment-keywords 1 font-lock-warning-face t))))
 
@@ -339,15 +343,16 @@ buffer is not visiting a file."
   (interactive "sNew name: ")
   (let ((name (buffer-name))
         (filename (buffer-file-name)))
+    (when (get-buffer new-name)
+      (kill-buffer new-name))
     (if (not filename)
-        (message "Buffer '%s' is not visiting a file!" name)
+         ; (error "Buffer '%s' is not visiting a file!" name)
+        (rename-buffer new-name)
       (progn
-        (when (get-buffer new-name)
-          (kill-buffer new-name))
         (rename-file filename new-name 1)
         (rename-buffer new-name)
-        (set-visited-file-name new-name)
-        (set-buffer-modified-p nil)))))
+        (set-visited-file-name new-name)))
+    (set-buffer-modified-p nil)))
 
 (defun move-buffer-file (dir)
   "Moves both current buffer and file it's visiting to DIR."

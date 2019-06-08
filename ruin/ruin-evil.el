@@ -23,6 +23,8 @@
 (global-evil-leader-mode t)
 (global-evil-surround-mode t)
 (evil-commentary-mode t)
+(evil-commentary-mode t)
+(evil-commentary-mode t)
 
 ;;; leader binds
 (evil-leader/set-leader "<SPC>")
@@ -35,7 +37,6 @@
   "u" 'universal-argument
   "y" 'helm-show-kill-ring
   "!" 'shell-command
-  ":" 'helm-M-x
   "T" 'crux-visit-term-buffer
   "zz" 'toggle-maximize-buffer
   "ZZZ" 'save-buffers-kill-emacs
@@ -48,7 +49,6 @@
   "dm" 'describe-mode
   "dk" 'describe-key
   "dd" 'describe-foo-at-point
-  "da" 'helm-apropos
   "de" 'flycheck-list-errors
 
   "eD" 'toggle-debug-on-error
@@ -73,28 +73,6 @@
   "js" 'bookmark-set
   "jj" 'bookmark-jump
   "jd" 'bookmark-delete
-
-  "ff" 'helm-find-files
-  "fg" 'helm-do-grep-ag
-  "fA" 'rg-dwim-current-dir
-  "fa" 'rg
-  "fr" 'helm-recentf
-  "fd" 'helm-semantic-or-imenu
-  "fs" 'find-function
-  "fv" 'find-variable
-  "fw" 'crux-view-url
-  "fl" 'find-library
-  "fe" 'elisp-refs-function
-  "fO" 'dmoccur
-  "fo" 'moccur
-
-  "hR" 'helm-regexp
-  "hm" 'helm-man-woman
-  "hM" 'helm-mini
-  "hM" 'helm-man-woman
-  "hr" 'helm-resume
-  "hc" 'helm-colors
-  "hg" 'helm-google
 
   "kc" 'compile
   "kr" 'recompile
@@ -123,7 +101,6 @@
   "rn" 'make-frame
   "rr" 'ruin/refactor-name
 
-  "bl" 'helm-buffers-list
   "TAB" 'spacemacs/alternate-buffer
   "bc"  'ruin/copy-buffer-to-new
   "bd"  'kill-this-buffer
@@ -174,7 +151,7 @@
 ;;; mode-based binds
 (defun copy-to-end-of-line ()
   (interactive)
-  (evil-yank (point) (point-at-eol)))
+  (lispyville-yank (point) (point-at-eol)))
 
 (defun ruin/window-movement-for-mode (mode map)
   (eval-after-load mode `(lambda ()
@@ -204,24 +181,11 @@
   (if (string= (kbd "RET") (this-command-keys))
       (clear-this-command-keys)))
 
-(defun comint-delchar-or-eof-or-kill-buffer (arg)
-  (interactive "p")
-  (if (null (get-buffer-process (current-buffer)))
-      (kill-buffer)
-    (comint-delchar-or-maybe-eof arg)))
-
-(add-hook 'shell-mode-hook
-          (lambda ()
-            (define-key shell-mode-map
-              (kbd "C-d") 'comint-delchar-or-eof-or-kill-buffer)))
-
-(add-hook 'ielm-mode-hook
-          (lambda ()
-            (define-key ielm-map
-              (kbd "C-d") 'comint-delchar-or-eof-or-kill-buffer)))
-
+(add-hook 'comint-mode-hook (lambda ()
+                              (delete 'comint-mode evil-insert-state-modes)))
 (delete 'shell-mode evil-insert-state-modes)
 (add-to-list 'evil-emacs-state-modes 'shell-mode)
+(add-to-list 'evil-emacs-state-modes 'comint-mode)
 (delete 'calc-mode evil-insert-state-modes)
 (add-to-list 'evil-emacs-state-modes 'calc-mode)
 (ruin/window-movement-for-mode "calc" 'calc-mode-map)
@@ -236,6 +200,8 @@
 (add-to-list 'evil-emacs-state-modes 'mpc-status-mode)
 (add-to-list 'evil-emacs-state-modes 'mpc-tagbrowser-mode)
 (add-to-list 'evil-emacs-state-modes 'mpc-tagbrowser-dir-mode)
+
+(add-to-list 'evil-emacs-state-modes 'inferior-lisp-mode)
 
 (general-define-key :states 'emacs "C-h" 'windmove-left)
 (general-define-key :states 'emacs "C-j" 'windmove-down)
@@ -345,7 +311,8 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
   "[" 'compilation-previous-file
   "]" 'compilation-next-file
   "gr" 'recompile
-  "h" 'evil-backward-char)
+  "h" 'evil-backward-char
+  "?" 'evil-search-backward)
 
 ;;; normal Emacs bindings
 (global-set-key (kbd "C-x C-u") 'universal-argument)

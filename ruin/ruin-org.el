@@ -18,34 +18,38 @@
 ;(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 
 ;; start agenda on emacs startup
-(when (file-exists-p "~/Dropbox/org")
-  (setq org-directory "~/Dropbox/org")
-  (setq org-agenda-files '("~/Dropbox/org/tracked/"))
-  (setq org-refile-targets '(("~/Dropbox/org/notes.org" :maxlevel . 9)
-                             (org-agenda-files :maxlevel . 9)))
+(let ((dir "/mnt/hibiki/up/syncthing/org/"))
+  (when (file-exists-p dir)
+    (setq org-directory dir)
+    (setq org-agenda-files `(,(concat org-directory "tracked/")))
+    (setq org-refile-targets `((,(concat org-directory "notes.org") :maxlevel . 9)
+                               (org-agenda-files :maxlevel . 9)))
 
-  (setq org-default-notes-file "~/Dropbox/org/tracked/refile.org")
-  (setq org-capture-templates
-        '(("t" "todo" entry (file "~/Dropbox/org/tracked/refile.org")
-           "* TODO %?\n%U")
-          ("c" "todo (with context)" entry (file "~/Dropbox/org/tracked/refile.org")
-           "* TODO %?\n%U\n%a")
-          ("n" "note" entry (file "~/Dropbox/org/notes.org")
-           "* %? :NOTE:\n%U\n")
-          ("x" "NeXT task" entry (file+headline "~/Dropbox/org/tracked/tasks.org" "NeXT Tasks")
-           "* NEXT %?\nDEADLINE: %t\n%U")
-          ("e" "etc." entry (file "~/Dropbox/org/notes.org")
-           "* %? - %U\n")
-          ("g" "generic" entry (file "~/Dropbox/org/tracked/refile.org")
-           "* %?\n%U\n")
-          ("d" "diary" entry (file+headline "~/Dropbox/org/diary.org" "日記")
-           "* %U\n%?\n" :prepend t)
-          ("y" "yume" entry (file+headline "~/Dropbox/org/yume.org" "ゆめにっき")
-           "* %U - %? %^g\n" :prepend t)))
-)
+    (setq org-default-notes-file (concat org-directory "tracked/refile.org"))
+    (setq org-capture-templates
+          `(("t" "todo" entry (file ,(concat org-directory "tracked/refile.org"))
+             "* TODO %?\n%U")
+            ("c" "todo (with context)" entry (file ,(concat org-directory "tracked/refile.org"))
+             "* TODO %?\n%U\n%a")
+            ("n" "note" entry (file ,(concat org-directory "notes.org"))
+             "* %? :NOTE:\n%U\n")
+            ("x" "NeXT task" entry (file+headline ,(concat org-directory "tracked/tasks.org" "NeXT Tasks"))
+             "* NEXT %?\nDEADLINE: %t\n%U")
+            ("e" "etc." entry (file ,(concat org-directory "notes.org"))
+             "* %? - %U\n")
+            ("g" "generic" entry (file ,(concat org-directory "tracked/refile.org"))
+             "* %?\n%U\n")
+            ("d" "diary" entry (file+headline ,(concat org-directory "diary.org" "日記"))
+             "* %U\n%?\n" :prepend t)
+            ("y" "yume" entry (file+headline ,(concat org-directory "yume.org" "ゆめにっき"))
+             "* %U - %? %^g\n" :prepend t)))))
 
 (add-hook 'org-capture-after-finalize-hook 'org-save-all-org-buffers)
 (add-hook 'org-agenda-finalize-hook 'org-save-all-org-buffers)
+
+(defun ruin/goto-org-folder ()
+  (interactive)
+  (find-file org-directory))
 
 ;;; Settings
 (setq org-src-fontify-natively t
@@ -322,7 +326,7 @@ show this warning instead."
 
 ;; leader binds for org-mode
 (evil-leader/set-key-for-mode 'org-mode
-  "of" 'org-capture-finalize
+  "of" 'ruin/goto-org-folder
   "ok" 'org-capture-kill
   "oI" 'org-clock-in
   "oO" 'org-clock-out
