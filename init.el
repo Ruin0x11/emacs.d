@@ -50,7 +50,7 @@
 (dolist (source '(("melpa" . "http://melpa.org/packages/")
                   ("elpa" . "http://tromey.com/elpa/")))
   (add-to-list 'package-archives source t))
-;(package-initialize)
+(package-initialize)
 (when (online?)
   (unless package-archive-contents (package-refresh-contents)))
 
@@ -131,10 +131,10 @@
 (package-require 'lsp-ui)
 (package-require 'kotlin-mode)
 ;(load "/Users/ruin/build/intellij-lsp-server/lsp-intellij.el")
-(with-eval-after-load 'lsp-mode
-  (require 'lsp-intellij)
-  (add-hook 'java-mode-hook #'lsp-intellij-enable)
-  (add-hook 'kotlin-mode-hook #'lsp-intellij-enable))
+;(with-eval-after-load 'lsp-mode
+;  (require 'lsp-intellij)
+;  (add-hook 'java-mode-hook #'lsp-intellij-enable)
+;  (add-hook 'kotlin-mode-hook #'lsp-intellij-enable))
 
 ;; load modularized features
 (dolist (file ruin-pkg)

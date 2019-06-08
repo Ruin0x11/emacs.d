@@ -71,6 +71,7 @@
 (package-require 'spaceline)
 (package-require 'helm)
 (package-require 'base16-theme)
+(package-require 'moe-theme)
 (require 'helm)
 (require 'spaceline-config)
 
@@ -216,6 +217,7 @@
 (defun ruin/normal-theme ()
   (interactive)
   (load-theme 'gruvbox t)
+  ;(moe-dark)
   (toggle-frame-fullscreen))
 
 (defun ruin/classic-theme-windows ()

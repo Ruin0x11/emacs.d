@@ -142,11 +142,11 @@ truncates lines returned by the compilation process."
   (setq compilation-finish-functions '((lambda (buffer message)
                                          (ding)
                                          (let ((urgency (if (string-match "finished" message) "normal" "critical")))
-                                           (shell-command (format "notify-send Compilation \"%s\" --expire-time=10000 --urgency=%s" message urgency)))
-
-
-
-                                         ))))
+                                           (shell-command
+                                            (cond
+                                             ((eq 'darwin system-type) (format "osascript -e 'display notification \"%s\" with title \"Compilation\"'" message))
+                                             (t (format "notify-send Compilation \"%s\" --expire-time=10000 --urgency=%s" message urgency))
+                                             )))))))
 
 (require 'compile)
 (setq compilation-error-regexp-alist

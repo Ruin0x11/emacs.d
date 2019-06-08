@@ -285,7 +285,7 @@
 (delete 'company-clang company-backends)
 (define-key company-active-map (kbd "C-v") 'company-next-page)
 (define-key company-active-map (kbd "M-v") 'company-previous-page)
-(setq company-c-headers-path-user "/home/ruin/build/elonafoobar/src")
+(setq company-c-headers-path-user '("/Users/ruin/build/ElonaFoobar/src" "/Users/ruin/build/ElonaFoobar/src/elona"))
 
 (setq flycheck-clang-definitions '("SNAIL_RENDERER_SDL")
       ;cmake-ide-flags-c++ '("-I/usr/include/SDL2" "-DSNAIL_RENDERER_SDL")
@@ -318,17 +318,20 @@
           (lambda ()
             (setq-local comment-fill "*")))
 
-(with-eval-after-load 'smartparens
-  (add-to-list 'sp--special-self-insert-commands 'c-electric-paren)
-  (add-to-list 'sp--special-self-insert-commands 'c-electric-brace))
+;(with-eval-after-load 'smartparens
+;  (add-to-list 'sp--special-self-insert-commands 'c-electric-paren)
+;  (add-to-list 'sp--special-self-insert-commands 'c-electric-brace))
 
 
 
 (setq doxymacs-blank-multiline-comment-template
  '(n > "/**" > n "* " p  > n " */"))
 
-(pushnew '(elonafoobar "^                       at \\([^\n]+\\):\\([0-9]+\\):\\([0-9]+\\)" 1 2 3)
-         compilation-error-regexp-alist-alist)
-(push 'elonafoobar compilation-error-regexp-alist)
+(add-to-list 'compilation-error-regexp-alist-alist
+'(elonafoobar "^                       at \\([^\n]+\\):\\([0-9]+\\):\\([0-9]+\\)" 1 2 3))
+(add-to-list 'compilation-error-regexp-alist-alist '(elonafoobar-error "^\\(.+\\):\\([0-9]+\\):\\([0-9]+\\): \\(error:\\|fatal error:\\| *required from here\\|FAILED:\\)" 1 2 3)
+compilation-error-regexp-alist-alist)
+(add-to-list 'compilation-error-regexp-alist 'elonafoobar)
+(add-to-list 'compilation-error-regexp-alist 'elonafoobar-error)
 
 (provide 'ruin-c)

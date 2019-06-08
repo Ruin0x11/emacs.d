@@ -9,8 +9,8 @@
 (require 'evil-magit)
 (evil-magit-init)
 
-(package-require 'magithub)
-(magithub-feature-autoinject t)
+;(package-require 'magithub)
+;(magithub-feature-autoinject t)
 
 (if (eq system-type 'windows-nt)
     (progn
