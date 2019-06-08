@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: fun
+# key: fun
+# --
+function `(file-name-nondirectory (file-name-sans-extension (buffer-file-name)))`:$1($2)$0
+end

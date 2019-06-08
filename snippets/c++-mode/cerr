@@ -2,4 +2,4 @@
 # name: cerr
 # key: ce
 # --
-std::cerr << ${1:string} $0<< std::endl;
+std::cerr << "${1:string}" $0<< std::endl;

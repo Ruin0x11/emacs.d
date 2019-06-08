@@ -58,7 +58,6 @@
 
 (add-to-list 'flycheck-disabled-checkers 'haml)
 (add-to-list 'flycheck-disabled-checkers 'c/c++-clang)
-(add-to-list 'flycheck-disabled-checkers 'c/c++-cppcheck)
 (add-to-list 'flycheck-disabled-checkers 'c/c++-gcc)
 
 (provide 'ruin-flycheck)

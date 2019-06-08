@@ -29,7 +29,7 @@
 
 (defun ruin/navigate-merge-conflicts ()
   (interactive)
-  (grep (concat "grep -nH --null -r -e \"<<<<<<< HEAD\" " (projectile-project-root))))
+  (rg-project "<<<<<<< HEAD" "all"))
 
 (evil-leader/set-key
   "gg" 'magit-dispatch-popup
@@ -57,7 +57,8 @@
   "gc" 'magit-commit
   "gR" 'magit-reset-hard
   "gv" 'endless/visit-pull-request-url
-  "gn" 'ruin/navigate-merge-conflicts)
+  "gn" 'ruin/navigate-merge-conflicts
+  "gi" 'magit-find-file)
 
 (defun magit-diff-head ()
         "Execute `magit-diff' against current HEAD."
@@ -83,8 +84,13 @@
 
 (general-define-key
  :keymaps '(magit-log-mode-map magit-mode-map)
- :states '(emacs)
+ :states '(emacs normal)
  "C-d" 'evil-scroll-down
- "C-u" 'evil-scroll-up)
+ "C-u" 'evil-scroll-up
+ "C-h" 'evil-window-left
+ "C-j" 'evil-window-down
+ "C-k" 'evil-window-up
+ "C-l" 'evil-window-right
+ )
 
 (provide 'ruin-git)

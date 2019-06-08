@@ -85,6 +85,7 @@
       `((".*" . ,backup-save-directory)))
 (setq auto-save-file-name-transforms
       `((".*" ,backup-save-directory t)))
+(setq x-alt-keysym 'meta)
 
 ;; modularize separate features
 (setq ruin-pkg

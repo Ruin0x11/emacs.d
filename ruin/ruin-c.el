@@ -23,12 +23,13 @@
 (add-hook 'c-mode-common-hook
           (lambda ()
             (yas-minor-mode 1)
-            (c-set-offset 'innamespace 0)
+            ;(c-set-offset 'innamespace 0)
             (linum-mode 0)
-            (c-set-offset 'substatement-open 0)
+            ;(c-set-offset 'substatement-open 0)
             (company-mode 1)
             (abbrev-mode 1)
             (which-function-mode 1)
+            (define-key c-mode-map (kbd "RET") 'indent-new-comment-line)
             (setq compilation-skip-threshold 1
                   compilation-auto-jump-to-first-error nil
                   c-default-style "linux"
@@ -47,7 +48,7 @@
               ; (define-key c-mode-map [(tab)]        'evil-complete-next)
               ; (define-key c-mode-map (kbd "TAB")    'evil-complete-next)
               ; (define-key c-mode-map (kbd "<tab>")  'evil-complete-next)
-              (setq-local compilation-error-regexp-alist '(msbuild-warning msbuild-error xbuild-warning xbuild-error gnu elonafoobar)))))
+              )))
 
 ; C++11 literals
 (add-hook
@@ -61,7 +62,7 @@
            ;; namespace names and tags - these are rendered as constants by cc-mode
            ("\\<\\(\\w+::\\)" . font-lock-function-name-face)
            ;;  new C++11 keywords
-           ("\\<\\(alignof\\|alignas\\|constexpr\\|decltype\\|noexcept\\|nullptr\\|static_assert\\|thread_local\\|override\\|final\\)\\>" . font-lock-keyword-face)
+           ("\\<\\(alignof\\|offsetof\\|alignas\\|constexpr\\|decltype\\|noexcept\\|nullptr\\|static_assert\\|thread_local\\|override\\|final\\)\\>" . font-lock-keyword-face)
            ("\\<\\(char16_t\\|char32_t\\)\\>" . font-lock-keyword-face)
            ;; PREPROCESSOR_CONSTANT, PREPROCESSORCONSTANT
            ("\\<[A-Z]*_[A-Z_]+\\>" . font-lock-constant-face)
@@ -87,7 +88,8 @@
            ("\\<[A-Za-z_]+[A-Za-z_0-9]*_\\(type\\|ptr\\)\\>" . font-lock-type-face)
            ("\\<\\(xstring\\|xchar\\)\\>" . font-lock-type-face)
            ))
-    ) t)
+    (define-key c++-mode-map (kbd "RET") 'c-indent-new-comment-line))
+ t)
 
 (evil-define-key 'normal c++-mode-map
   (kbd "M-.") 'ggtags-find-tag-dwim)
@@ -164,7 +166,7 @@
   "fg" 'lsp-find-references
   "ft" 'lsp-find-type-definition
   "fs" 'helm-semantic-or-imenu
-  "fe" 'lsp-rename
+  "rr" 'lsp-rename
   "fm" 'ccls-member-hierarchy
   "fc" 'ccls/caller-hierarchy
   "fC" 'ccls/callee-hierarchy
@@ -267,9 +269,11 @@
 ;; enable next-error/previous-error in helm-ag
 (add-hook 'helm-ag-mode-hook 'grep-mode)
 
-(add-hook 'before-save-hook (lambda ()
-                              (when (derived-mode-p 'c++-mode)
-                                (clang-format-buffer))))
+(defvar ruin/clang-format-buffer-on t)
+
+; (add-hook 'before-save-hook (lambda ()
+;                               (when (and ruin/clang-format-buffer-on (derived-mode-p 'c++-mode))
+;                                 (clang-format-buffer))))
 
 (let ((doxymacs-file "/usr/share/emacs/site-lisp/doxymacs.el"))
   (when (file-exists-p doxymacs-file)
@@ -285,7 +289,11 @@
 (delete 'company-clang company-backends)
 (define-key company-active-map (kbd "C-v") 'company-next-page)
 (define-key company-active-map (kbd "M-v") 'company-previous-page)
-(setq company-c-headers-path-user "/home/ruin/build/elonafoobar/src")
+
+(setq company-c-headers-path-user
+      (delete-dups
+       (mapcar #'file-name-directory
+               (directory-files-recursively "/home/ruin/build/elonafoobar/src" ""))))
 
 (setq flycheck-clang-definitions '("SNAIL_RENDERER_SDL")
       ;cmake-ide-flags-c++ '("-I/usr/include/SDL2" "-DSNAIL_RENDERER_SDL")
@@ -327,8 +335,24 @@
 (setq doxymacs-blank-multiline-comment-template
  '(n > "/**" > n "* " p  > n " */"))
 
-(pushnew '(elonafoobar "^                       at \\([^\n]+\\):\\([0-9]+\\):\\([0-9]+\\)" 1 2 3)
+(add-to-list 'compilation-error-regexp-alist-alist
+         '(elonafoobar "^                       at \\([^\n]+\\):\\([0-9]+\\):\\([0-9]+\\)" 1 2 3))
+(add-to-list 'compilation-error-regexp-alist-alist '(elonafoobar-error "^\\(.+\\):\\([0-9]+\\):\\([0-9]+\\): \\(error:\\|fatal error:\\| *required from here\\)" 1 2 3)
          compilation-error-regexp-alist-alist)
-(push 'elonafoobar compilation-error-regexp-alist)
+(add-to-list 'compilation-error-regexp-alist-alist '(catch2 "^\\(.+\\):\\([0-9]+\\): \\(FAILED:\\)" 1 2)
+         compilation-error-regexp-alist-alist)
+(add-to-list 'compilation-error-regexp-alist-alist
+         '(rake-test "[	 ]*\\(.*\\):\\([1-9][0-9]*\\):in" 1 2))
+(add-to-list 'compilation-error-regexp-alist-alist
+         '(love "^\\(Error: \\|luajit: \\)?[ \t]*\\(Syntax error: \\)?\\([\\.\\/a-zA-Z0-9_]+\\.lua\\):\\([0-9]+\\):" 3 4))
+(add-to-list 'compilation-error-regexp-alist 'rake-test)
+(add-to-list 'compilation-error-regexp-alist 'elonafoobar)
+(add-to-list 'compilation-error-regexp-alist 'elonafoobar-error)
+(add-to-list 'compilation-error-regexp-alist 'catch2)
+(add-to-list 'compilation-error-regexp-alist 'catch2)
+(add-to-list 'compilation-error-regexp-alist 'love)
+
+(sp-with-modes '(c++-mode)
+  (sp-local-pair "<" ">" :actions nil))
 
 (provide 'ruin-c)

@@ -137,7 +137,7 @@
 (package-require 'anzu)
 (package-require 'evil-anzu)
 (global-anzu-mode 1)
-(setq anzu-cons-mode-line-p nil)
+(setq anzu-cons-mode-line-p t)
 (with-eval-after-load 'evil
   (require 'evil-anzu))
 
@@ -188,11 +188,15 @@
 
 ;;; markdown-mode
 (package-require 'markdown-mode)
+(require 'markdown-mode)
 (eval-after-load "markdown-mode" #'(lambda ()
                                      (define-key markdown-mode-map (kbd "<C-return>") 'markdown-follow-thing-at-point)))
 (add-hook 'markdown-mode-hook #'flyspell-mode)
 
-(setq markdown-gfm-use-electric-backquote nil)
+(setq markdown-gfm-use-electric-backquote nil
+      markdown-fontify-code-blocks-natively t)
+(set-face-attribute 'markdown-code-face nil :background "#3a3a3a")
+
 
 ;(package-require 'mmm-mode)
 ;(require 'mmm-mode)
@@ -235,6 +239,11 @@
 
 ;;; YAML
 (package-require 'yaml-mode)
+(add-hook 'yaml-mode-hook
+          (lambda ()
+            (setq indent-tabs-mode nil)
+            (setq tab-width 2)
+            (setq evil-shift-width 2)))
 
 
 ;;; kaomoji
@@ -307,7 +316,8 @@
 (package-require 'highlight-symbol)
 (defun ruin/highlight-evil-search ()
   (interactive)
-  (highlight-symbol (evil-get-register ?/)))
+  (highlight-symbol (evil-get-register ?/))
+  (evil-ex-nohighlight))
 
 (evil-leader/set-key
   "HH" 'highlight-symbol-at-point
@@ -320,6 +330,8 @@
 (defun ruin/open-this-file-in-shader-view ()
   (interactive)
   (shell-command-on-file "glslViewer"))
+(add-to-list 'auto-mode-alist '("\\.fs$" . glsl-mode))
+(add-to-list 'auto-mode-alist '("\\.vs$" . glsl-mode))
 
 
 ;;; compilation-shell-minor-mode
@@ -498,7 +510,7 @@ If REHASH is set, rehashes the list of all cached cmdlets."
 
 (package-require 'outshine)
 (require 'outshine)
-(add-hook 'outline-minor-mode-hook 'outshine-hook-function)
+(add-hook 'outline-minor-mode-hook 'outshine-mode)
 (defun -add-font-lock-kwds (FONT-LOCK-ALIST)
   (font-lock-add-keywords
    nil (--map (-let (((rgx uni-point) it))
@@ -555,6 +567,10 @@ If REHASH is set, rehashes the list of all cached cmdlets."
 (eval-after-load "org-indent" '(diminish 'org-indent-mode))
 (eval-after-load "evil-org" '(diminish 'evil-org-mode))
 (eval-after-load "prettier-js" '(diminish 'prettier-js-mode))
+(eval-after-load "doc-mode" '(diminish 'doc-mode))
+(eval-after-load "minitest-mode" '(diminish 'doc-mode))
+(eval-after-load "doxymacs" '(diminish 'doxymacs-mode))
+(eval-after-load "doxymacs" '(diminish 'doxymacs-mode))
 ;(eval-after-load "rainbow-mode" '(diminish 'rainbow-mode))
 
 (diminish 'compilation-in-progress "㋙")
@@ -577,7 +593,7 @@ If REHASH is set, rehashes the list of all cached cmdlets."
   (indent-according-to-mode))
 
 (setq open-paren-modes
-      '(rust-mode glsl-mode c-mode c++-mode hcl-mode lua-mode org-mode))
+      '(rust-mode glsl-mode c-mode c++-mode hcl-mode lua-mode org-mode css-mode))
 
 (dolist (mode open-paren-modes)
   (sp-local-pair mode "{" nil :post-handlers '((my-create-newline-and-enter-sexp "RET"))))
@@ -681,6 +697,20 @@ RENDER-ALL - nil if only the signature should be rendered."
      (not (eq (find-buffer-visiting (lsp--uri-to-path (gethash "uri" (gethash "location" sym))))
               (current-buffer))))))
 
+(defun lsp-rename (newname)
+  "Rename the symbol (and all references to it) under point to NEWNAME."
+  (interactive (list (let ((symbol (lsp--get-symbol-to-rename)))
+                       (read-string (format "Rename %s to: " symbol) ""))))
+  (lsp--cur-workspace-check)
+  (unless (lsp--capability "renameProvider")
+    (signal 'lsp-capability-not-supported (list "renameProvider")))
+  (let ((edits (lsp-request "textDocument/rename"
+                            `(:textDocument ,(lsp--text-document-identifier)
+                                            :position ,(lsp--cur-position)
+                                            :newName ,newname))))
+    (when edits
+      (lsp--apply-workspace-edit edits))))
+
 ;; override semantic/bovine, which is taken in by doc-mode
 (defvar-mode-local c-mode imenu-create-index-function 'lsp--imenu-create-index
   "Imenu index function for C.")
@@ -726,6 +756,14 @@ RENDER-ALL - nil if only the signature should be rendered."
 
 (let ((uim-file "/usr/share/emacs/site-lisp/uim-el/uim.el"))
   (when (file-exists-p uim-file)
+    (defun process-kill-without-query (process &optional flag)
+      "Say no query needed if PROCESS is running when Emacs is exited.
+Optional second argument if non-nil says to require a query.
+Value is t if a query was formerly required."
+      (let ((old (process-query-on-exit-flag process)))
+        (set-process-query-on-exit-flag process nil)
+        old))
+
     (add-to-list 'load-path "/usr/share/emacs/site-lisp/uim-el")
     (load uim-file)
     (global-set-key "\C-\\" 'uim-mode)
@@ -735,6 +773,15 @@ RENDER-ALL - nil if only the signature should be rendered."
 ; (require 'edict)
 ; (setq edict-dictionaries '("~/.edict"))
 ; (evil-leader/set-key "ae" 'edict-search-kanji)
+
+;;; midnight
+(require 'midnight)
+(midnight-mode)
+
+;;; tiny
+(package-require 'tiny)
+(require 'tiny)
+(tiny-setup-default)
 
 ;;; Local variables
 ;; Local Variables:

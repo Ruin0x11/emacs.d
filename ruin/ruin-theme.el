@@ -60,15 +60,21 @@
 (global-whitespace-mode 1)
 (add-hook 'before-save-hook 'whitespace-cleanup)
 
+(setq custom-safe-themes 't)
+
 ;; Install themes
 ;; (package-require 'ample-theme)
 ;; (package-require 'spacemacs-theme)
 ;; (package-require 'zenburn-theme)
+(package-require 'color-theme-sanityinc-tomorrow)
 (package-require 'solarized-theme)
 (package-require 'monokai-theme)
 (package-require 'spaceline)
 (package-require 'helm)
 (package-require 'base16-theme)
+(package-require 'powerline)
+(package-require 'moe-theme)
+(package-require 'nord-theme)
 (require 'helm)
 (require 'spaceline-config)
 
@@ -216,20 +222,43 @@
   (load-theme 'monokai t)
   (toggle-frame-fullscreen))
 
+(defun font-exists-p (font)
+  "check if font exists"
+  (not (null (x-list-fonts font))))
+
 (defun ruin/classic-theme-windows ()
   (when (eq system-type 'windows-nt)
     (set-frame-font "y-outline-MS Gothic-normal-normal-normal-mono-13-*-*-*-c-*-iso10646-1"))
+
   (when (eq system-type 'gnu/linux)
-    (set-frame-font "-*-terminus-medium-*-*-*-12-*-*-*-*-*-*"))
+    (let ((font "-*-SGI Screen-medium-*-*-*-12-*-*-*-*-*-*"))
+      (when (font-exists-p font)
+        (set-frame-font font nil t)))
+    (let ((font "-*-SGI Screen-medium-*-*-*-12-*-*-*-*-*-*"))
+      (when (font-exists-p font)
+        (set-frame-font font nil t))))
+
   ;(load-theme 'undy t)
   ;(load-theme 'base16-hopscotch t)
   ;(load-theme 'base16-atelier-savanna t)
-  (require 'moe-theme)
-  (setq moe-theme-mode-line-color 'w/b)
-  (moe-dark)
+  (require 'powerline)
+  ; (require 'moe-theme)
+  ; (setq moe-theme-mode-line-color 'w/b)
+  ; (moe-dark)
+  ; (powerline-moe-theme)
+  ; (set-face-attribute 'powerline-active2 nil :background "#3a3a3a" :foreground "#ffffff")
+  ; (set-face-attribute 'mode-line nil :background "#3a3a3a" :foreground "#ffffff")
+  ; (set-face-attribute 'mode-line-buffer-id nil :background nil :foreground "#ffffff")
+;  (load-theme 'sanityinc-tomorrow-night 't)
+  (setq undy-foreground "#BBBBBB")
+  (load-theme 'undy)
+  (powerline-reset)
   (transparency 100)
   (set-frame-size (selected-frame) 140 80)
   (setq flycheck-color-mode-line-face-to-color 'mode-line-buffer-id))
+
+(add-to-list 'custom-theme-load-path
+             (file-name-as-directory (locate-user-emacs-file "themes/replace-colorthemes")))
 
 (defun ruin/growth-theme ()
   (interactive)
@@ -335,5 +364,27 @@ The following %-sequences are provided:
 
 (when (memq system-type '(darwin))
   (setq battery-status-function #'ruin/battery-pmset))
+
+(add-hook 'term-mode-hook
+          (lambda ()
+            (setq ansi-term-color-vector
+                  [term
+                   term-color-black
+                   term-color-red
+                   term-color-green
+                   term-color-yellow
+                   term-color-blue
+                   term-color-magenta
+                   term-color-cyan
+                   term-color-white])))
+
+;; Color the evil tag - colors taken from spaceline
+(setq evil-normal-state-tag   (propertize " <N> " 'face '((:background "DarkGoldenrod2" :foreground "black")))
+      evil-emacs-state-tag    (propertize " <E> " 'face '((:background "SkyBlue2"       :foreground "black")))
+      evil-insert-state-tag   (propertize " <I> " 'face '((:background "chartreuse3"    :foreground "black")))
+      evil-replace-state-tag  (propertize " <R> " 'face '((:background "chocolate"      :foreground "black")))
+      evil-motion-state-tag   (propertize " <M> " 'face '((:background "plum3"          :foreground "black")))
+      evil-visual-state-tag   (propertize " <V> " 'face '((:background "gray"           :foreground "black")))
+      evil-operator-state-tag (propertize " <O> " 'face '((:background "sandy brown"    :foreground "black"))))
 
 (provide 'ruin-theme)

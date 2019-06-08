@@ -6,6 +6,11 @@
 (package-require 'helm-flx)
 (package-require 'wgrep)
 (package-require 'rg)
+(package-require 'ivy)
+(package-require 'counsel)
+(package-require 'smex)
+
+(ivy-mode t)
 
 (require 'helm-config)
 (require 'wgrep)
@@ -26,10 +31,18 @@
       helm-candidate-number-limit 50
       helm-ag-base-command "ag --vimgrep --nocolor "
       helm-fd-command-option "-H"
-      helm-input-idle-delay 0.2
+      helm-input-idle-delay 0.05
       helm-cycle-resume-delay 2
       helm-follow-input-idle-delay 0.2
       helm-M-x-always-save-history t)
+
+(with-eval-after-load 'rg
+  (push '("hcl" . "*.hcl") rg-custom-type-aliases)
+  (push '("slim" . "*.slim") rg-custom-type-aliases)
+  (push '("yml" . "*.yml") rg-custom-type-aliases)
+  (push '("hpp" . "*.hpp") rg-custom-type-aliases)
+  (push '("janet" . "*.janet") rg-custom-type-aliases)
+)
 
 ;; dumb redefinition for ripgrep
 ;; (defun helm-projectile-ag (&optional options)
@@ -43,33 +56,46 @@
 ;;         (error "You're not in a project"))
 ;;     (error "helm-ag not available")))
 
-(global-set-key (kbd "M-x") 'helm-M-x)
-(helm-mode t)
-(helm-flx-mode +1)
+(global-set-key (kbd "M-x") 'counsel-M-x)
+; (helm-mode t)
+; (helm-flx-mode +1)
+(ivy-mode t)
 
 (evil-leader/set-key
-  "/"  'helm-swoop
+  "/"  'swiper
+  ":" 'ivy-M-x
 
   "ff" 'helm-find-files
-  "fg" 'helm-do-grep-ag
-  "fr" 'helm-recentf
-  "fd" 'helm-semantic-or-imenu
-  "fF" 'helm-find
-  "fi" 'imenu
+  "fa" 'counsel-rg
+  "fr" 'counsel-recentf
+  "fd" 'counsel-semantic-or-imenu
+  "fi" 'counsel-imenu
   ; "fI" 'helm-fd
 
-  "hf" 'helm-flycheck
+  "fs" 'find-function
+  "fv" 'find-variable
+  "fl" 'find-library
+  "fe" 'elisp-refs-function
+  "fO" 'dmoccur
+
+  "hm" 'man
+  "hr" 'helm-resume
+  "hR" 'ivy-resume
+  "hc" 'counsel-colors-web
+
   "hR" 'helm-regexp
   "hm" 'helm-man-woman
   "hM" 'helm-mini
-  "hb" 'helm-bookmarks
-  "hr" 'helm-resume
+  "hM" 'helm-man-woman
+  "hR" 'helm-resume
+  "hr" 'ivy-resume
   "hc" 'helm-colors
   "hg" 'helm-google
-  "ht" 'helm-top
-  "hp" 'helm-list-emacs-process
-  "h@" 'helm-list-elisp-packages
-  "hq" 'helm-quick-launch
+
+  "da" 'counsel-apropos
+
+  "bl" 'counsel-switch-buffer
+  "bl" 'counsel-switch-buffer
 
   ;; "ii" 'helm-info-at-point
   "?e" 'helm-info-emacs
