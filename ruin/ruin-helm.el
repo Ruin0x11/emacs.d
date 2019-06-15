@@ -9,6 +9,7 @@
 (package-require 'ivy)
 (package-require 'counsel)
 (package-require 'smex)
+(package-require 'ivy-hydra)
 
 (ivy-mode t)
 
@@ -39,6 +40,7 @@
 (with-eval-after-load 'rg
   (push '("hcl" . "*.hcl") rg-custom-type-aliases)
   (push '("slim" . "*.slim") rg-custom-type-aliases)
+  (push '("hsp" . "*.hsp") rg-custom-type-aliases)
   (push '("yml" . "*.yml") rg-custom-type-aliases)
   (push '("hpp" . "*.hpp") rg-custom-type-aliases)
   (push '("janet" . "*.janet") rg-custom-type-aliases)
@@ -60,13 +62,24 @@
 ; (helm-mode t)
 ; (helm-flx-mode +1)
 (ivy-mode t)
+(helm-mode 0)
+
+(define-key ivy-minibuffer-map (kbd "C-z") 'hydra-ivy/body)
+(define-key ivy-minibuffer-map (kbd "TAB") 'hydra-ivy/body)
+
+(rg-define-search ruin/rg-current-file
+  "Search for thing in files matching the current file name (as a
+pattern) under the current directory."
+  :files (file-name-nondirectory (buffer-file-name))
+  :dir current)
 
 (evil-leader/set-key
   "/"  'swiper
-  ":" 'ivy-M-x
+  ":" 'counsel-M-x
 
   "ff" 'helm-find-files
   "fa" 'counsel-rg
+  "fA" 'ruin/rg-current-file
   "fr" 'counsel-recentf
   "fd" 'counsel-semantic-or-imenu
   "fi" 'counsel-imenu
@@ -83,7 +96,6 @@
   "hR" 'ivy-resume
   "hc" 'counsel-colors-web
 
-  "hR" 'helm-regexp
   "hm" 'helm-man-woman
   "hM" 'helm-mini
   "hM" 'helm-man-woman
@@ -91,6 +103,7 @@
   "hr" 'ivy-resume
   "hc" 'helm-colors
   "hg" 'helm-google
+  "hf" 'counsel-recoll
 
   "da" 'counsel-apropos
 

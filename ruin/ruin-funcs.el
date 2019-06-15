@@ -457,6 +457,9 @@ buffer is not visiting a file."
 
 (defalias 'finder 'explorer "Alias for `explorer'.")
 
+(defmacro comment (&rest body)
+  "Comment out one or more s-expressions."
+  nil)
 
 ;;; Bodil
 

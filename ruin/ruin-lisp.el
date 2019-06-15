@@ -23,33 +23,58 @@
 (add-lisp-hook 'smartparens-mode)
 (add-lisp-hook 'lispyville-mode)
 
-(with-eval-after-load 'elisp-mode
-  (defadvice elisp-get-fnsym-args-string (after add-docstring activate compile)
-    "Add a 1st line of docstring to ElDoc's function information."
-    (when ad-return-value
-      (when-let ((doc (elisp--docstring-first-line (documentation (ad-get-arg 0) t))))
-        (let* ((w (frame-width))
-               (color-doc (propertize doc 'face 'font-lock-doc-face)))
-          (when (and doc (not (string= doc "")))
-            (setq ad-return-value (concat ad-return-value "\n" color-doc))
-            (when (> (length doc) w)
-              (setq ad-return-value (substring ad-return-value 0 (1- w)))))))
-      ad-return-value)))
+; (with-eval-after-load 'elisp-mode
+;   (defadvice elisp-get-fnsym-args-string (after add-docstring activate compile)
+;     "Add a 1st line of docstring to ElDoc's function information."
+;     (when ad-return-value
+;       (when-let ((doc (elisp--docstring-first-line (documentation (ad-get-arg 0) t))))
+;         (let* ((w (frame-width))
+;                (color-doc (propertize doc 'face 'font-lock-doc-face)))
+;           (when (and doc (not (string= doc "")))
+;             (setq ad-return-value (concat ad-return-value "\n" color-doc))
+;             (when (> (length doc) w)
+;               (setq ad-return-value (substring ad-return-value 0 (1- w)))))))
+;       ad-return-value)))
 
 ;;; emacs lisp
 
 (evil-leader/set-key-for-mode 'emacs-lisp-mode
   "eb" 'ruin/write-and-eval-buffer
   "es" 'eval-last-sexp
-  "eh" 'helm-eval-expression-with-eldoc
   "ed" 'eval-defun
   )
 
 (evil-leader/set-key-for-mode 'lisp-interaction-mode
   "eb" 'ruin/write-and-eval-buffer
   "es" 'eval-last-sexp
-  "eh" 'helm-eval-expression-with-eldoc
   "ed" 'eval-defun
+  )
+
+(defun ruin/lisp-eval-last-sexp ()
+  (interactive)
+  (save-excursion
+    (forward-char)
+    (lisp-eval-last-sexp)))
+
+(evil-leader/set-key-for-mode 'janet-mode
+  "ee" 'janet-eval-expression
+  "eb" 'janet-eval-buffer
+  "es" 'ruin/lisp-eval-last-sexp
+  "ed" 'lisp-eval-defun
+  "dd" 'janet-doc
+  )
+
+(evil-leader/set-key
+  "lc" 'lispy-convolute
+  "lC" 'lispy-convolute-left
+  "lO" 'lispy-oneline
+  "lM" 'lispy-alt-multiline
+  "lS" 'lispy-stringify
+  "l/" 'lispy-splice
+  "lr" 'lispy-raise
+  "lR" 'lispy-raise-some
+  "lx" 'hydra-lispy-x/body
+  "lp" 'lispy-clone
   )
 
 (defun endless/eval-overlay (value point)
@@ -88,15 +113,45 @@
   (lispyville-set-key-theme
    '(operators
      (escape insert)
+     (commentary normal visual motion)
+     (additional-motions normal visual motion)
+     (additional-insert)
+     (text-objects normal visual motion)
      (slurp/barf-cp normal visual motion)
      (additional normal visual)))
+  (evil-define-key nil evil-inner-text-objects-map
+    "a" #'lispyville-inner-atom
+    "l" #'lispyville-inner-list
+    "x" #'lispyville-inner-sexp
+    "f" #'lispyville-inner-function
+    "c" #'lispyville-inner-comment
+    "S" #'lispyville-inner-string)
+  (evil-define-key nil evil-outer-text-objects-map
+    "a" #'lispyville-a-atom
+    "l" #'lispyville-a-list
+    "x" #'lispyville-a-sexp
+    "f" #'lispyville-a-function
+    "c" #'lispyville-a-comment
+    "S" #'lispyville-a-string)
+  (lispyville--define-key '(normal visual motion)
+           "[" #'lispyville-previous-opening
+           "]" #'lispyville-next-opening
+           "-" #'lispy-up
+           "+" #'lispy-down
+           (kbd "M-h") #'lispy-move-left
+           (kbd "M-l") #'lispy-down-slurp
+           "{" #'evil-backward-paragraph
+           "}" #'evil-forward-paragraph
+           "(" #'lispyville-backward-up-list
+           ")" #'lispy-flow)
   (define-key lispy-mode-map (kbd "<C-return>") nil)
+  )
 
-  ;(evil-define-key '(normal visual motion) lispyville-mode-map (kbd "M-{") 'lispyville-next-opening)
-  ;(evil-define-key '(normal visual motion) lispyville-mode-map (kbd "M-}") 'lispyville-previous-closing)
-  ;(evil-define-key '(normal visual motion) lispyville-mode-map (kbd "M-[") 'lispyville-previous-opening)
-  ;(evil-define-key '(normal visual motion) lispyville-mode-map (kbd "M-]") 'lispyville-next-closing)
-)
+(defun ruin/lispy-map--enter-insert (&rest _ignore)
+  (evil-insert 0))
+
+(add-function :after (symbol-function 'lispy-map-make-input-overlay) #'ruin/lispy-map--enter-insert)
+
 
 (eval-after-load "ielm" #'(lambda ()
                             (ruin/window-movement-for-map inferior-emacs-lisp-mode-map)
@@ -145,7 +200,7 @@
   "ma" 'cider-apropos-documentation
   "mr" 'cider-switch-to-repl-buffer
   "mb" 'connect-burgundy
-;  "ms" 'slamhound
+                                        ;  "ms" 'slamhound
   "mq" 'cider-quit
 
   "eb" 'cider-eval-buffer

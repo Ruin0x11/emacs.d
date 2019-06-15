@@ -35,11 +35,17 @@
       ivy-on-del-error-function #'ignore
       ivy-height 30)
 
+(defun ruin/counsel-rg-project ()
+  (interactive)
+  (let ((dir (projectile-project-root)))
+    (if dir
+        (counsel-rg nil dir)
+      (message "Not in a project."))))
 
 (evil-leader/set-key
   "ps" 'helm-projectile-switch-project
-  "pa" 'rg-project
-  ; "pf" 'helm-projectile
+  "pa" 'ruin/counsel-rg-project
+  "pA" 'rg-project
   "pf" 'find-file-in-project
   "pb" 'helm-projectile-switch-to-buffer
   "p!" 'projectile-run-async-shell-command-in-root

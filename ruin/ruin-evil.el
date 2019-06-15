@@ -329,7 +329,14 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (global-set-key [f7] 'previous-error)
 (global-set-key [f8] 'next-error)
 
-(global-set-key (kbd "RET") 'electric-newline-and-maybe-indent)
+;(global-set-key (kbd "RET") 'electric-newline-and-maybe-indent)
+(global-set-key (kbd "RET") 'indent-new-comment-line)
+;(define-key emacs-lisp-mode-map (kbd "RET") 'indent-new-comment-line)
+
+(defun ruin/mark-current-buffer-as-compilation ()
+  "Sets the current buffer as the one for compilation next-error."
+  (interactive)
+  (setq (next-error-last-buffer (window-buffer (selected-window)))))
 
 ;; match items with %
 (package-require 'evil-matchit)

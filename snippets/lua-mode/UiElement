@@ -13,8 +13,8 @@ end
 function $1:relayout(x, y, width, height)
    self.x = x
    self.y = y
-   self.width = width,
-   self.height = height;
+   self.width = width
+   self.height = height
 end
 
 function $1:draw()

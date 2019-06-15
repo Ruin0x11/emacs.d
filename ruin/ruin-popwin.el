@@ -94,6 +94,7 @@
         ("*cider-result*" :height 0.3)
         (yari-mode :height 0.4 :stick t :dedicated t)
         ("*robe-doc*" :height 0.4 :stick t :dedicated t)
+        ("*janet-doc*" :height 0.3 :stick t :dedicated t :noselect t)
         (sql-interactive-mode :height 0.4 :stick t)
         ;; Console
         ("*shell*" :height 0.3 :stick t)
