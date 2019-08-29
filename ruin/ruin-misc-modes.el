@@ -740,11 +740,6 @@ Value is t if a query was formerly required."
     (global-set-key "\C-\\" 'uim-mode)
     (setq uim-default-im-engine "anthy")))
 
-;;; edict
-; (require 'edict)
-; (setq edict-dictionaries '("~/.edict"))
-; (evil-leader/set-key "ae" 'edict-search-kanji)
-
 ;;; midnight
 (require 'midnight)
 (midnight-mode)
