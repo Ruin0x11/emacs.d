@@ -28,3 +28,12 @@
 [submodule "site-lisp/dictionary"]
 	path = site-lisp/dictionary
 	url = https://github.com/myrkr/dictionary-el
+[submodule "site-lisp/downdraft"]
+	path = site-lisp/downdraft
+	url = https://www.github.com/ruin0x11/downdraft
+[submodule "site-lisp/janet-mode"]
+	path = site-lisp/janet-mode
+	url = https://www.github.com/ruin0x11/janet-mode
+[submodule "site-lisp/doxymacs"]
+	path = site-lisp/doxymacs
+	url = https://github.com/emacsattic/doxymacs

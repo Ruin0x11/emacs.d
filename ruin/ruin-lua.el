@@ -2,9 +2,9 @@
 (package-require 'highlight-numbers)
 (package-require 'format-all)
 (package-require 'realgud)
-(require 'doxymacs)
-(require 'doxymacs-luadoc)
-(load "~/build/work/realgud-mobdebug/realgud-mobdebug.el")
+; (require 'doxymacs)
+;(require 'doxymacs-luadoc)
+;(load "~/build/work/realgud-mobdebug/realgud-mobdebug.el")
 (require 'lua-mode)
 (require 'lua-block)
 

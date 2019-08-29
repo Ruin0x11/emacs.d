@@ -290,10 +290,10 @@
 (define-key company-active-map (kbd "C-v") 'company-next-page)
 (define-key company-active-map (kbd "M-v") 'company-previous-page)
 
-(setq company-c-headers-path-user
-      (delete-dups
-       (mapcar #'file-name-directory
-               (directory-files-recursively "/home/ruin/build/elonafoobar/src" ""))))
+;(setq company-c-headers-path-user
+;      (delete-dups
+;       (mapcar #'file-name-directory
+;               (directory-files-recursively "/home/ruin/build/elonafoobar/src" ""))))
 
 (setq flycheck-clang-definitions '("SNAIL_RENDERER_SDL")
       ;cmake-ide-flags-c++ '("-I/usr/include/SDL2" "-DSNAIL_RENDERER_SDL")

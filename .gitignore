@@ -65,3 +65,5 @@ cc-mode/
 .yas-compiled-snippets.el
 url/
 srecode-map.el
+/places
+/smex-items
