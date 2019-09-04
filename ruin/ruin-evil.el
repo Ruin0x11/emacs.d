@@ -22,8 +22,6 @@
 (global-evil-leader-mode t)
 (global-evil-surround-mode t)
 (evil-commentary-mode t)
-(evil-commentary-mode t)
-(evil-commentary-mode t)
 
 ;;; leader binds
 (evil-leader/set-leader "<SPC>")

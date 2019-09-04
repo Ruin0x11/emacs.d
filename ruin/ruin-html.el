@@ -28,7 +28,7 @@
             (web-mode-set-content-type "jsx")
           (message "now set to: %s" web-mode-content-type))))
 
-(setq web-mode-markup-indent-offset 2)
+(setq web-mode-markup-indent-offset 4)
 
 (add-hook 'slim-mode-hook
   (function (lambda ()

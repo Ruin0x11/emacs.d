@@ -197,6 +197,17 @@
       markdown-fontify-code-blocks-natively t)
 (set-face-attribute 'markdown-code-face nil :background "#3a3a3a")
 
+(package-require 'writeroom-mode)
+(require 'downdraft)
+(downdraft-add-to-mode-line)
+
+(setq writeroom-mode-line '(downdraft-mode-line-string downdraft-mode-line-string)
+      writeroom-maximize-window nil
+      downdraft-default-goal-time 5
+      downdraft-default-goal-word-count 800)
+
+(add-to-list 'markdown-mode-hook 'writeroom-mode)
+
 ;; (add-hook 'compilation-shell-minor-mode-hook
 ;;           #'(lambda ()
 ;;               (setq compilation-scroll-output nil)))
@@ -264,8 +275,22 @@
 
 
 ;;; uim
-(if (locate-library "uim") (require 'uim))
+(make-obsolete
+ 'process-kill-without-query
+ "use `process-query-on-exit-flag' or `set-process-query-on-exit-flag'."
+ "22.1")
+(defun process-kill-without-query (process &optional flag)
+  "Say no query needed if PROCESS is running when Emacs is exited.
+Optional second argument if non-nil says to require a query.
+Value is t if a query was formerly required."
+  (let ((old (process-query-on-exit-flag process)))
+    (set-process-query-on-exit-flag process nil)
+    old))
 
+(add-to-list 'load-path "/usr/share/emacs/site-lisp/uim-el")
+(if (locate-library "uim") (require 'uim))
+(global-set-key (kbd "C-\\") 'uim-mode)
+(setq uim-default-im-engine "anthy")
 
 ;;; buffer-move
 (package-require 'buffer-move)
