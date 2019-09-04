@@ -299,8 +299,6 @@ Value is t if a query was formerly required."
 (global-set-key (kbd "C-S-h") 'buf-move-left)
 (global-set-key (kbd "C-S-l") 'buf-move-right)
 
-
-
 ;;; command-frequency
 (package-require 'keyfreq)
 (keyfreq-mode)

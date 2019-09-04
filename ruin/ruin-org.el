@@ -32,10 +32,14 @@
             ("T" "Tickler" entry
              (file+headline ,(concat org-directory "gtd/tickler.org") "Tickler")
              "* %i%? \n %U")
+            ("R" "Review" entry
+             (file+headline ,(concat org-directory "gtd/review.org") "Review")
+             "* %(current-time-string) \nStream-of-conscious brief (one paragraph):\n%?\nProgress towards goals:\n\nNew ideas/risks for personal system:\n\n")
             ("y" "yume" entry (file+headline ,(concat org-directory "yume.org" "ゆめにっき"))
              "* %U - %? %^g\n" :prepend t)))))
 
 (add-hook 'org-capture-after-finalize-hook 'org-save-all-org-buffers)
+(add-hook 'org-after-refile-insert-hook 'org-save-all-org-buffers)
 (add-hook 'org-agenda-finalize-hook 'org-save-all-org-buffers)
 
 (defun ruin/goto-org-folder ()
@@ -79,10 +83,13 @@
 
 (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images)
 
+(define-key org-mode-map (kbd "M-j") 'org-move-subtree-down)
+(define-key org-mode-map (kbd "M-k") 'org-move-subtree-up)
+
 (setq org-agenda-custom-commands
-      '(("g" "GTD" tags-todo ""
-         ((org-agenda-overriding-header "")
-          (org-agenda-skip-function #'my-org-agenda-skip-all-siblings-but-first)))))
+      '(("g" "GTD" tags-todo "*"
+         ((org-agenda-overriding-header "プロジェクト")
+          (org-agenda-skip-function #'my-org-agenda-skip-projects)))))
 
 (defun my-org-agenda-skip-all-siblings-but-first ()
   "Skip all but the first non-done entry."
@@ -93,6 +100,18 @@
       (while (and (not should-skip-entry) (org-goto-sibling t))
         (when (org-current-is-todo)
           (setq should-skip-entry t))))
+    (when should-skip-entry
+      (or (outline-next-heading)
+          (goto-char (point-max))))))
+
+(defun my-org-agenda-skip-projects ()
+  "Skip projects (items with children)."
+  (let (should-skip-entry)
+    (unless (org-current-is-todo)
+      (setq should-skip-entry t))
+    (save-excursion
+      (when (or (org-goto-first-child) (not (= (org-current-level) 2)))
+        (setq should-skip-entry t)))
     (when should-skip-entry
       (or (outline-next-heading)
           (goto-char (point-max))))))
@@ -117,12 +136,13 @@
 
 ;;; TODOs
 (setq org-todo-keywords
-      (quote ((sequence "TODO(t!)" "WAITING(w@/!)" "|" "DONE(d!)"))))
+      (quote ((sequence "TODO(t!)" "WAITING(w@/!)" "IN PROGRESS(w!)" "|" "DONE(d!)"))))
 
 (setq org-todo-keyword-faces
       (quote (
               ("TODO" :foreground "red" :weight bold)
               ;; ("NEXT" :foreground "blue" :weight bold)
+              ("IN PROGRESS" :foreground "yellow" :weight bold)
               ("DONE" :foreground "forest green" :weight bold)
               ("WAITING" :foreground "magneta" :weight bold)
               ;; ("CANCELLED" :foreground "orange" :weight bold)
