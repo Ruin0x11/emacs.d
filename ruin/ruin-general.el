@@ -116,6 +116,9 @@ truncates lines returned by the compilation process."
 (add-hook 'compilation-filter-hook 'truncate-compilation-long-lines)
 
 (when (eq system-type 'windows-nt)
+  ;(setq comint-eol-on-send t)
+  (setq comint-redirect-verbose t)
+  (setq comint-redirect-echo-input t)
   (shell-command "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\VC\\Auxiliary\\Build\\vcvars64.bat"))
 
 (provide 'ruin-general)

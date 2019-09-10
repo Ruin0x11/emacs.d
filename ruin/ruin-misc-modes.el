@@ -656,8 +656,18 @@ instead."
     (add-to-list 'exec-path putty-directory)))
 
 
+;;; CMake
 (package-require 'cmake-mode)
 (require 'cmake-mode)
+
+;;; HCL
+(package-require 'hcl-mode)
+
+;;; tiny
+(package-require 'tiny)
+(require 'tiny)
+(tiny-setup-default)
+
 
 (provide 'ruin-misc-modes)
 

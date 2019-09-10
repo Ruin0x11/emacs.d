@@ -5,8 +5,10 @@
 (package-require 'git-timemachine)
 (package-require 'smeargle)
 (package-require 'gitignore-mode)
+
 ;(package-require 'magithub)
 (require 'magit)
+(require 'evil-magit)
 
 (if (eq system-type 'windows-nt)
     (progn
@@ -62,7 +64,8 @@
 
 ;; always open symlinks as actual file
 (setq vc-follow-symlinks t
-      magit-commit-show-diff t)
+      magit-commit-show-diff t
+      magit_commit-ask-to-stage nil)
 
 (add-to-list 'evil-insert-state-modes 'git-commit-mode)
 

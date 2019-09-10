@@ -26,12 +26,12 @@
           (function (lambda ()
                       (local-set-key (kbd "C-d") 'comint-esd-or-maybe-eof))))
 
-(require 'ansi-color)
-(defun colorize-compilation-buffer ()
-  (toggle-read-only)
-  (ansi-color-apply-on-region compilation-filter-start (point))
-  (toggle-read-only))
-(add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
+(ignore-errors
+  (require 'ansi-color)
+  (defun my-colorize-compilation-buffer ()
+    (when (eq major-mode 'compilation-mode)
+      (ansi-color-apply-on-region compilation-filter-start (point-max))))
+  (add-hook 'compilation-filter-hook 'my-colorize-compilation-buffer))
 
 (evil-define-key 'normal shell-mode-map (kbd "q") 'delete-window)
 (evil-define-key 'emacs shell-mode-map (kbd "q") 'delete-window)

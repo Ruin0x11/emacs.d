@@ -67,6 +67,7 @@
 (package-require 'solarized-theme)
 (package-require 'monokai-theme)
 (package-require 'spaceline)
+(package-require 'ubuntu-theme)
 (require 'spaceline-config)
 
 (setq custom-theme-directory (locate-user-emacs-file "themes"))
@@ -192,9 +193,13 @@ This segment overrides the modeline functionality of `org-mode-line-string'."
   (toggle-frame-fullscreen))
 
 (defun ruin/classic-theme-windows ()
+  (load-theme 'solarized-dark)
   (when (eq system-type 'windows-nt)
-    (set-default-font "y-outline-MS Gothic-normal-normal-normal-mono-13-*-*-*-c-*-iso10646-1"))
-  (load-theme 'undy t)
+    (set-default-font "y-outline-MS Gothic-normal-normal-normal-mono-12-*-*-*-c-*-iso10646-1"))
+  ; (load-theme 'undy t)
+  ; (load (locate-user-emacs-file "themes/spacemacs-theme/spacemacs-common.el"))
+  ; (load (locate-user-emacs-file "themes/spacemacs-theme/spacemacs-dark-theme.el"))
+  ; (load-theme 'spacemacs-dark)
   (set-frame-size (selected-frame) 120 60))
 
 (defun ruin/growth-theme ()

@@ -69,6 +69,7 @@
 
 (setq backup-save-directory "~/.emacs.d/saves")
 (when (memq system-type '(windows-nt))
+  (require 'vc)
   (setenv "PATH"
           (concat
            "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319" ";"

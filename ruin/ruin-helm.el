@@ -54,6 +54,7 @@
   "fF" 'helm-find
   "fi" 'helm-fd-this-directory
   "fI" 'helm-fd
+  "fa" 'rg
 
   "hf" 'helm-flycheck
   "hR" 'helm-regexp

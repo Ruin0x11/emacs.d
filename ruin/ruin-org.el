@@ -14,41 +14,45 @@
 (require 'ox-md nil t)
 
 ;; Startup & Directories
-(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+;(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 
 ;; start agenda on emacs startup
-(when (file-exists-p "~/Dropbox/org")
-  (setq org-directory "~/Dropbox/org")
-  (setq org-agenda-files '("~/Dropbox/org/tracked/"))
-  (setq org-refile-targets '(("~/Dropbox/org/notes.org" :maxlevel . 9)
-                             (org-agenda-files :maxlevel . 9)))
+(let ((dir (concat (getenv "HOME") "/Dropbox/org/")))
+  (when (file-exists-p dir)
+    (setq org-directory dir)
+    (setq org-agenda-files `(,(concat org-directory "gtd/")))
+    (setq org-refile-targets `((,(concat org-directory "gtd/gtd.org") :maxlevel . 3)
+                               (,(concat org-directory "gtd/itsuka.org") :level . 1)
+                               (,(concat org-directory "gtd/tickler.org") :maxlevel . 2)))
 
-  (setq org-default-notes-file "~/Dropbox/org/tracked/refile.org")
-  (setq org-capture-templates
-        '(("t" "todo" entry (file "~/Dropbox/org/tracked/refile.org")
-           "* TODO %?\n%U")
-          ("c" "todo (with context)" entry (file "~/Dropbox/org/tracked/refile.org")
-           "* TODO %?\n%U\n%a")
-          ("n" "note" entry (file "~/Dropbox/org/notes.org")
-           "* %? :NOTE:\n%U\n")
-          ("x" "NeXT task" entry (file+headline "~/Dropbox/org/tracked/tasks.org" "NeXT Tasks")
-           "* NEXT %?\nDEADLINE: %t\n%U")
-          ("e" "etc." entry (file "~/Dropbox/org/notes.org")
-           "* %? - %U\n")
-          ("g" "generic" entry (file "~/Dropbox/org/tracked/refile.org")
-           "* %?\n%U\n")
-          ("d" "diary" entry (file+headline "~/Dropbox/org/diary.org" "日記")
-           "* %U\n%?\n" :prepend t)
-          ("y" "yume" entry (file+headline "~/Dropbox/org/yume.org" "ゆめにっき")
-           "* %U - %? %^g\n" :prepend t)))
-)
+    (setq org-default-notes-file (concat org-directory "gtd/inbox.org"))
+    (setq org-capture-templates
+          `(("t" "TODO" entry (file ,(concat org-directory "gtd/inbox.org"))
+             "* TODO %?\n%U")
+            ("T" "Tickler" entry
+             (file+headline ,(concat org-directory "gtd/tickler.org") "Tickler")
+             "* %i%? \n %U")
+            ("j" "Journal" entry
+             (file+headline ,(concat org-directory "gtd/journal.org") "Journal")
+             "* %(current-time-string) \n%U\n\n*Three things I am grateful for:*\n1. %^{I am grateful for}\n2. %^{I am grateful for}\n3. %^{I am grateful for}\n\n*One positive experience in the last day:*\n%^{One positive experience in the last day}\n\n*What I have learned:*\n1. %^{What I have learned}\n2. %^{What I have learned}\n3. %^{What I have learned}\n\n*What have we done for these facets?*\nHealth:%?\nHappiness:\nRelationships:\nPersonal development:\nProduction:\nFinances:\nCareer:\nWorld-based impact:\n")
+            ("R" "Review" entry
+             (file+headline ,(concat org-directory "gtd/review.org") "Review")
+             "* %(current-time-string) \nStream-of-conscious brief (one paragraph):\n\n%?\n\nProgress towards goals:\n\nNew ideas/risks for personal system:\n\n")
+            ("y" "yume" entry (file+headline ,(concat org-directory "yume.org" "ゆめにっき"))
+             "* %U - %? %^g\n" :prepend t)))))
 
 (add-hook 'org-capture-after-finalize-hook 'org-save-all-org-buffers)
+(add-hook 'org-after-refile-insert-hook 'org-save-all-org-buffers)
 (add-hook 'org-agenda-finalize-hook 'org-save-all-org-buffers)
+
+(defun ruin/goto-org-folder ()
+  (interactive)
+  (find-file org-directory))
 
 ;;; Settings
 (setq org-src-fontify-natively t
      org-startup-indented t
+     org-startup-folded 'content
 
      org-agenda-sticky nil
      org-agenda-todo-ignore-with-date nil
@@ -74,9 +78,49 @@
 
      org-hide-emphasis-markers t
      org-pretty-entities t
-     org-startup-with-inline-images t)
+     org-startup-with-inline-images t
+     org-export-with-sub-superscripts nil
+     org-use-sub-superscripts nil
+
+     org-ellipsis "⤵")
 
 (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images)
+
+(define-key org-mode-map (kbd "M-j") 'org-move-subtree-down)
+(define-key org-mode-map (kbd "M-k") 'org-move-subtree-up)
+
+(setq org-agenda-custom-commands
+      '(("g" "GTD" tags-todo "*"
+         ((org-agenda-overriding-header "プロジェクト")
+          (org-agenda-skip-function #'my-org-agenda-skip-projects)))))
+
+(defun my-org-agenda-skip-all-siblings-but-first ()
+  "Skip all but the first non-done entry."
+  (let (should-skip-entry)
+    (unless (org-current-is-todo)
+      (setq should-skip-entry t))
+    (save-excursion
+      (while (and (not should-skip-entry) (org-goto-sibling t))
+        (when (org-current-is-todo)
+          (setq should-skip-entry t))))
+    (when should-skip-entry
+      (or (outline-next-heading)
+          (goto-char (point-max))))))
+
+(defun my-org-agenda-skip-projects ()
+  "Skip projects (items with children)."
+  (let (should-skip-entry)
+    (unless (org-current-is-todo)
+      (setq should-skip-entry t))
+    (save-excursion
+      (when (or (org-goto-first-child) (not (= (org-current-level) 2)))
+        (setq should-skip-entry t)))
+    (when should-skip-entry
+      (or (outline-next-heading)
+          (goto-char (point-max))))))
+
+(defun org-current-is-todo ()
+  (string= "TODO" (org-get-todo-state)))
 
 
 (setq org-agenda-time-grid
@@ -85,185 +129,6 @@
     (800 1200 1600 2000)))
 
 (setq org-columns-default-format "%50ITEM(Task) %3PRIORITY %10Effort(Effort){:} %10CLOCKSUM %16TIMESTAMP_IA")
-;; (setq org-tags-column 80)
-;(setq org-agenda-tags-column org-tags-column)
-
-;;; Agenda Setup
-
-;; bh/helper-functions
-(defun bh/is-project-p ()
-  "Any task with a todo keyword subtask."
-  (save-restriction
-    (widen)
-    (let ((has-subtask)
-          (subtree-end (save-excursion (org-end-of-subtree t)))
-          (is-a-task (member (nth 2 (org-heading-components)) org-todo-keywords-1)))
-      (save-excursion
-        (forward-line 1)
-        (while (and (not has-subtask)
-                    (< (point) subtree-end)
-                    (re-search-forward "^\*+ " subtree-end t))
-          (when (member (org-get-todo-state) org-todo-keywords-1)
-            (setq has-subtask t))))
-      (and is-a-task has-subtask))))
-(defun bh/find-project-task ()
-  "Move point to the parent (project) task if any."
-  (save-restriction
-    (widen)
-    (let ((parent-task (save-excursion (org-back-to-heading 'invisible-ok) (point))))
-      (while (org-up-heading-safe)
-        (when (member (nth 2 (org-heading-components)) org-todo-keywords-1)
-          (setq parent-task (point))))
-      (goto-char parent-task)
-      parent-task)))
-(defun bh/is-project-subtree-p ()
-  "Any task with a todo keyword that is in a project subtree.
-Callers of this function already widen the buffer view."
-  (let ((task (save-excursion (org-back-to-heading 'invisible-ok)
-                              (point))))
-    (save-excursion
-      (bh/find-project-task)
-      (if (equal (point) task)
-          nil
-        t))))
-
-;; Some helper functions for selection within agenda views
-(defun gs/select-with-tag-function (select-fun-p)
-  (save-restriction
-    (widen)
-    (let ((next-headline
-	   (save-excursion (or (outline-next-heading)
-			       (point-max)))))
-      (if (funcall select-fun-p) nil next-headline))))
-
-(defun gs/select-projects ()
-  "Selects tasks which are project headers"
-  (gs/select-with-tag-function #'bh/is-project-p))
-(defun gs/select-project-tasks ()
-  "Skips tags which belong to projects (and is not a project itself)"
-  (gs/select-with-tag-function
-   #'(lambda () (and
-		 (not (bh/is-project-p))
-		 (bh/is-project-subtree-p)))))
-(defun gs/select-standalone-tasks ()
-  "Skips tags which belong to projects. Is neither a project, nor does it blong to a project"
-  (gs/select-with-tag-function
-   #'(lambda () (and
-		 (not (bh/is-project-p))
-		 (not (bh/is-project-subtree-p))))))
-(defun gs/select-projects-and-standalone-tasks ()
-  "Skips tags which are not projects"
-  (gs/select-with-tag-function
-   #'(lambda () (or
-		 (bh/is-project-p)
-		 (bh/is-project-subtree-p)))))
-
-(defun gs/org-agenda-project-warning ()
-  "Is a project stuck or waiting. If the project is not stuck,
-show nothing. However, if it is stuck and waiting on something,
-show this warning instead."
-  (if (gs/org-agenda-project-is-stuck)
-    (if (gs/org-agenda-project-is-waiting) " !W" " !S") ""))
-
-(defun gs/org-agenda-project-is-stuck ()
-  "Is a project stuck"
-  (if (bh/is-project-p) ; first, check that it's a project
-      (let* ((subtree-end (save-excursion (org-end-of-subtree t)))
-	     (has-next))
-	(save-excursion
-	  (forward-line 1)
-	  (while (and (not has-next)
-		      (< (point) subtree-end)
-		      (re-search-forward "^\\*+ NEXT " subtree-end t))
-	    (unless (member "WAITING" (org-get-tags-at))
-	      (setq has-next t))))
-	(if has-next nil t)) ; signify that this project is stuck
-    nil)) ; if it's not a project, return an empty string
-
-(defun gs/org-agenda-project-is-waiting ()
-  "Is a project stuck"
-  (if (bh/is-project-p) ; first, check that it's a project
-      (let* ((subtree-end (save-excursion (org-end-of-subtree t))))
-	(save-excursion
-	  (re-search-forward "^\\*+ WAITING" subtree-end t)))
-    nil)) ; if it's not a project, return an empty string
-
-;; Some helper functions for agenda views
-(defun gs/org-agenda-prefix-string ()
-  "Format"
-  (let ((path (org-format-outline-path (org-get-outline-path))) ; "breadcrumb" path
-	(stuck (gs/org-agenda-project-warning))) ; warning for stuck projects
-       (if (> (length path) 0)
-	   (concat stuck ; add stuck warning
-		   " [" path "]") ; add "breadcrumb"
-	 stuck)))
-
-(defun gs/org-agenda-add-location-string ()
-  "Gets the value of the LOCATION property"
-  (let ((loc (org-entry-get (point) "LOCATION")))
-    (if (> (length loc) 0)
-	(concat "{" loc "} ")
-      "")))
-
-;; Variables for ignoring tasks with deadlines
-(defvar gs/hide-deadline-next-tasks t)
-(setq org-agenda-tags-todo-honor-ignore-options t)
-(setq org-deadline-warning-days 10)
-
-(setq org-agenda-custom-commands
-      '(("h" "Habits" agenda "STYLE=\"habit\""
-         ((org-agenda-overriding-header "Habits")
-          (org-agenda-sorting-strategy
-           '(todo-state-down effort-up category-keep))))
-        (" " "Export Schedule" ((agenda "" ((org-agenda-overriding-header "Today's Schedule:")
-                                            (org-agenda-span 'day)
-                                            (org-agenda-ndays 1)
-                                            (org-agenda-start-on-weekday nil)
-                                            (org-agenda-start-day "+0d")
-                                            (org-agenda-todo-ignore-deadlines nil)))
-                                (tags-todo "-INACTIVE-CANCELLED-ARCHIVE/!NEXT"
-                                           ((org-agenda-overriding-header "close one door, open the NeXT")
-                                            ))
-                                (tags-todo "-INACTIVE-HOLD-CANCELLED-REFILE-ARCHIVEr/!"
-                                           ((org-agenda-overriding-header "Active Projects:")
-                                            (org-agenda-skip-function 'gs/select-projects)))
-                                (tags-todo "-INACTIVE-HOLD-CANCELLED-REFILE-ARCHIVE/!-NEXT"
-                                           ((org-agenda-overriding-header "Remaining Project Tasks:")
-                                            (org-agenda-skip-function 'gs/select-project-tasks)))
-                                (tags-todo "-INACTIVE-HOLD-CANCELLED-REFILE-ARCHIVE-STYLE=\"habit\"/!-NEXT"
-                                           ((org-agenda-overriding-header "Standalone Tasks:")
-                                            (org-agenda-skip-function 'gs/select-standalone-tasks)))
-                                (agenda "" ((org-agenda-overriding-header "Week At A Glance:")
-                                            (org-agenda-ndays 5)
-                                            (org-agenda-start-day "+1d")
-                                            (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled))
-                                            (org-agenda-prefix-format '((agenda . "  %-12:c%?-12t %s [%b] ")))))
-                                (tags "REFILE-ARCHIVE-REFILE=\"nil\""
-                                      ((org-agenda-overriding-header "Tasks to Refile:")
-                                       (org-tags-match-list-sublevels nil)))
-                                (tags "INACTIVE-ARCHIVE"
-                                      ((org-agenda-overriding-header "Inactive Projects and Tasks")
-                                       (org-tags-match-list-sublevels nil)))
-                                (tags "ENDOFAGENDA"
-                                      ((org-agenda-overriding-header "End of Agenda")
-                                       (org-tags-match-list-sublevels nil))))
-         ((org-agenda-start-with-log-mode t)
-          (org-agenda-log-mode-items '(clock))
-          (org-agenda-prefix-format '((agenda . "  %-12:c%?-12t %(gs/org-agenda-add-location-string)% s")
-                                      (timeline . "  % s")
-                                      (todo . "  %-12:c %(gs/org-agenda-prefix-string) ")
-                                      (tags . "  %-12:c %(gs/org-agenda-prefix-string) ")
-                                      (search . "  %i %-12:c")))
-          (org-agenda-todo-ignore-deadlines 'near)
-          (org-agenda-todo-ignore-scheduled t)))
-        ("X" "Agenda" ((agenda "") (alltodo))
-         ((org-agenda-ndays 10)
-          (org-agenda-start-on-weekday nil)
-          (org-agenda-start-day "-1d")
-          (org-agenda-start-with-log-mode t)
-          (org-agenda-log-mode-items '(closed clock state)))
-	 )))
-
 
 ;; Resume clocking task when emacs is restarted
 (org-clock-persistence-insinuate)
@@ -274,15 +139,15 @@ show this warning instead."
 
 ;;; TODOs
 (setq org-todo-keywords
-      (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
-              (sequence "WAITING(w@/!)" "|" "CANCELLED(c@/!)"))))
+      (quote ((sequence "TODO(t!)" "WAITING(w@/!)" "IN PROGRESS(w!)" "|" "DONE(d!)"))))
 
 (setq org-todo-keyword-faces
       (quote (
-              ;; ("TODO" :foreground "red" :weight bold)
-              ("NEXT" :foreground "blue" :weight bold)
-              ;; ("DONE" :foreground "forest green" :weight bold)
-              ;; ("WAITING" :foreground "magneta" :weight bold)
+              ("TODO" :foreground "red" :weight bold)
+              ;; ("NEXT" :foreground "blue" :weight bold)
+              ("IN PROGRESS" :foreground "yellow" :weight bold)
+              ("DONE" :foreground "forest green" :weight bold)
+              ("WAITING" :foreground "magneta" :weight bold)
               ;; ("CANCELLED" :foreground "orange" :weight bold)
               )))
 
@@ -291,6 +156,12 @@ show this warning instead."
 ;;; Evil bindings
 (package-require 'evil-org)
 (require 'evil-org)
+
+(define-key org-mode-map (kbd "<tab>") 'org-cycle)
+(define-key org-mode-map (kbd "TAB") 'org-cycle)
+(define-key org-mode-map [(tab)] 'org-cycle)
+(define-key evil-motion-state-map (kbd "TAB") nil)
+
 
 (evil-leader/set-key-for-mode 'org-mode
   ;; "o C" 'evil-org-recompute-clocks
@@ -312,7 +183,7 @@ show this warning instead."
 
 ;; leader binds for org-mode
 (evil-leader/set-key-for-mode 'org-mode
-  "of" 'org-capture-finalize
+  "of" 'ruin/goto-org-folder
   "ok" 'org-capture-kill
   "oI" 'org-clock-in
   "oO" 'org-clock-out
@@ -422,59 +293,16 @@ show this warning instead."
              (org-save-all-org-buffers)
              (my-org-agenda-to-appt)))
 
-;; give visual notifications of deadlines with appt
-;; http://emacs.stackexchange.com/a/5821
-(require 'appt)
-(appt-activate t)
-
-(setq appt-message-warning-time 30)
-(setq appt-display-interval 10) ; disable multiple reminders
-(setq appt-display-mode-line t)
-
-                                        ; use appointment data from org-mode
-(defun my-org-agenda-to-appt ()
-  (interactive)
-  (setq appt-time-msg-list nil)
-  (org-agenda-to-appt))
-
-                                        ; run when starting Emacs and everyday at 12:05am
-(my-org-agenda-to-appt)
-(run-at-time "12:05am" (* 24 3600) 'my-org-agenda-to-appt)
-
-                                        ; display appointments as a notifications in the window manager
-(setq appt-disp-window-function 'my-appt-display)
-
-(setq my-appt-notification-app (concat (getenv "HOME") "/.bin/appt-notification"))
-
-(defun my-appt-display (min-to-app new-time msg)
-  (if (atom min-to-app)
-      (call-process my-appt-notification-app nil nil nil min-to-app msg)
-    (dolist (i (number-sequence 0 (1- (length min-to-app))))
-      (call-process my-appt-notification-app nil nil nil (nth i min-to-app) (nth i msg)))))
-
-                                        ; automatically update appointments when TODO.txt is saved
-(add-hook 'after-save-hook
-          '(lambda ()
-             (if (string= (buffer-file-name) (concat (getenv "HOME") "/ideas/TODO.txt"))
-                 (my-org-agenda-to-appt))))
-
-
-;; autosave org buffers
-(add-hook 'org-capture-after-finalize-hook #'org-save-all-org-buffers)
-
-(defun org-insert-code-block (name language)
+(defun org-insert-code-block (language)
   "Asks name, language, switches, header. Inserts org-mode source code snippet"
-  (interactive "sname? \nslanguage? ")
+  (interactive "slanguage? ")
   (insert
-   (if (string= name "")
-       ""
-     (concat "#+NAME: " name) )
-   (format "
-#+BEGIN_SRC %s
+   (format "#+BEGIN_SRC %s
 
 #+END_SRC" language))
   (forward-line -1)
-  (goto-char (line-end-position)))
+  (goto-char (line-end-position))
+  (evil-insert-state))
 
 (add-hook 'org-mode-hook (lambda () (yas-minor-mode 0)))
 

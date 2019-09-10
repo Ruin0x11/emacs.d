@@ -73,6 +73,7 @@
         ("Django:" :regexp t :width 0.3 :position right)
         ("*Python*" :stick t)
         (inf-ruby-mode :stick t :height 0.3)
+        (inferior-lisp-mode :stick t :height 0.3 :noselect t)
         (minitest-mode :stick t :height 0.3)
         ;; (haskell-interactive-mode :stick t)
         (cargo-process-mode :stick t :noselect t :width 0.25 :position right)

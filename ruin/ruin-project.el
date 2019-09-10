@@ -1,5 +1,7 @@
 (package-require 'projectile)
 (package-require 'helm-projectile)
+(package-require 'rg)
+(require 'rg)
 
 (projectile-global-mode)
 (helm-projectile-on)
@@ -16,16 +18,19 @@
                                                         "tmp"
                                                         "auto-save-list"
                                                         "semanticdb"
-                                                        "build"
+                                                        "bin"
                                                         "deps"
                                                         "CMakeFiles"
                                                         )))
 
 (setq projectile-globally-ignored-file-suffixes '("class" "db"))
 
+(push '("janet" . "*.janet") rg-custom-type-aliases)
+
 (evil-leader/set-key
   "ps" 'helm-projectile-switch-project
-  "pa" 'helm-projectile-ag
+  ; "pa" 'helm-projectile-ag
+  "pa" 'rg-project
   "pf" 'helm-projectile
   "pb" 'helm-projectile-switch-to-buffer
   "p!" 'projectile-run-async-shell-command-in-root
