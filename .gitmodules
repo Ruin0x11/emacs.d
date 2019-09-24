@@ -25,3 +25,12 @@
 [submodule "site-lisp/helm-fd"]
 	path = site-lisp/helm-fd
 	url = https://www.github.com/ruin0x11/helm-fd
+[submodule "site-lisp/downdraft"]
+	path = site-lisp/downdraft
+	url = https://github.com/ruin0x11/downdraft
+[submodule "site-lisp/janet-mode"]
+	path = site-lisp/janet-mode
+	url = https://github.com/ruin0x11/janet-mode
+[submodule "themes/spacemacs-theme"]
+	path = themes/spacemacs-theme
+	url = https://github.com/nashamri/spacemacs-theme

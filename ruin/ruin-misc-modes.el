@@ -208,11 +208,6 @@
     (mmm-add-classes (list (list class :submode submode :front front :back back)))
     (mmm-add-mode-ext-class 'markdown-mode nil class)))
 
-;; Mode names that derive directly from the language name
-(mapc 'my-mmm-markdown-auto-class
-      '("awk" "bibtex" "c" "cpp" "css" "html" "latex" "lisp" "makefile"
-        "markdown" "python" "r" "ruby" "rust" "sql" "stata" "xml"))
-
 (setq mmm-parse-when-idle 't)
 
 ;; (add-hook 'compilation-shell-minor-mode-hook
@@ -225,6 +220,12 @@
 
 (add-hook 'feature-mode-hook '(lambda ()
                                 (local-set-key (kbd "RET") 'newline-and-indent)))
+
+(package-require 'writeroom-mode)
+(require 'downdraft)
+(add-hook 'markdown-mode-hook 'writeroom-mode)
+(add-hook 'downdraft-start-hook 'writeroom-mode)
+(setq writeroom-mode-line '(downdraft-mode-line-string downdraft-mode-line-string))
 
 ;;; YAML
 (package-require 'yaml-mode)

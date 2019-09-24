@@ -26,6 +26,7 @@
 (setq projectile-globally-ignored-file-suffixes '("class" "db"))
 
 (push '("janet" . "*.janet") rg-custom-type-aliases)
+(push '("hsp" . "*.hsp") rg-custom-type-aliases)
 
 (evil-leader/set-key
   "ps" 'helm-projectile-switch-project

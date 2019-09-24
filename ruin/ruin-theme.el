@@ -79,6 +79,8 @@
   ;; https://debbugs.gnu.org/cgi/bugreport.cgi?bug=20611
   (setq bidi-paragraph-direction 'left-to-right))
 
+(setq custom-safe-themes t)
+
 ;;; Properly align CJK org-mode tables
 ;; https://github.com/kuanyui/.emacs.d/blob/master/rc/rc-basic.el#L102
 (defun setup-cjk-alignment ()

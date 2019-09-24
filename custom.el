@@ -3,9 +3,11 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-safe-themes
+ '(custom-safe-themes (quote t))
+ '(safe-local-variable-values
    (quote
-    ("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default))))
+    ((projectile-project-run-cmd . "cd src && love .")
+     (projectile-project-compilation-cmd . "cd src && luajit -l boot -e \"require 'test'\"")))))
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
