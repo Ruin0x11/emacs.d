@@ -16,25 +16,28 @@
 ;; Startup & Directories
 ;(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 
-;; start agenda on emacs startup
 (let ((dir (concat (getenv "HOME") "/Dropbox/org/")))
   (when (file-exists-p dir)
-    (setq org-directory dir)
-    (setq org-agenda-files `(,(concat org-directory "gtd/")))
-    (setq org-refile-targets `((,(concat org-directory "gtd/gtd.org") :maxlevel . 3)
+    (setq org-directory dir
+          org-agenda-files `(,(concat org-directory "gtd/"))
+          org-refile-targets `((,(concat org-directory "gtd/gtd.org") :maxlevel . 3)
                                (,(concat org-directory "gtd/itsuka.org") :level . 1)
-                               (,(concat org-directory "gtd/tickler.org") :maxlevel . 2)))
+                               (,(concat org-directory "gtd/tickler.org") :maxlevel . 2))
 
-    (setq org-default-notes-file (concat org-directory "gtd/inbox.org"))
-    (setq org-capture-templates
+          org-default-notes-file (concat org-directory "gtd/inbox.org")
+          initial-buffer-choice (concat org-directory "gtd/inbox.org")
+          org-capture-templates
           `(("t" "TODO" entry (file ,(concat org-directory "gtd/inbox.org"))
              "* TODO %?\n%U")
             ("T" "Tickler" entry
              (file+headline ,(concat org-directory "gtd/tickler.org") "Tickler")
              "* %i%? \n %U")
+            ("j" "Journal" entry
+             (file+headline ,(concat org-directory "gtd/journal.org") "Journal")
+             "* %(current-time-string) \n%U\n\nGut feeling (1-10): %^{Gut feeling (1-10)}\n\n*Three things I am grateful for:*\n1. %^{I am grateful for}\n2. %^{I am grateful for}\n3. %^{I am grateful for}\n\n*One positive experience in the last day:*\n%^{One positive experience in the last day}\n\n*What I have learned:*\n1. %^{What I have learned}\n2. %^{What I have learned}\n3. %^{What I have learned}\n\n*What have we done for these facets?*\nHealth:%?\nHappiness:\nRelationships:\nPersonal development:\nFinances:\nCareer:\nWorld-based impact:\n")
             ("R" "Review" entry
              (file+headline ,(concat org-directory "gtd/review.org") "Review")
-             "* %(current-time-string) \nStream-of-conscious brief (one paragraph):\n%?\nProgress towards goals:\n\nNew ideas/risks for personal system:\n\n")
+             "* %(current-time-string) \nStream-of-conscious brief (one paragraph):\n\n%?\n\nProgress towards goals:\n\nNew ideas/risks for personal system:\n\n")
             ("y" "yume" entry (file+headline ,(concat org-directory "yume.org" "ゆめにっき"))
              "* %U - %? %^g\n" :prepend t)))))
 
@@ -136,7 +139,7 @@
 
 ;;; TODOs
 (setq org-todo-keywords
-      (quote ((sequence "TODO(t!)" "WAITING(w@/!)" "IN PROGRESS(w!)" "|" "DONE(d!)"))))
+      (quote ((sequence "TODO(t!)" "WAITING(w@/!)" "CANCELLED(c@/!)" "IN PROGRESS(w!)" "|" "DONE(d!)"))))
 
 (setq org-todo-keyword-faces
       (quote (

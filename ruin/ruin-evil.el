@@ -17,11 +17,11 @@
 (load "evil-leader-minor")
 (require 'evil-little-word)
 (package-require 'evil-numbers)
-(evil-mode 1)
 
 (global-evil-leader-mode t)
 (global-evil-surround-mode t)
 (evil-commentary-mode t)
+(evil-mode 1)
 
 ;;; leader binds
 (evil-leader/set-leader "<SPC>")

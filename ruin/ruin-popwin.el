@@ -15,7 +15,7 @@
         ;; Debug
         ("*Warnings*" :noselect t :position bottom :height 0.3 )
         ;("*Backtrace*" :stick t :noselect t :position bottom :height 0.3 )
-        ("*Messages*" :noselect t :position bottom :height 0.3 )
+        ("*Messages*" :noselect t :position bottom :height 0.3 :stick t)
         ("*Compile-Log*" :position bottom :height 0.3 )
         ("*Shell Command Output*" :position bottom :height 0.3 )
         (".*overtone.log" :regexp t :height 0.3)

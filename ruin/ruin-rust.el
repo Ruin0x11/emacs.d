@@ -5,7 +5,7 @@
 (package-require 'racer)
 
 (add-hook 'rust-mode-hook 'cargo-minor-mode)
-(add-hook 'rust-mode-hook #'rust-enable-format-on-save)
+(add-hook 'rust-mode-hook #'rust-disable-format-on-save)
 
 (add-hook 'rust-mode-hook #'racer-mode)
 ;; (add-hook 'racer-mode-hook #'eldoc-mode)
@@ -15,11 +15,13 @@
 
 (require 'racer)
 (setq racer-rust-src-path "/mnt/hibiki/build/rust/src"
-      racer-cmd "/home/ruin/build/work/racer/target/release/racer")
+      ;racer-cmd "/home/ruin/build/work/racer/target/release/racer")
+      rust-format-on-save nil)
 
 (evil-leader/set-key-for-mode 'rust-mode
-  ; "dd" 'racer-describe
-  ; "df" 'racer-find-definition
+  "dd" 'racer-describe
+  "df" 'racer-find-definition
+  "bw" 'rust-format-buffer
 
   "fd" 'lsp-find-definition
   "fD" 'lsp-find-declaration
@@ -29,6 +31,7 @@
   "fe" 'lsp-rename
   "fy" 'lsp-ui-find-workspace-symbol
   "fp" 'lsp-ui-peek-find-definitions
+  "fx" 'lsp-execute-code-action
 
   ; "bi" 'rust-format-buffer
 
