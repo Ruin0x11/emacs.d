@@ -322,10 +322,16 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 
 (global-set-key (kbd "<s-return>") 'toggle-frame-fullscreen)
 
+(defun ruin/last-error ()
+  (interactive)
+  (next-error 99999))
+
 (global-set-key [f5] 'ruin/scroll-up-or-prev-buffer)
 (global-set-key [f6] 'ruin/scroll-down-or-next-buffer)
 (global-set-key [f7] 'previous-error)
 (global-set-key [f8] 'next-error)
+(global-set-key (kbd "C-F7") 'first-error)
+(global-set-key (kbd "C-F8") 'ruin/last-error)
 
 ;(global-set-key (kbd "RET") 'electric-newline-and-maybe-indent)
 (global-set-key (kbd "RET") 'indent-new-comment-line)

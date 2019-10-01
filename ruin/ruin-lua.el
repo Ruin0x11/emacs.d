@@ -18,6 +18,7 @@
 
 (add-hook 'lua-mode-hook 'highlight-numbers-mode)
 (add-hook 'lua-mode-hook 'yas-minor-mode)
+(add-hook 'lua-mode-hook 'flycheck-mode)
 (add-hook 'lua-mode-hook (lambda ()
                            (setq compilation-auto-jump-to-first-error t)
                            (doxymacs-mode t)
@@ -101,7 +102,8 @@ If ARG is set, don't replace the symbol."
   ; "mt" 'ruin/query-lua-data-item
   ; "mq" 'ruin/query-lua-data
   ; "mo" 'ruin/edit-console-lua
-  "mi" 'run-lua
+  "mi" 'elona-next-start-repl
+  "eb" 'elona-next-hotload-this-file
   "md" 'ruin/start-mobdebug
   "ee" 'realgud:cmd-eval
   "er" 'realgud:cmd-eval-region)
