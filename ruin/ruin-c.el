@@ -33,16 +33,21 @@
             (global-flycheck-mode -1)
             (yas-global-mode -1)
             (c-toggle-electric-state -1)
-            (c-set-offset 'innamespace 0)
-            (c-set-offset 'substatement-open 0)
             ;(semantic-mode 1)
             (setq-local eldoc-documentation-function #'ggtags-eldoc-function)
-            (setq c-default-style "linux"
+            (setq c-default-style "cc-mode"
                   c-basic-offset 4
                   comment-fill "*")
+            (c-set-offset 'inclass '2)
+            (c-set-offset 'innamespace 0)
+            (c-set-offset 'substatement-open 0)
+            (c-set-offset 'statement-block-intro '2)
+            (c-set-offset 'substatement '2)
+            (define-key c-mode-base-map [ret] 'newline-and-indent)
+            (evil-define-key 'normal c-mode-base-map (kbd "RET") 'newline-and-indent)
             (when (derived-mode-p 'c-mode 'c++-mode)
-              (semanticdb-enable-gnu-global-databases 'c-mode)
-              (semanticdb-enable-gnu-global-databases 'c++-mode)
+              ;(semanticdb-enable-gnu-global-databases 'c-mode)
+              ;(semanticdb-enable-gnu-global-databases 'c++-mode)
               (ggtags-mode 1))))
 
 (setq
@@ -59,13 +64,14 @@
 
 (require 'helm-gtags)
 ;; Enable helm-gtags-mode
-(add-hook 'dired-mode-hook 'helm-gtags-mode)
-(add-hook 'eshell-mode-hook 'helm-gtags-mode)
-(add-hook 'c-mode-hook 'helm-gtags-mode)
-(add-hook 'c++-mode-hook 'helm-gtags-mode)
-(add-hook 'asm-mode-hook 'helm-gtags-mode)
+;(add-hook 'dired-mode-hook 'helm-gtags-mode)
+;(add-hook 'eshell-mode-hook 'helm-gtags-mode)
+;(add-hook 'c-mode-hook 'helm-gtags-mode)
+;(add-hook 'c++-mode-hook 'helm-gtags-mode)
+;(add-hook 'asm-mode-hook 'helm-gtags-mode)
 
 (evil-leader/set-key-for-mode 'c++-mode
+  "fh" 'ff-find-other-file
   "fi" 'helm-gtags-tags-in-this-function)
 (define-key helm-gtags-mode-map (kbd "C-c g a") 'helm-gtags-tags-in-this-function)
 (define-key helm-gtags-mode-map (kbd "C-j") 'helm-gtags-select)

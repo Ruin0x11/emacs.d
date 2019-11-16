@@ -948,4 +948,13 @@ so change the default 'F' binding in the agenda to allow both"
     (save-restriction
       (org-agenda-set-restriction-lock))))
 
+(defun ruin/yank-path-of-buffer-file (&optional arg file)
+  (interactive "P")
+  (or file
+      (setq file (buffer-file-name))
+      (error "Current buffer has no file"))
+  (let ((filename (if arg file (file-name-directory file))))
+    (kill-new filename)
+    (message filename)))
+
 (provide 'ruin-funcs)

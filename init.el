@@ -59,6 +59,8 @@
   (when (not (package-installed-p pkg))
     (package-install pkg)))
 
+(package-refresh-contents)
+
 (package-require 'exec-path-from-shell)
 
 (when (memq system-type '(darwin))
@@ -100,7 +102,7 @@
         ruin-company
 
         ruin-lisp
-        ;ruin-lua
+        ruin-lua
         ruin-ruby
         ;ruin-python
         ruin-html

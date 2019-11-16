@@ -56,7 +56,7 @@
 
 ;; Show whitespace
 (require 'whitespace)
-(setq whitespace-style '(face trailing))
+(setq whitespace-style '(tabs face trailing))
 (global-whitespace-mode 1)
 (add-hook 'before-save-hook 'whitespace-cleanup)
 
@@ -66,6 +66,7 @@
 ;; (package-require 'zenburn-theme)
 (package-require 'solarized-theme)
 (package-require 'monokai-theme)
+(package-require 'monokai-pro-theme)
 (package-require 'spaceline)
 (package-require 'ubuntu-theme)
 (require 'spaceline-config)
@@ -195,14 +196,20 @@ This segment overrides the modeline functionality of `org-mode-line-string'."
   (toggle-frame-fullscreen))
 
 (defun ruin/classic-theme-windows ()
-  (load-theme 'solarized-dark)
+  ;(load-theme 'solarized-dark)
+  (load-theme 'monokai-pro)
   (when (eq system-type 'windows-nt)
-    (set-default-font "y-outline-MS Gothic-normal-normal-normal-mono-12-*-*-*-c-*-iso10646-1"))
+    (set-default-font "y-outline-MS Gothic-normal-normal-normal-mono-14-*-*-*-c-*-iso10646-1"))
   ; (load-theme 'undy t)
   ; (load (locate-user-emacs-file "themes/spacemacs-theme/spacemacs-common.el"))
   ; (load (locate-user-emacs-file "themes/spacemacs-theme/spacemacs-dark-theme.el"))
   ; (load-theme 'spacemacs-dark)
-  (set-frame-size (selected-frame) 120 60))
+  (set-frame-size (selected-frame) 120 60)
+  (set-face-attribute  'mode-line
+                       nil
+                       :foreground "gray80"
+                       :background "gray55"
+                       :box '(:line-width 1 :style released-button)))
 
 (defun ruin/growth-theme ()
   (interactive)

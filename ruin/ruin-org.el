@@ -45,6 +45,7 @@
 (add-hook 'org-capture-after-finalize-hook 'org-save-all-org-buffers)
 (add-hook 'org-after-refile-insert-hook 'org-save-all-org-buffers)
 (add-hook 'org-agenda-finalize-hook 'org-save-all-org-buffers)
+(add-hook 'org-after-todo-state-change-hook 'org-save-all-org-buffers)
 
 (defun ruin/goto-org-folder ()
   (interactive)
@@ -283,16 +284,6 @@
 ;; improve performance on large org files by tweaking linum
 (setq linum-delay t
       linum-eager nil)
-
-;; autosave after capture / TODO state change
-(add-hook 'org-capture-after-finalize-hook
-          '(lambda ()
-             (org-save-all-org-buffers)
-             (my-org-agenda-to-appt)))
-(add-hook 'org-after-todo-state-change-hook
-          '(lambda ()
-             (org-save-all-org-buffers)
-             (my-org-agenda-to-appt)))
 
 (defun org-insert-code-block (language)
   "Asks name, language, switches, header. Inserts org-mode source code snippet"

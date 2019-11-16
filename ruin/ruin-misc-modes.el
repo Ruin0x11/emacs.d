@@ -629,7 +629,7 @@ instead."
   (interactive)
   (setq lsp-print-io (not lsp-print-io)))
 
-(require 'lsp-imenu)
+; (require 'lsp-imenu)
 (add-hook 'lsp-after-open-hook 'lsp-enable-imenu)
 
 
@@ -669,6 +669,11 @@ instead."
 (require 'tiny)
 (tiny-setup-default)
 
+;;; CSV
+(package-require 'csv-mode)
+
+;;; AHK
+(package-require 'ahk-mode)
 
 (provide 'ruin-misc-modes)
 

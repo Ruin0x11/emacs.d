@@ -39,6 +39,7 @@
   "gl" 'magit-log-all
   "gL" 'magit-log-buffer-file
   "gs" 'magit-status
+  "gi" 'magit-find-file
   "gS" 'smeargle
   "gtt" 'magit-stash
   "gtp" 'magit-stash-pop

@@ -9,6 +9,8 @@
 (require 'cl)
 (require 'janet-mode)
 
+(smartparens-global-mode 1)
+
 (setq lisp-modes
       '(scheme-mode emacs-lisp-mode lisp-mode
                     clojure-mode common-lisp-mode lisp-interaction-mode

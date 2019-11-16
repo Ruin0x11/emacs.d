@@ -116,6 +116,7 @@
   "rr" 'ruin/refactor-name
 
   "bl" 'helm-buffers-list
+  "bL" 'popwin:display-buffer
   "TAB" 'spacemacs/alternate-buffer
   "bd"  'kill-this-buffer
   "bD"  'delete-file-and-buffer
@@ -124,6 +125,7 @@
   "br"  'revert-buffer
   "bK"  'spacemacs/kill-other-buffers
   "bY"  'spacemacs/copy-whole-buffer-to-clipboard
+  "by"  'ruin/yank-path-of-buffer-file
   "b!"  'shell-command-on-file
   "bB"  'browse-url-of-file
   "b="  'my-diff-buffer-with-file
