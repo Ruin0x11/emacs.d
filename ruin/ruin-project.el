@@ -25,6 +25,7 @@
                                                         "CMakeFiles"
                                                         "external"
                                                         )))
+(setq projectile-project-root-files (append projectile-project-root-files '("package.json")))
 
 (setq projectile-globally-ignored-file-suffixes '("class" "db" "min.css")
       projectile-project-compilation-cmd ""

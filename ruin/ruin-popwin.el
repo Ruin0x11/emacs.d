@@ -36,7 +36,7 @@
         ("*xref*" :position bottom :height 0.2 :stick t :noselect t)
         ("*Completions*" :height 0.4)
         ("*compilation*" :height 0.3 :noselect t :stick t)
-        ("*elona-next-repl-errors*" :height 0.3)
+        ("*elona-next-repl-errors*" :height 0.3 :stick t)
         ("*elona-next-repl*" :height 0.4 :stick t)
         ("*quickrun*" :height 0.3 :stick t)
         (projectile-rails-server-mode :height 0.3 :stick t)

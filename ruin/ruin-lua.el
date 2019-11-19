@@ -19,18 +19,31 @@
 (add-hook 'lua-mode-hook 'highlight-numbers-mode)
 (add-hook 'lua-mode-hook 'yas-minor-mode)
 (add-hook 'lua-mode-hook 'flycheck-mode)
+(add-hook 'lua-mode-hook 'doxymacs-mode)
+(add-hook 'lua-mode-hook 'company-mode)
+(add-hook 'lua-mode-hook 'lua-block-mode)
+(add-hook 'lua-mode-hook 'eldoc-mode)
+(add-hook 'lua-mode-hook 'smartparens-mode)
 (add-hook 'lua-mode-hook (lambda ()
                            (setq compilation-auto-jump-to-first-error t)
-                           (doxymacs-mode t)
-                           (company-mode t)
-                           (lua-block-mode t)
+                           (make-variable-buffer-local 'after-save-hook)
+                           (add-to-list 'after-save-hook (lambda ()
+                                                           (when (projectile-project-p)
+                                                             (let ((default-directory (projectile-project-root)))
+                                                               (shell-command "ltags -nr -e **/*.lua")))))
+                           (when (projectile-project-p)
+                             (setq-local tags-file-name (string-join (list (projectile-project-root) "TAGS"))))
+                           (setq-local eldoc-documentation-function 'ruin/etags-eldoc-function)
                            (define-key lua-mode-map (kbd "RET") 'indent-new-comment-line)
                            (if-let* ((cmd-buffer (get-buffer "*mobdebug main.lua shell*"))
                                      (proc (get-buffer-process cmd-buffer)))
                                (realgud:attach-cmd-buffer cmd-buffer))))
-; (add-hook 'before-save-hook (lambda ()
-;                               (when (equal major-mode 'lua-mode)
-;                                 (format-all-buffer))))
+                                        ; (add-hook 'before-save-hook (lambda ()
+                                        ;                               (when (equal major-mode 'lua-mode)
+                                        ;                                 (format-all-buffer))))
+
+(setq tags-revert-without-query t
+      tags-case-fold-search nil)
 
 (defun ruin/get-lua-result ()
   "Gets the last line of the current Lua buffer."
@@ -96,17 +109,44 @@ If ARG is set, don't replace the symbol."
   (if-let ((cmd-buffer (get-buffer "*mobdebug main.lua shell*")))
       (realgud:attach-cmd-buffer cmd-buffer)))
 
+(defun ruin/xref-find-definitions ()
+  (interactive)
+  (xref-find-definitions (symbol-name (symbol-at-point))))
+
+(defun ruin/xref-find-references ()
+  (interactive)
+  (xref-find-references (symbol-name (symbol-at-point))))
+
+(defun ruin/xref-find-definitions-period ()
+  (interactive)
+  (with-syntax-table (copy-syntax-table)
+    (modify-syntax-entry ?. "_")
+    (xref-find-definitions (symbol-name (symbol-at-point)))))
+
+(defun ruin/xref-find-references-period ()
+  (interactive)
+  (with-syntax-table (copy-syntax-table)
+    (modify-syntax-entry ?. "_")
+    (xref-find-references (symbol-name (symbol-at-point)))))
+
 (evil-leader/set-key-for-mode 'lua-mode
   ; "mi" 'ruin/initialize-lua
   ; "mc" 'ruin/query-lua-data-chara
   ; "mt" 'ruin/query-lua-data-item
   ; "mq" 'ruin/query-lua-data
   ; "mo" 'ruin/edit-console-lua
+  "fd" 'ruin/xref-find-definitions
+  "fD" 'ruin/xref-find-definitions-period
+  "fg" 'ruin/xref-find-references
+  "fG" 'ruin/xref-find-references-period
   "mi" 'elona-next-start-repl
+  "mr" 'elona-next-require-this-file
   "eb" 'elona-next-hotload-this-file
+  "el" 'elona-next-send-current-line
   "md" 'ruin/start-mobdebug
-  "ee" 'realgud:cmd-eval
-  "er" 'realgud:cmd-eval-region)
+  ;"ee" 'realgud:cmd-eval
+  ;"er" 'realgud:cmd-eval-region
+  )
 
 (with-eval-after-load 'lsp-mode
   (lsp-register-client
@@ -124,5 +164,58 @@ If ARG is set, don't replace the symbol."
 (add-function :after (symbol-function 'doxymacs-call-template) #'ruin/doxymacs--enter-insert)
 
 (setq tempo-interactive t)
+
+(let ((file "/home/ruin/build/elona-next/src/elona-next.el"))
+  (when (file-exists-p file)
+    (load file)))
+
+(require 'xref)
+(defun xref--show-xref-buffer (fetcher alist)
+  (cl-assert (functionp fetcher))
+  (let* ((xrefs
+          (or
+           (assoc-default 'fetched-xrefs alist)
+           (funcall fetcher)))
+         (xref-alist (xref--analyze xrefs)))
+    (with-current-buffer (get-buffer-create xref-buffer-name)
+      (xref--xref-buffer-mode)
+      (xref--show-common-initialize xref-alist fetcher alist)
+      (display-buffer (current-buffer))
+      (next-error)
+      (current-buffer))))
+
+(defun xref--show-defs-buffer-at-bottom (fetcher alist)
+  "Show definitions list in a window at the bottom.
+When there is more than one definition, split the selected window
+and show the list in a small window at the bottom.  And use a
+local keymap that binds `RET' to `xref-quit-and-goto-xref'."
+  (let ((xrefs (funcall fetcher)))
+    (cond
+     ((not (cdr xrefs))
+      (xref-pop-to-location (car xrefs)
+                            (assoc-default 'display-action alist)))
+     (t
+      (with-current-buffer (get-buffer-create xref-buffer-name)
+        (xref--transient-buffer-mode)
+        (xref--show-common-initialize (xref--analyze xrefs) fetcher alist)
+        (display-buffer (current-buffer)
+                       '(display-buffer-in-direction . ((direction . below))))
+        (next-error)
+        (current-buffer))))))
+
+(defun ruin/etags-eldoc-function ()
+  (let* ((sym (prin1-to-string (symbol-at-point)))
+         (defs (etags--xref-find-definitions sym)))
+    (when defs
+      (let* ((def (car defs))
+             (raw (substring-no-properties (xref-item-summary def))))
+        (with-temp-buffer
+          (insert raw)
+          (delay-mode-hooks (lua-mode))
+          (font-lock-default-function 'lua-mode)
+          (font-lock-default-fontify-region (point-min)
+                                            (point-max)
+                                            nil)
+          (buffer-string))))))
 
 (provide 'ruin-lua)

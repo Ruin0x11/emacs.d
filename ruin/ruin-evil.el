@@ -106,6 +106,7 @@
   "br"  'revert-buffer
   "bK"  'spacemacs/kill-other-buffers
   "bY"  'spacemacs/copy-whole-buffer-to-clipboard
+  "by"  'ruin/yank-path-of-buffer-file
   "b!"  'shell-command-on-file
   "bB"  'browse-url-of-file
   "b="  'my-diff-buffer-with-file
@@ -330,8 +331,8 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 (global-set-key [f6] 'ruin/scroll-down-or-next-buffer)
 (global-set-key [f7] 'previous-error)
 (global-set-key [f8] 'next-error)
-(global-set-key (kbd "C-F7") 'first-error)
-(global-set-key (kbd "C-F8") 'ruin/last-error)
+(global-set-key (kbd "<C-F7>") 'first-error)
+(global-set-key (kbd "<C-F8>") 'ruin/last-error)
 
 ;(global-set-key (kbd "RET") 'electric-newline-and-maybe-indent)
 (global-set-key (kbd "RET") 'indent-new-comment-line)
