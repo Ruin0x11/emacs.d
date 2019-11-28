@@ -13,7 +13,6 @@
 (package-require 'general)
 ;(package-require 'color-moccur)
 ;(package-require 'moccur-edit)
-(global-evil-leader-mode t)
 (load "evil-leader-minor")
 (require 'evil-little-word)
 (package-require 'evil-numbers)
@@ -104,6 +103,7 @@
   "bn"  'rename-file-and-buffer
   "bm"  'move-buffer-file
   "br"  'revert-buffer
+  "bR"  'modi/revert-all-file-buffers
   "bK"  'spacemacs/kill-other-buffers
   "bY"  'spacemacs/copy-whole-buffer-to-clipboard
   "by"  'ruin/yank-path-of-buffer-file

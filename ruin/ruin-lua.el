@@ -26,11 +26,6 @@
 (add-hook 'lua-mode-hook 'smartparens-mode)
 (add-hook 'lua-mode-hook (lambda ()
                            (setq compilation-auto-jump-to-first-error t)
-                           (make-variable-buffer-local 'after-save-hook)
-                           (add-to-list 'after-save-hook (lambda ()
-                                                           (when (projectile-project-p)
-                                                             (let ((default-directory (projectile-project-root)))
-                                                               (shell-command "ltags -nr -e **/*.lua")))))
                            (when (projectile-project-p)
                              (setq-local tags-file-name (string-join (list (projectile-project-root) "TAGS"))))
                            (setq-local eldoc-documentation-function 'ruin/etags-eldoc-function)
@@ -41,6 +36,13 @@
                                         ; (add-hook 'before-save-hook (lambda ()
                                         ;                               (when (equal major-mode 'lua-mode)
                                         ;                                 (format-all-buffer))))
+
+(defun ruin/regenerate-ltags ()
+  (interactive)
+  (when (projectile-project-p)
+    (let ((default-directory (projectile-project-root)))
+      (shell-command "ltags -nr -e **/*.lua")
+      (message "TAGS regenerated."))))
 
 (setq tags-revert-without-query t
       tags-case-fold-search nil)
@@ -117,17 +119,19 @@ If ARG is set, don't replace the symbol."
   (interactive)
   (xref-find-references (symbol-name (symbol-at-point))))
 
-(defun ruin/xref-find-definitions-period ()
+(defun ruin/dotted-symbol-at-point ()
   (interactive)
   (with-syntax-table (copy-syntax-table)
     (modify-syntax-entry ?. "_")
-    (xref-find-definitions (symbol-name (symbol-at-point)))))
+    (symbol-at-point)))
+
+(defun ruin/xref-find-definitions-period ()
+  (interactive)
+  (xref-find-definitions (symbol-name (ruin/dotted-symbol-at-point))))
 
 (defun ruin/xref-find-references-period ()
   (interactive)
-  (with-syntax-table (copy-syntax-table)
-    (modify-syntax-entry ?. "_")
-    (xref-find-references (symbol-name (symbol-at-point)))))
+  (xref-find-references (symbol-name (ruin/dotted-symbol-at-point))))
 
 (evil-leader/set-key-for-mode 'lua-mode
   ; "mi" 'ruin/initialize-lua
@@ -142,8 +146,13 @@ If ARG is set, don't replace the symbol."
   "mi" 'elona-next-start-repl
   "mr" 'elona-next-require-this-file
   "eb" 'elona-next-hotload-this-file
+  "eB" 'elona-next-send-buffer
+  "er" 'elona-next-require-this-file
   "el" 'elona-next-send-current-line
+  "ei" 'elona-next-insert-require
+  "ey" 'elona-next-copy-require-path
   "md" 'ruin/start-mobdebug
+  "mt" 'ruin/regenerate-ltags
   ;"ee" 'realgud:cmd-eval
   ;"er" 'realgud:cmd-eval-region
   )
@@ -165,9 +174,12 @@ If ARG is set, don't replace the symbol."
 
 (setq tempo-interactive t)
 
-(let ((file "/home/ruin/build/elona-next/src/elona-next.el"))
+(let ((file (if (eq system-type 'windows-nt)
+                "z:/build/elona-next/src/elona-next.el"
+              "/home/ruin/build/elona-next/src/elona-next.el")))
   (when (file-exists-p file)
-    (load file)))
+    (load file)
+    (elona-next-eval-sexp-fu-setup)))
 
 (require 'xref)
 (defun xref--show-xref-buffer (fetcher alist)
@@ -204,8 +216,9 @@ local keymap that binds `RET' to `xref-quit-and-goto-xref'."
         (current-buffer))))))
 
 (defun ruin/etags-eldoc-function ()
-  (let* ((sym (prin1-to-string (symbol-at-point)))
-         (defs (etags--xref-find-definitions sym)))
+  (let* ((sym-dotted (prin1-to-string (ruin/dotted-symbol-at-point)))
+         (sym (prin1-to-string (symbol-at-point)))
+         (defs (or (etags--xref-find-definitions sym-dotted) (etags--xref-find-definitions sym))))
     (when defs
       (let* ((def (car defs))
              (raw (substring-no-properties (xref-item-summary def))))

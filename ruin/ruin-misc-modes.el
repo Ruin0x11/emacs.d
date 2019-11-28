@@ -45,7 +45,13 @@
 ;   (add-hook 'after-init-hook #'(lambda () (persp-mode 1))))
 ; (require 'persp-mode)
 ;
-; (setq persp-auto-resume-time 0)
+(setq persp-auto-resume-time 0
+      persp-auto-save-opt 2
+      persp-nil-name "base"
+      persp-kill-foreign-buffer-behaviour 'kill)
+; (run-with-idle-timer 30 t (lambda () (let ((inhibit-message nil)) (persp-save-state-to-file))))
+;
+; (set-face-background 'persp-face-lighter-default "magenta")
 ;
 ; (evil-leader/set-key
 ;   "sn" 'persp-next
@@ -55,7 +61,6 @@
 ;   "sw" 'persp-save-state-to-file
 ;   "sl" 'persp-load-state-from-file
 ;   "sr" 'persp-rename)
-
 
 ;;; electric-indent
 (electric-indent-mode 1)
@@ -195,6 +200,7 @@
 
 (setq markdown-gfm-use-electric-backquote nil
       markdown-fontify-code-blocks-natively t)
+(global-evil-leader-mode t)
 (set-face-attribute 'markdown-code-face nil :background "#3a3a3a")
 
 (package-require 'writeroom-mode)
@@ -226,6 +232,7 @@
             (setq indent-tabs-mode nil)
             (setq tab-width 2)
             (setq evil-shift-width 2)))
+(add-to-list 'auto-mode-alist '("\\.clang-format$" . yaml-mode))
 
 
 ;;; kaomoji
@@ -556,7 +563,7 @@ If REHASH is set, rehashes the list of all cached cmdlets."
 (eval-after-load "eldoc" '(diminish 'eldoc-mode))
 (eval-after-load "autorevert" '(diminish 'auto-revert-mode))
 (eval-after-load "ruby-block" '(diminish 'ruby-block-mode))
-(eval-after-load "persp-mode" '(diminish 'persp-mode))
+; (eval-after-load "persp-mode" '(diminish 'persp-mode))
 (eval-after-load "whitespace" '(diminish 'global-whitespace-mode))
 (eval-after-load "org-indent" '(diminish 'org-indent-mode))
 (eval-after-load "evil-org" '(diminish 'evil-org-mode))
@@ -565,6 +572,12 @@ If REHASH is set, rehashes the list of all cached cmdlets."
 (eval-after-load "minitest-mode" '(diminish 'doc-mode))
 (eval-after-load "doxymacs" '(diminish 'doxymacs-mode))
 (eval-after-load "doxymacs" '(diminish 'doxymacs-mode))
+(eval-after-load "rainbow-mode" '(diminish 'rainbow-mode))
+(eval-after-load "lua-block" '(diminish 'lua-block-mode))
+(eval-after-load "ivy" '(diminish 'ivy-mode))
+(eval-after-load "outshine" '(diminish 'outshine-mode))
+(eval-after-load "lispyville" '(diminish 'lispyville-mode))
+(eval-after-load "outline" '(diminish 'outline-mode))
 ;(eval-after-load "rainbow-mode" '(diminish 'rainbow-mode))
 
 (diminish 'compilation-in-progress "㋙")
@@ -771,6 +784,9 @@ Value is t if a query was formerly required."
 (package-require 'tiny)
 (require 'tiny)
 (tiny-setup-default)
+
+;;; Docker
+(package-require 'dockerfile-mode)
 
 ;;; Local variables
 ;; Local Variables:

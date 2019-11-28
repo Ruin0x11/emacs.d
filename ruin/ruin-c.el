@@ -37,6 +37,9 @@
                   comment-fill "*"
                   fill-column 80)
 
+            ;; xref--show-defs-buffer does not push marker stack
+            (setq-local xref-show-definitions-function 'ruin/xref--show-defs-buffer)
+
             (when (derived-mode-p 'c-mode 'c++-mode)
               ;(semanticdb-enable-gnu-global-databases 'c-mode)
               ;(semanticdb-enable-gnu-global-databases 'c++-mode)
@@ -49,6 +52,10 @@
               ; (define-key c-mode-map (kbd "TAB")    'evil-complete-next)
               ; (define-key c-mode-map (kbd "<tab>")  'evil-complete-next)
               )))
+
+(defun ruin/xref--show-defs-buffer (fetcher alist)
+  (xref-push-marker-stack)
+  (xref--show-defs-buffer fetcher alist))
 
 ; C++11 literals
 (add-hook

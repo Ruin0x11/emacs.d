@@ -108,7 +108,7 @@ pattern) under the current directory."
   "da" 'counsel-apropos
 
   "bl" 'counsel-switch-buffer
-  "bl" 'counsel-switch-buffer
+  "bL" 'popwin:pop-to-buffer
 
   ;; "ii" 'helm-info-at-point
   "?e" 'helm-info-emacs

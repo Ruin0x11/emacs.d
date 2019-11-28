@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: Event.register
+# key: reg
+# --
+Event.register("$1", "$2",
+               function(chara, params)
+                 $3
+               end)
