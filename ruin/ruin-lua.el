@@ -2,9 +2,10 @@
 (package-require 'highlight-numbers)
 (package-require 'format-all)
 (package-require 'realgud)
-(require 'doxymacs)
-(require 'doxymacs-luadoc)
-(load "~/build/work/realgud-mobdebug/realgud-mobdebug.el")
+;(require 'doxymacs)
+;(require 'doxymacs-luadoc)
+;(load "~/build/work/realgud-mobdebug/realgud-mobdebug.el")
+(load "~/build/elona-next.el")
 (require 'lua-mode)
 (require 'lua-block)
 
@@ -23,6 +24,8 @@
                            (doxymacs-mode t)
                            (company-mode t)
                            (lua-block-mode t)
+                           (elona-next-minor-mode t)
+                           (flycheck-mode t)
                            (define-key lua-mode-map (kbd "RET") 'indent-new-comment-line)
                            (if-let* ((cmd-buffer (get-buffer "*mobdebug main.lua shell*"))
                                      (proc (get-buffer-process cmd-buffer)))
@@ -38,13 +41,29 @@
     (goto-char (point-max))
     (forward-line -1)
     (let ((line (thing-at-point 'line t)))
-      (substring line 2 (- (length line) 1))))
-  )
+      (substring line 2 (- (length line) 1)))))
 
-(defun ruin/run-lua (cmd)
+(defun ruin/send-lua-string (cmd)
   "Run CMD in the current Lua buffer and return the last line of the result."
   (lua-send-string (concat "return " cmd))
   (ruin/get-lua-result))
+
+(defvar ruin/run-lua-options-history '())
+
+(defun ruin/run-lua (args)
+  (interactive (list
+                (split-string
+                 (read-string
+                  (format "Run: %s " lua-default-application)
+                  (or (first ruin/run-lua-options-history) "")
+                  'ruin/run-lua-options-history))))
+  (let ((default-directory (or (projectile-project-root) default-directory))
+        (lua-default-command-switches args))
+    (unless (and (buffer-live-p lua-process-buffer)
+                 (process-live-p (get-buffer-process lua-process-buffer)))
+      (run-lua))
+    (if (buffer-live-p lua-process-buffer)
+      (popwin:display-buffer lua-process-buffer))))
 
 (defvar ruin/lua-initialized nil)
 
@@ -101,10 +120,20 @@ If ARG is set, don't replace the symbol."
   ; "mt" 'ruin/query-lua-data-item
   ; "mq" 'ruin/query-lua-data
   ; "mo" 'ruin/edit-console-lua
-  "mi" 'run-lua
+  "mi" 'ruin/run-lua
   "md" 'ruin/start-mobdebug
-  "ee" 'realgud:cmd-eval
-  "er" 'realgud:cmd-eval-region)
+  ;"ee" 'realgud:cmd-eval
+  ;"er" 'realgud:cmd-eval-region
+  "ed" 'elona-next-send-defun
+  "el" 'elona-next-send-buffer
+  "eb" 'elona-next-hotload-this-file)
+
+(add-to-list 'evil-emacs-state-modes 'comint-mode)
+
+(require 'eval-sexp-fu)
+(elona-next-eval-sexp-fu-setup)
+
+(setq lua-default-application "luajit")
 
 (with-eval-after-load 'lsp-mode
   (lsp-register-client
@@ -113,6 +142,25 @@ If ARG is set, don't replace the symbol."
                     :priority -1
                     :multi-root t
                     :server-id 'lua-lsp)))
+
+(defun ruin/lua-privatize ()
+  (interactive)
+  (let ((stab (copy-syntax-table)))
+    (with-syntax-table stab
+      (modify-syntax-entry ?. "_")
+      (modify-syntax-entry ?- ".")
+      (modify-syntax-entry ?* ".")
+      (modify-syntax-entry ?+ ".")
+      (modify-syntax-entry ?/ ".")
+      (let* ((sym (symbol-name (symbol-at-point)))
+             (parts (split-string sym "\\."))
+             (newsym (concat (car parts) "." (concat "_" (cadr parts))))
+             (regexp (concat "\\_<\\(" (regexp-quote sym) "\\)\\_>")))
+        (save-excursion
+          (goto-char (point-min))
+          (let ((case-fold-search nil))
+            (while (re-search-forward regexp nil t)
+              (replace-match newsym t nil))))))))
 
 (setq realgud-safe-mode nil)
 

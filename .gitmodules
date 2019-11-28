@@ -28,3 +28,9 @@
 [submodule "site-lisp/dictionary"]
 	path = site-lisp/dictionary
 	url = https://github.com/myrkr/dictionary-el
+[submodule "site-lisp/downdraft"]
+	path = site-lisp/downdraft
+	url = https://github.com/Ruin0x11/downdraft
+[submodule "site-lisp/doxymacs"]
+	path = site-lisp/doxymacs
+	url = https://github.com/pniedzielski/doxymacs

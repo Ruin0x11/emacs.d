@@ -193,6 +193,7 @@
                                      (define-key markdown-mode-map (kbd "<C-return>") 'markdown-follow-thing-at-point)))
 (add-hook 'markdown-mode-hook #'flyspell-mode)
 (add-to-list 'auto-mode-alist '("\\.page$" . markdown-mode))
+(add-hook 'markdown-mode-hook 'writeroom-mode)
 
 (setq markdown-gfm-use-electric-backquote nil
       markdown-fontify-code-blocks-natively t)
@@ -644,6 +645,15 @@ Value is t if a query was formerly required."
 (package-require 'tiny)
 (require 'tiny)
 (tiny-setup-default)
+
+(package-require 'writeroom-mode)
+(require 'downdraft)
+(downdraft-add-to-mode-line)
+
+(add-to-list 'downdraft-start-hook 'writeroom-mode)
+(setq writeroom-mode-line '(downdraft-mode-line-string downdraft-mode-line-string)
+      downdraft-default-goal-time 5
+      downdraft-default-goal-word-count 800)
 
 ;;; Local variables
 ;; Local Variables:

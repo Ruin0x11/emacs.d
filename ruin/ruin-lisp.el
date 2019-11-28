@@ -7,13 +7,14 @@
 (package-require 'flycheck-package)
 (require 'smartparens-config)
 (require 'cl)
-(require 'janet-mode)
+; (require 'janet-mode)
 
 (setq lisp-modes
       '(scheme-mode emacs-lisp-mode lisp-mode
                     clojure-mode common-lisp-mode lisp-interaction-mode
                     cider-repl-mode inferior-emacs-lisp-mode sly-mrepl-mode
-                    janet-mode inferior-lisp-mode))
+                    ;janet-mode
+inferior-lisp-mode))
 
 (defun add-lisp-hook (func)
   (add-hooks lisp-modes func))

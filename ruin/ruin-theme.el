@@ -20,8 +20,7 @@
 ;; This is bound to f11 in Emacs 24.4
 ;; (toggle-frame-fullscreen)
 ;; Who use the bar to scroll?
-(scroll-bar-mode 0)
-(tool-bar-mode 0)
+;(tool-bar-mode 0)
 (menu-bar-mode 0)
 (if (or (display-graphic-p) (daemonp))
     (progn
