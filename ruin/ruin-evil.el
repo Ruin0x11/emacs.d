@@ -15,6 +15,9 @@
 (global-evil-leader-mode t)
 (load "evil-leader-minor")
 (require 'evil-little-word)
+(package-require 'evil-numbers)
+(require 'buffer-move)
+
 (evil-mode 1)
 
 (global-evil-leader-mode t)
@@ -238,6 +241,11 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
 
      ;; trade ctrl-h and others for faster window switching
      (ruin/window-movement-for-map evil-normal-state-map)
+
+     (define-key evil-normal-state-map (kbd "M-k") 'buf-move-up)
+     (define-key evil-normal-state-map (kbd "M-j") 'buf-move-down)
+     (define-key evil-normal-state-map (kbd "M-h") 'buf-move-left)
+     (define-key evil-normal-state-map (kbd "M-l") 'buf-move-right)
 
      ;; global escape-to-quit
      (define-key evil-normal-state-map [escape] 'keyboard-quit)

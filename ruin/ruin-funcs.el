@@ -284,15 +284,13 @@ buffer is not visiting a file."
   (interactive "sNew name: ")
   (let ((name (buffer-name))
         (filename (buffer-file-name)))
-    (if (not filename)
-        (message "Buffer '%s' is not visiting a file!" name)
-      (progn
-        (when (get-buffer new-name)
-          (kill-buffer new-name))
-        (rename-file filename new-name 1)
-        (rename-buffer new-name)
-        (set-visited-file-name new-name)
-        (set-buffer-modified-p nil)))))
+    (when (get-buffer new-name)
+      (kill-buffer new-name))
+    (rename-buffer new-name)
+    (when (file-exists-p filename)
+      (rename-file filename new-name 1))
+    (set-visited-file-name new-name)
+    (set-buffer-modified-p nil)))
 
 (defun move-buffer-file (dir)
   "Moves both current buffer and file it's visiting to DIR."

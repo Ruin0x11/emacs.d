@@ -120,7 +120,7 @@
      (additional-insert)
      (text-objects normal visual motion)
      (slurp/barf-cp normal visual motion)
-     (additional normal visual)))
+     (additional visual)))
   (evil-define-key nil evil-inner-text-objects-map
     "a" #'lispyville-inner-atom
     "l" #'lispyville-inner-list
@@ -140,8 +140,8 @@
            "]" #'lispyville-next-opening
            "-" #'lispy-up
            "+" #'lispy-down
-           (kbd "M-h") #'lispy-move-left
-           (kbd "M-l") #'lispy-down-slurp
+           ; (kbd "M-h") #'lispy-move-left
+           ; (kbd "M-l") #'lispy-down-slurp
            "{" #'evil-backward-paragraph
            "}" #'evil-forward-paragraph
            "(" #'lispyville-backward-up-list
