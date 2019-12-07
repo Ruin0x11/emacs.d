@@ -1,0 +1,187 @@
+= evil-plugin by tarao
+
+Plugins for Evil ( http://www.emacswiki.org/emacs/Evil ).
+
+== evil-ex-registers.el
+
+=== Usage
+
+  (require 'evil-ex-registers)
+  (define-key evil-ex-completion-map (kbd "C-r") #'evil-ex-paste-from-register)
+
+It provides special registers for ex mode.
+
+== evil-little-word.el
+
+=== Usage
+
+  (require 'evil-little-word)
+
+It provides little-word motion commands and text objects with default
+key bindings listed below.  The little-word motion commands are
+similar to those in
+{camelcasemotion.vim}[http://www.vim.org/scripts/script.php?script_id=1905].
+The motions stop at upcase letters just after a lowercase letter and
+at underscores ('<tt>_</tt>').  Unlike <tt>camelcasemotion.vim</tt>,
+little-word motions are sensitive to non-ascii uppercase/lowercase
+letters as long as Emacs knows which character is uppercase or not.
+See
+https://lists.ourproject.org/pipermail/implementations-list/2012-June/001604.html
+for further design details.
+
+=== Commands
+
+glw:: evil-forward-little-word-begin
+glb:: evil-backward-little-word-begin
+glW:: evil-forward-little-word-end
+glB:: evil-backward-little-word-end
+
+=== Text objects
+
+lw:: evil-a-little-word
+lw:: evil-inner-little-word
+
+== evil-mode-line.el
+
+=== Usage
+
+  (require 'evil-mode-line)
+
+It gives a state indicator at the beginning of the mode line and
+changes the mode line color for each state.
+
+=== Dependencies
+
+- mode-line-color.el http://github.com/tarao/elisp/raw/master/mode-line-color.el
+
+=== Customization
+
+==== evil-mode-line-color
+
+An associative list which specifies correspondence between Evil states
+and colors. The key of the associative list must be a symbol of an
+Evil state (such as <tt>normal</tt>, <tt>insert</tt>, etc.) and the
+value of the associative list must be a string of a color (such as
+"SteelBlue4", "#575735", etc.).
+
+==== evil-normal-state-msg
+
+A string shown at the mode line as a state indicator of normal state.
+
+==== evil-insert-state-msg
+
+A string shown at the mode line as a state indicator of insert state.
+
+==== evil-replace-state-msg
+
+A string shown at the mode line as a state indicator of replace state.
+
+==== evil-emacs-state-msg
+
+A string shown at the mode line as a state indicator of emacs state.
+
+==== evil-visual-state-msg-alist
+
+An associative list which specifies correspondence between Evil visual
+state types and state indicator strings. The key of the associative
+list must be a symbol of visual state type (such as <tt>normal</tt>,
+<tt>line</tt> and <tt>block</tt>) and the value of the associative
+list must be a string of indicator.
+
+== evil-operator-comment.el
+
+=== Usage
+
+  (require 'evil-operator-comment)
+  (global-evil-operator-comment-mode 1)
+
+It provides comment/uncomment operator. You can use it by typing
+<tt>C*</tt>, for example, <tt>CC</tt> for commenting out the line at
+the cursor, <tt>Ciw</tt> for commenting out the word at the
+cursor. The key can be changed by setting custom variable
+<tt>evil-operator-comment-key</tt>.
+
+=== Examples
+
+<tt>|</tt> denotes the cursor position.
+
+<tt>Ciw</tt> on
+  (foo ba|r)
+comments out '<tt>bar</tt>', and <tt>Ci(</tt> comments out '<tt>foo bar</tt>'.
+
+=== Remarks
+
+The idea is taken from
+http://relaxedcolumn.blog8.fc2.com/blog-entry-154.html, which is to
+add comment/uncomment operator to Vim.
+
+== evil-operator-moccur.el
+
+=== Usage
+
+  (require 'evil-operator-moccur)
+  (global-evil-operator-moccur-mode 1)
+
+It provides an operator for <tt>moccur-grep-find</tt> command. You can
+use it by typing <tt>M*</tt>, for example, <tt>Miw</tt> for grepping a
+word under the cursor. The key can be changed by setting custom
+variable <tt>evil-operator-moccur-grep-find-key</tt>. You will be
+asked in which directory files to be grepped are located. Setting
+custom variable <tt>evil-operator-moccur-use-current-directory</tt>
+disables asking a directory and files in the current directory are
+grepped.
+
+=== Dependencies
+
+- color-moccur.el http://www.emacswiki.org/emacs/color-moccur.el
+
+== evil-relative-linum.el
+
+=== Usage
+
+  (require 'evil-relative-linum)
+
+It provides relative line numbers shown up when you hit operator keys.
+
+=== Dependencies
+
+- linum.el http://stud4.tuwien.ac.at/~e0225855/linum/linum.html (you don't need this if emacs-version >= 23)
+- linum+.el http://github.com/tarao/elisp/raw/master/linum+.el
+
+== evil-textobj-between.el
+
+=== Usage
+
+  (require 'evil-textobj-between)
+
+It provides text object for selecting a range between a
+character. Default key bindings are <tt>if</tt> and <tt>af</tt>, which
+select a range between a character by which the command is
+followed. <tt>if</tt> selects an inner range. These bindings can be
+changed by setting custom variable <tt>evil-textobj-between-i-key</tt>
+and <tt>evil-textobj-between-a-key</tt>.
+
+=== Examples
+
+<tt>|</tt> denotes the cursor position.
+
+<tt>dif,</tt> on
+  foo, b|ar, baz
+deletes '<tt> bar</tt>', and <tt>vif:</tt> on
+  :foo :b|ar :baz
+selects '<tt>bar </tt>'.
+
+=== Remarks
+
+The idea is taken from
+http://d.hatena.ne.jp/thinca/20100614/1276448745, which is to define
+textobj-between for Vim.
+
+== hexl-evil-patch.el
+
+=== Usage
+
+  (require 'hexl-evil-patch)
+
+A patch for <tt>hexl-mode</tt>, a mode for editing binary files in hex
+dump format.
