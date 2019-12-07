@@ -19,21 +19,46 @@
 (add-hook 'lua-mode-hook 'highlight-numbers-mode)
 (add-hook 'lua-mode-hook 'yas-minor-mode)
 (add-hook 'lua-mode-hook 'flycheck-mode)
+;(add-hook 'lua-mode-hook 'doxymacs-mode)
+(add-hook 'lua-mode-hook 'company-mode)
+(add-hook 'lua-mode-hook 'lua-block-mode)
+(add-hook 'lua-mode-hook 'eldoc-mode)
 (add-hook 'lua-mode-hook 'smartparens-mode)
 (add-hook 'lua-mode-hook (lambda ()
                            (setq compilation-auto-jump-to-first-error t)
-                           ; (doxymacs-mode t)
-                           (company-mode t)
-                           (lua-block-mode t)
-                           (define-key lua-mode-map (kbd "RET") 'indent-new-comment-line)
-                           (make-variable-buffer-local 'compilation-error-regexp-alist)
+                           (make-variable-buffer-local 'after-save-hook)
+                           ;(add-to-list 'after-save-hook (lambda ()
+                           ;                                (when (projectile-project-p)
+                           ;                                  (let ((default-directory (projectile-project-root)))
+                           ;                                    (shell-command (format "bash -e ltags -nr -e %s **/*.lua"))))))
+                           (when (projectile-project-p)
+                             (setq-local tags-file-name (string-join (list (projectile-project-root) "TAGS"))))
+                           (setq-local eldoc-documentation-function 'ruin/etags-eldoc-function)
                            (setq compilation-error-regexp-alist (list (list lua-traceback-line-re 1 2)))
+                           (define-key lua-mode-map (kbd "RET") 'indent-new-comment-line)
+
+                           ;; luacheck for whatever reason cannot
+                           ;; handle forward slashes in its --config
+                           ;; option.
+                           (setq flycheck-locate-config-file-functions
+                                 '(ruin/flycheck-locate-config-file-ancestor-directories))
+
                            (if-let* ((cmd-buffer (get-buffer "*mobdebug main.lua shell*"))
                                      (proc (get-buffer-process cmd-buffer)))
                                (realgud:attach-cmd-buffer cmd-buffer))))
-; (add-hook 'before-save-hook (lambda ()
-;                               (when (equal major-mode 'lua-mode)
-;                                 (format-all-buffer))))
+                                        ; (add-hook 'before-save-hook (lambda ()
+                                        ;                               (when (equal major-mode 'lua-mode)
+                                        ;                                 (format-all-buffer))))
+
+(when (eq system-type 'windows-nt)
+  (setq initial-buffer-choice '("z:/build/elona-next/src/scratch.lua")))
+
+(defun ruin/flycheck-locate-config-file-ancestor-directories (file _checker)
+  (when-let ((path (flycheck-locate-config-file-ancestor-directories file _checker)))
+    (subst-char-in-string ?/ ?\\ path)))
+
+(setq tags-revert-without-query t
+      tags-case-fold-search nil)
 
 (defun ruin/get-lua-result ()
   "Gets the last line of the current Lua buffer."
@@ -99,10 +124,25 @@ If ARG is set, don't replace the symbol."
   (if-let ((cmd-buffer (get-buffer "*mobdebug main.lua shell*")))
       (realgud:attach-cmd-buffer cmd-buffer)))
 
-(let ((file "z:/build/elona-next/src/elona-next.el"))
-  (when (file-exists-p file)
-    (load file)
-    (elona-next-eval-sexp-fu-setup)))
+(defun ruin/xref-find-definitions ()
+  (interactive)
+  (xref-find-definitions (symbol-name (symbol-at-point))))
+
+(defun ruin/xref-find-references ()
+  (interactive)
+  (xref-find-references (symbol-name (symbol-at-point))))
+
+(defun ruin/xref-find-definitions-period ()
+  (interactive)
+  (with-syntax-table (copy-syntax-table)
+    (modify-syntax-entry ?. "_")
+    (xref-find-definitions (symbol-name (symbol-at-point)))))
+
+(defun ruin/xref-find-references-period ()
+  (interactive)
+  (with-syntax-table (copy-syntax-table)
+    (modify-syntax-entry ?. "_")
+    (xref-find-references (symbol-name (symbol-at-point)))))
 
 (evil-leader/set-key-for-mode 'lua-mode
   ; "mi" 'ruin/initialize-lua
@@ -110,15 +150,30 @@ If ARG is set, don't replace the symbol."
   ; "mt" 'ruin/query-lua-data-item
   ; "mq" 'ruin/query-lua-data
   ; "mo" 'ruin/edit-console-lua
+  "fd" 'ruin/xref-find-definitions
+  "fD" 'ruin/xref-find-definitions-period
+  "fg" 'ruin/xref-find-references
+  "fG" 'ruin/xref-find-references-period
   "mi" 'elona-next-start-repl
+  "mr" 'elona-next-require-this-file
   "eb" 'elona-next-hotload-this-file
-  "ed" 'elona-next-send-defun
+  "eB" 'elona-next-send-buffer
   "el" 'elona-next-send-current-line
   "er" 'elona-next-require-this-file
+  "ey" 'elona-next-copy-require-path
+  "ei" 'elona-next-insert-require
   "md" 'ruin/start-mobdebug
   ;"ee" 'realgud:cmd-eval
   ;"er" 'realgud:cmd-eval-region
   )
+
+(with-eval-after-load 'lsp-mode
+  (lsp-register-client
+   (make-lsp-client :new-connection (lsp-stdio-connection '("lua5.3" "/home/ruin/build/util/lua-lsp/bin/lua-lsp"))
+                    :major-modes '(lua-mode)
+                    :priority -1
+                    :multi-root t
+                    :server-id 'lua-lsp)))
 
 (setq realgud-safe-mode nil)
 
@@ -128,6 +183,62 @@ If ARG is set, don't replace the symbol."
 (add-function :after (symbol-function 'doxymacs-call-template) #'ruin/doxymacs--enter-insert)
 
 (setq tempo-interactive t)
+
+(let ((file (if (eq system-type 'windows-nt)
+                "z:/build/elona-next/src/elona-next.el"
+              "/home/ruin/build/elona-next/src/elona-next.el")))
+  (when (file-exists-p file)
+    (load file)
+    (elona-next-eval-sexp-fu-setup)))
+
+(require 'xref)
+(defun xref--show-xref-buffer (fetcher alist)
+  (cl-assert (functionp fetcher))
+  (let* ((xrefs
+          (or
+           (assoc-default 'fetched-xrefs alist)
+           (funcall fetcher)))
+         (xref-alist (xref--analyze xrefs)))
+    (with-current-buffer (get-buffer-create xref-buffer-name)
+      (xref--xref-buffer-mode)
+      (xref--show-common-initialize xref-alist fetcher alist)
+      (display-buffer (current-buffer))
+      (next-error)
+      (current-buffer))))
+
+(defun xref--show-defs-buffer-at-bottom (fetcher alist)
+  "Show definitions list in a window at the bottom.
+When there is more than one definition, split the selected window
+and show the list in a small window at the bottom.  And use a
+local keymap that binds `RET' to `xref-quit-and-goto-xref'."
+  (let ((xrefs (funcall fetcher)))
+    (cond
+     ((not (cdr xrefs))
+      (xref-pop-to-location (car xrefs)
+                            (assoc-default 'display-action alist)))
+     (t
+      (with-current-buffer (get-buffer-create xref-buffer-name)
+        (xref--transient-buffer-mode)
+        (xref--show-common-initialize (xref--analyze xrefs) fetcher alist)
+        (display-buffer (current-buffer)
+                       '(display-buffer-in-direction . ((direction . below))))
+        (next-error)
+        (current-buffer))))))
+
+(defun ruin/etags-eldoc-function ()
+  (let* ((sym (prin1-to-string (symbol-at-point)))
+         (defs (etags--xref-find-definitions sym)))
+    (when defs
+      (let* ((def (car defs))
+             (raw (substring-no-properties (xref-item-summary def))))
+        (with-temp-buffer
+          (insert raw)
+          (delay-mode-hooks (lua-mode))
+          (font-lock-default-function 'lua-mode)
+          (font-lock-default-fontify-region (point-min)
+                                            (point-max)
+                                            nil)
+          (buffer-string))))))
 
 ;(add-to-list 'compilation-error-regexp-alist
 ;             '("\\(.+\\):\\([1-9][0-9]+\\) in " 1 2))
@@ -142,5 +253,22 @@ If ARG is set, don't replace the symbol."
 ; ;; dotnet test with xunit project
 ; ;; [xUnit.net 00:00:00.6080370]         /TestProject/UnitTest1.cs(15,0): at TestProject.UnitTest1.Test1()
 ; (add-to-list 'compilation-error-regexp-alist '("\\[xUnit.net .*\\] +\\(.*\\)(\\([[:digit:]]+\\),\\([[:digit:]]+\\))" 1 2 3))
+
+(package-require 'rainbow-mode)
+(require 'rainbow-mode)
+(setq rainbow-html-colors t)
+;; (setq rainbow-html-colors-alist nil)
+
+(add-to-list 'rainbow-html-rgb-colors-font-lock-keywords
+             '("{\s*\\([0-9]\\{1,3\\}\\(?:\\.[0-9]\\)?\\(?:\s*%\\)?\\)\s*,\s*\\([0-9]\\{1,3\\}\\(?:\\.[0-9]\\)?\\(?:\s*%\\)?\\)\s*,\s*\\([0-9]\\{1,3\\}\\(?:\\.[0-9]\\)?\\(?:\s*%\\)?\\)\s*,\s*[0-9]*\.?[0-9]+\s*%?\s*}"
+               (0 (rainbow-colorize-rgb))))
+(add-to-list 'rainbow-html-rgb-colors-font-lock-keywords
+             '("color(\s*\\([0-9]\\{1,3\\}\\(?:\.[0-9]\\)?\\(?:\s*%\\)?\\)\s*,\s*\\([0-9]\\{1,3\\}\\(?:\\.[0-9]\\)?\\(?:\s*%\\)?\\)\s*,\s*\\([0-9]\\{1,3\\}\\(?:\\.[0-9]\\)?\\(?:\s*%\\)?\\)\s*)"
+                (0 (rainbow-colorize-rgb))))
+(add-to-list 'rainbow-html-rgb-colors-font-lock-keywords
+             '("{\s*\\([0-9]\\{1,3\\}\\(?:\\.[0-9]\\)?\\(?:\s*%\\)?\\)\s*,\s*\\([0-9]\\{1,3\\}\\(?:\\.[0-9]\\)?\\(?:\s*%\\)?\\)\s*,\s*\\([0-9]\\{1,3\\}\\)}"
+               (0 (rainbow-colorize-rgb))))
+(add-hook 'c++-mode-hook 'rainbow-mode)
+(add-hook 'lua-mode-hook 'rainbow-mode)
 
 (provide 'ruin-lua)

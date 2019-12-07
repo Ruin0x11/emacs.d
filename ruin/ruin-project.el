@@ -24,6 +24,8 @@
                                                         "deps"
                                                         "CMakeFiles"
                                                         "external"
+                                                        "megasource"
+                                                        "love"
                                                         )))
 
 (setq projectile-globally-ignored-file-suffixes '("class" "db" "min.css")

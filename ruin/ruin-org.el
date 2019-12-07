@@ -26,7 +26,7 @@
                                (,(concat org-directory "gtd/tickler.org") :maxlevel . 2))
 
           org-default-notes-file (concat org-directory "gtd/inbox.org")
-          initial-buffer-choice (concat org-directory "gtd/inbox.org")
+          ; initial-buffer-choice (concat org-directory "gtd/inbox.org")
           org-capture-templates
           `(("t" "TODO" entry (file ,(concat org-directory "gtd/inbox.org"))
              "* TODO %?\n%U")

@@ -33,7 +33,7 @@
 (recentf-mode 1)
 (setq recentf-max-saved-items 1000)
 (run-with-idle-timer 30 t (lambda () (let ((inhibit-message t)) (recentf-save-list))))
-(recentf-cleanup)
+; (recentf-cleanup)
 
 ;; Highlight matching parentheses when the point is on them.
 (show-paren-mode 1)
@@ -120,5 +120,7 @@ truncates lines returned by the compilation process."
   (setq comint-redirect-verbose t)
   (setq comint-redirect-echo-input t)
   (shell-command "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\VC\\Auxiliary\\Build\\vcvars64.bat"))
+
+(setq kill-ring-max 500)
 
 (provide 'ruin-general)

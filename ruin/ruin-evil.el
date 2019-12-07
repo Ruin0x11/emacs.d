@@ -1,6 +1,7 @@
 ;;; ruin-evil.el --- evil settings and non-package mappings
 
 (setq evil-want-C-u-scroll t)
+(setq evil-search-module 'evil-search)
 
 (package-require 'evil)
 (package-require 'evil-commentary)
@@ -37,6 +38,7 @@
   "ZZZ" 'save-buffers-kill-emacs
   "as" 'sos
   "M" 'popwin:messages
+  "<RET>" 'evil-ex-nohighlight
 
   "df" 'describe-function
   "dv" 'describe-variable
@@ -67,11 +69,10 @@
   "jj" 'bookmark-jump
   "jd" 'bookmark-delete
 
-  "ff" 'helm-find-files
-  "fg" 'helm-do-grep-ag
-  "fA" 'helm-do-ag
-  "fa" 'helm-do-ag-this-file
-  "fr" 'helm-recentf
+  ;"ff" 'helm-find-files
+  ;"fg" 'helm-do-grep-ag
+  ;"fA" 'helm-do-ag
+  ;"fa" 'helm-do-ag-this-file
   "fd" 'helm-semantic-or-imenu
   "fs" 'find-function
   "fv" 'find-variable
@@ -85,7 +86,6 @@
   "hm" 'helm-man-woman
   "hM" 'helm-mini
   "hM" 'helm-man-woman
-  "hr" 'helm-resume
   "hc" 'helm-colors
   "hg" 'helm-google
 

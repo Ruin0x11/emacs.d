@@ -64,31 +64,42 @@
 (global-set-key (kbd "M-x") 'helm-M-x)
 (helm-mode t)
 (helm-flx-mode +1)
-
 (evil-leader/set-key
-  "/"  'helm-swoop
+  "/"  'swiper
+  ":" 'counsel-M-x
 
   "ff" 'helm-find-files
-  "fg" 'helm-do-grep-ag
-  "fr" 'helm-recentf
-  "fd" 'helm-semantic-or-imenu
-  "fF" 'helm-find
-  "fi" 'helm-fd-this-directory
-  "fI" 'helm-fd
-  "fa" 'rg
+  "fa" 'counsel-rg
+  "fA" 'ruin/rg-current-file
+  "fr" 'counsel-recentf
+  "fd" 'counsel-semantic-or-imenu
+  "fi" 'counsel-imenu
+  ; "fI" 'helm-fd
 
-  "hf" 'helm-flycheck
-  "hR" 'helm-regexp
+  "fs" 'find-function
+  "fv" 'find-variable
+  "fl" 'find-library
+  "fe" 'elisp-refs-function
+  "fO" 'dmoccur
+
+  "hm" 'man
+  "hr" 'helm-resume
+  "hR" 'ivy-resume
+  "hc" 'counsel-colors-web
+
   "hm" 'helm-man-woman
   "hM" 'helm-mini
-  "hb" 'helm-bookmarks
-  "hr" 'helm-resume
+  "hM" 'helm-man-woman
+  "hR" 'helm-resume
+  "hr" 'ivy-resume
   "hc" 'helm-colors
   "hg" 'helm-google
-  "ht" 'helm-top
-  "hp" 'helm-list-emacs-process
-  "h@" 'helm-list-elisp-packages
-  "hq" 'helm-quick-launch
+  "hf" 'counsel-recoll
+
+  "da" 'counsel-apropos
+
+  "bl" 'counsel-switch-buffer
+  "bl" 'counsel-switch-buffer
 
   ;; "ii" 'helm-info-at-point
   "?e" 'helm-info-emacs
@@ -284,14 +295,12 @@ pattern) under the current directory."
   "fO" 'dmoccur
 
   "hm" 'man
-  "hr" 'helm-resume
   "hR" 'ivy-resume
   "hc" 'counsel-colors-web
 
   "hm" 'helm-man-woman
   "hM" 'helm-mini
   "hM" 'helm-man-woman
-  "hR" 'helm-resume
   "hr" 'ivy-resume
   "hc" 'helm-colors
   "hg" 'helm-google

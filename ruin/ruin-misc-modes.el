@@ -197,6 +197,7 @@
     :front "^```lisp[\n\r]+"
     :back "^```$")))
 (mmm-add-mode-ext-class 'markdown-mode nil 'markdown-lisp)
+(setq writeroom-maximize-window nil)
 
 (defun my-mmm-markdown-auto-class (lang &optional submode)
   "Define a mmm-mode class for LANG in `markdown-mode' using SUBMODE.
