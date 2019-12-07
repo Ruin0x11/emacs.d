@@ -1,4 +1,4 @@
-;;; vc.el --- Visual Studio 2017 x64 environment       -*- lexical-binding: t; -*-
+;;; vs.el --- Visual Studio 2017 x64 environment       -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2018
 
@@ -68,5 +68,5 @@
 (setenv "__DOTNET_PREFERRED_BITNESS" "64")
 (setenv "__VSCMD_PREINIT_PATH" "C:\\Program Files\\ConEmu\\ConEmu\\Scripts;C:\\Program Files\\ConEmu;C:\\Program Files\\ConEmu\\ConEmu;C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\javapath;C:\\Program Files\\ImageMagick-7.0.7-Q16;C:\\Python27;C:\\ProgramData\\Oracle\\Java\\javapath;C:\\Program Files (x86)\\Gpg4win\\..\\GnuPG\\bin;C:\\Program Files (x86)\\GnuWin32\\bin;C:\\Windows\\system32;C:\\Windows;C:\\Windows\\System32\\Wbem;C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\;C:\\bin;C:\\bin\\mpv;C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common;C:\\Program Files\\MacType;C:\\bin\\emacs\\bin;C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\;C:\\Program Files\\Everything;C:\\Users\\kadode\\.cargo\\bin;C:\\bin\\xperf\\;C:\\Program Files (x86)\\Windows Kits\\8.1\\Windows Performance Toolkit\\;C:\\bin\\arbtt\\bin;C:\\bin\\ruby\\bin;C:\\bin\\ffmpeg\\bin;C:\\Program Files\\Git\\cmd;C:\\Program Files (x86)\\GnuWin32\\lib;C:\\bin\\apache-ant-1.10.2\\bin;C:\\bin\\buck\\bin;C:\\Program Files\\Java\\jdk1.8.0_151\\bin;C:\\bin\\kotlinc\\bin;C:\\bin\\gradle-4.5.1\\bin;C:\\Program Files\\Cppcheck;C:\\Program Files\\Git\\bin;C:\\bin\\nc;C:\\Program Files\\Zulu\\zulu-7\\bin\\;C:\\Program Files\\Zulu\\zulu-8\\bin\\;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\GtkSharp\\2.12\\bin;C:\\Program Files\\PuTTY\\;C:\\bin\\jflex-1.6.1\\bin;C:\\Program Files\\CMake\\bin;C:\\Program Files (x86)\\LLVM\\bin;C:\\Users\\kadode\\.cargo\\bin;C:\\Program Files (x86)\\mitmproxy\\bin;C:\\Users\\kadode\\AppData\\Roaming\\npm;C:\\Users\\kadode\\AppData\\Local\\Pandoc\\")
 
-(provide 'vc)
-;;; vc.el ends here
+(provide 'vs)
+;;; vs.el ends here
