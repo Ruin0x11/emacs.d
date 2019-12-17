@@ -14,9 +14,9 @@
 
 ;; Strangely, just redefining one of the variations below won't work.
 ;; All rebinds seem to be needed.
-(define-key yas-minor-mode-map [(tab)]        'yas-expand)
-(define-key yas-minor-mode-map (kbd "TAB")    'yas-expand)
-(define-key yas-minor-mode-map (kbd "<tab>")  'yas-expand)
+;(define-key yas-minor-mode-map [(tab)]        'yas-expand)
+;(define-key yas-minor-mode-map (kbd "TAB")    'yas-expand)
+;(define-key yas-minor-mode-map (kbd "<tab>")  'yas-expand)
 
 (add-hook 'kotlin-mode-hook 'yas-minor-mode-on)
 

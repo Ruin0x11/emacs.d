@@ -20,8 +20,8 @@
 
 (global-evil-leader-mode t)
 (global-evil-surround-mode t)
-(evil-commentary-mode t)
 (evil-mode 1)
+(evil-commentary-mode t)
 
 ;;; leader binds
 (evil-leader/set-leader "<SPC>")
@@ -224,6 +224,21 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
      (define-key evil-normal-state-map "&" 'evil-ex-repeat-substitute-with-flags)
      ;(define-key evil-normal-state-map (kbd "M-.") 'xref-find-definitions)
 
+     (define-key evil-normal-state-map "u"
+       (lambda (arg)
+         (interactive "P")
+         (if arg
+             (save-excursion
+               (call-interactively 'undo-tree-undo))
+           (call-interactively 'undo-tree-undo))))
+     (define-key evil-normal-state-map (kbd "C-r")
+       (lambda (arg)
+         (interactive "P")
+         (if arg
+             (save-excursion
+               (call-interactively 'undo-tree-redo))
+           (call-interactively 'undo-tree-redo))))
+
      ;; trade ctrl-h and others for faster window switching
      (ruin/window-movement-for-map evil-normal-state-map)
 
@@ -316,6 +331,11 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
   "gr" 'recompile
   "h" 'evil-backward-char
   "?" 'evil-search-backward)
+
+(when (not (window-system))
+  (define-key evil-normal-state-map [(tab)]        'evil-jump-forward)
+  (define-key evil-normal-state-map (kbd "TAB")    'evil-jump-forward)
+  (define-key evil-normal-state-map (kbd "<tab>")  'evil-jump-forward))
 
 ;;; normal Emacs bindings
 (global-set-key (kbd "C-x C-u") 'universal-argument)

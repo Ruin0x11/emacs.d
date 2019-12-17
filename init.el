@@ -143,3 +143,4 @@
 ;(let ((secrets (locate-user-emacs-file "secret.el.gpg")))
 ;  (when (file-exists-p secrets)
 ;    (ruin/load-encrypted secrets)))
+(put 'erase-buffer 'disabled nil)

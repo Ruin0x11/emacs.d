@@ -220,7 +220,8 @@
 (defun ruin/normal-theme ()
   (interactive)
   (load-theme 'monokai t)
-  (toggle-frame-fullscreen))
+  ;(toggle-frame-fullscreen)
+  )
 
 (defun font-exists-p (font)
   "check if font exists"

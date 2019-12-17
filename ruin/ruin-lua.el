@@ -42,10 +42,14 @@
   (when (projectile-project-p)
     (let ((default-directory (projectile-project-root)))
       (shell-command "ltags -nr -e **/*.lua")
+      (when (projectile-project-p)
+        (setq-local tags-file-name (string-join (list (projectile-project-root) "TAGS"))))
       (message "TAGS regenerated."))))
 
-(setq tags-revert-without-query t
-      tags-case-fold-search nil)
+(setq lua-default-application "luajit"
+      tags-revert-without-query t
+      tags-case-fold-search nil
+      initial-buffer-choice "/home/ruin/build/elona-next/src/scratch.lua")
 
 (defun ruin/get-lua-result ()
   "Gets the last line of the current Lua buffer."
@@ -54,8 +58,7 @@
     (goto-char (point-max))
     (forward-line -1)
     (let ((line (thing-at-point 'line t)))
-      (substring line 2 (- (length line) 1))))
-  )
+      (substring line 2 (- (length line) 1)))))
 
 (defun ruin/run-lua (cmd)
   "Run CMD in the current Lua buffer and return the last line of the result."
@@ -113,11 +116,15 @@ If ARG is set, don't replace the symbol."
 
 (defun ruin/xref-find-definitions ()
   (interactive)
-  (xref-find-definitions (symbol-name (symbol-at-point))))
+  (if-let ((sym (symbol-at-point)))
+      (xref-find-definitions (symbol-name sym))
+    (call-interactively 'xref-find-definitions)))
 
 (defun ruin/xref-find-references ()
   (interactive)
-  (xref-find-references (symbol-name (symbol-at-point))))
+  (if-let ((sym (symbol-at-point)))
+      (xref-find-references (symbol-name sym))
+    (call-interactively 'xref-find-references)))
 
 (defun ruin/dotted-symbol-at-point ()
   (interactive)
@@ -133,29 +140,33 @@ If ARG is set, don't replace the symbol."
   (interactive)
   (xref-find-references (symbol-name (ruin/dotted-symbol-at-point))))
 
-(evil-leader/set-key-for-mode 'lua-mode
-  ; "mi" 'ruin/initialize-lua
-  ; "mc" 'ruin/query-lua-data-chara
-  ; "mt" 'ruin/query-lua-data-item
-  ; "mq" 'ruin/query-lua-data
-  ; "mo" 'ruin/edit-console-lua
-  "fd" 'ruin/xref-find-definitions
-  "fD" 'ruin/xref-find-definitions-period
-  "fg" 'ruin/xref-find-references
-  "fG" 'ruin/xref-find-references-period
-  "mi" 'elona-next-start-repl
-  "mr" 'elona-next-require-this-file
-  "eb" 'elona-next-hotload-this-file
-  "eB" 'elona-next-send-buffer
-  "er" 'elona-next-require-this-file
-  "el" 'elona-next-send-current-line
-  "ei" 'elona-next-insert-require
-  "ey" 'elona-next-copy-require-path
-  "md" 'ruin/start-mobdebug
-  "mt" 'ruin/regenerate-ltags
-  ;"ee" 'realgud:cmd-eval
-  ;"er" 'realgud:cmd-eval-region
-  )
+(progn
+  (defun ruin/setup-lua-keybinds (mode)
+    (evil-leader/set-key-for-mode mode
+      "fg" 'ruin/xref-find-references
+      "fG" 'ruin/xref-find-references-period
+      "fd" 'elona-next-jump-to-definition
+      "fj" 'ruin/xref-find-definitions
+      "fJ" 'ruin/xref-find-definitions-period
+      "mi" 'elona-next-start-repl
+      "mr" 'elona-next-require-this-file
+      "eb" 'elona-next-hotload-this-file
+      "eB" 'elona-next-send-buffer
+      "ee" 'elona-next-eval-expression
+      "er" 'elona-next-require-this-file
+      "el" 'elona-next-eval-current-line
+      "ei" 'elona-next-insert-require
+      "eI" 'elona-next-insert-missing-requires
+      "ey" 'elona-next-copy-require-path
+      "dd" 'elona-next-describe-thing-at-point
+      "da" 'elona-next-describe-apropos
+      "md" 'ruin/start-mobdebug
+      "mt" 'ruin/regenerate-ltags
+      "mf" 'kotaro-format-buffer))
+
+  (mapc 'ruin/setup-lua-keybinds '(lua-mode fennel-mode)))
+
+(define-key lua-mode-map (kbd "M-:") 'elona-next-eval-expression)
 
 (with-eval-after-load 'lsp-mode
   (lsp-register-client
@@ -180,6 +191,10 @@ If ARG is set, don't replace the symbol."
   (when (file-exists-p file)
     (load file)
     (elona-next-eval-sexp-fu-setup)))
+
+(let ((file "/home/ruin/build/work/kotaro/kotaro.el"))
+  (when (file-exists-p file)
+    (load file)))
 
 (require 'xref)
 (defun xref--show-xref-buffer (fetcher alist)
@@ -216,19 +231,118 @@ local keymap that binds `RET' to `xref-quit-and-goto-xref'."
         (current-buffer))))))
 
 (defun ruin/etags-eldoc-function ()
-  (let* ((sym-dotted (prin1-to-string (ruin/dotted-symbol-at-point)))
-         (sym (prin1-to-string (symbol-at-point)))
-         (defs (or (etags--xref-find-definitions sym-dotted) (etags--xref-find-definitions sym))))
-    (when defs
-      (let* ((def (car defs))
-             (raw (substring-no-properties (xref-item-summary def))))
-        (with-temp-buffer
-          (insert raw)
-          (delay-mode-hooks (lua-mode))
-          (font-lock-default-function 'lua-mode)
-          (font-lock-default-fontify-region (point-min)
-                                            (point-max)
-                                            nil)
-          (buffer-string))))))
+  (if (and elona-next--eldoc-saved-message
+           (equal elona-next--eldoc-saved-point (point)))
+      elona-next--eldoc-saved-message
+
+    (setq elona-next--eldoc-saved-message nil
+          elona-next--eldoc-saved-point nil)
+    (elona-next-eldoc-function)
+    (let* ((sym-dotted (ruin/dotted-symbol-at-point))
+           (sym (symbol-at-point))
+           (defs (or (and sym-dotted (etags--xref-find-definitions (prin1-to-string sym-dotted)))
+                     (and sym (etags--xref-find-definitions (prin1-to-string sym))))))
+      (when defs
+        (let* ((def (car defs))
+               (raw (substring-no-properties (xref-item-summary def))))
+          (with-temp-buffer
+            (insert raw)
+            (delay-mode-hooks (lua-mode))
+            (font-lock-default-function 'lua-mode)
+            (font-lock-default-fontify-region (point-min)
+                                              (point-max)
+                                              nil)
+            (buffer-string)))))))
+
+(advice-add 'elona-next--command-jump-to :after
+            (lambda (&rest args)
+              (pulse-momentary-highlight-one-line (point))))
+
+(add-to-list 'compilation-error-regexp-alist
+             '("^[ \t]*\\([^ \t:\\[]+\\):\\([0-9]+\\):" 1 2))
+
+(setq lua-font-lock-keywords
+  `(;; highlight the hash-bang line "#!/foo/bar/lua" as comment
+    ("^#!.*$" . font-lock-comment-face)
+
+    ;; Builtin constants
+    (,(lua-rx (symbol "true" "false" "nil"))
+     . font-lock-constant-face)
+
+    ;; Keywords
+    (,(lua-rx lua-keyword)
+     . font-lock-keyword-face)
+
+    ;; Labels used by the "goto" statement
+    ;; Highlights the following syntax:  ::label::
+    (,(lua-rx "::" ws lua-name ws "::")
+      . font-lock-constant-face)
+
+    ;; Hightlights the name of the label in the "goto" statement like
+    ;; "goto label"
+    (,(lua-rx (symbol (seq "goto" ws+ (group-n 1 lua-name))))
+      (1 font-lock-constant-face))
+
+    ;; Highlight Lua builtin functions and variables
+    (,lua--builtins
+     (1 font-lock-builtin-face) (2 font-lock-builtin-face nil noerror))
+
+    ("^[ \t]*\\_<for\\_>"
+     (,(lua-make-delimited-matcher (lua-rx lua-name) ","
+                                   (lua-rx (or (symbol "in") lua-assignment-op)))
+      nil nil
+      (1 font-lock-variable-name-face nil noerror)
+      (2 font-lock-warning-face t noerror)
+      (3 font-lock-warning-face t noerror)))
+
+    ;; Handle local variable/function names
+    ;;  local blalba, xyzzy =
+    ;;        ^^^^^^  ^^^^^
+    ;;
+    ;;  local function foobar(x,y,z)
+    ;;                 ^^^^^^
+    ;;  local foobar = function(x,y,z)
+    ;;        ^^^^^^
+    ("^[ \t]*\\_<local\\_>"
+     (0 font-lock-keyword-face)
+
+     ;; (* nonl) at the end is to consume trailing characters or otherwise they
+     ;; delimited matcher would attempt to parse them afterwards and wrongly
+     ;; highlight parentheses as incorrect variable name characters.
+     (,(lua-rx point ws lua-funcheader (* nonl))
+      nil nil
+      (1 font-lock-function-name-face nil noerror))
+
+     (,(lua-make-delimited-matcher (lua-rx lua-name) ","
+                                   (lua-rx lua-assignment-op))
+      nil nil
+      (1 font-lock-variable-name-face nil noerror)
+      (2 font-lock-warning-face t noerror)
+      (3 font-lock-warning-face t noerror)))
+
+    (,(lua-rx (or bol ";") ws lua-funcheader)
+     (1 font-lock-function-name-face))
+
+    (,(lua-rx (or (group-n 1
+                           "@" (symbol "author" "copyright" "field" "release"
+                                       "return" "see" "usage" "description"))
+                  (seq (group-n 1 "@" (symbol "param" "class" "name" "table" "field" "function")) ws+
+                       (group-n 2 (+ (not (any "\n" space)))))))
+     (1 font-lock-keyword-face t)
+     (2 font-lock-variable-name-face t noerror))
+
+    (,(lua-rx (seq (group-n 1 "@" (symbol "treturn")) (group-n 3 (or (seq "[" (+ alnum) "]") "")) ws+
+                   (group-n 2 (+ (not (any "\n" space))))))
+     (1 font-lock-keyword-face t)
+     (2 font-lock-type-face t noerror)
+     (3 font-lock-type-face t noerror))
+
+    (,(lua-rx (seq (group-n 1 "@" (symbol "tparam")) (group-n 4 (or (seq "[" (+ alnum) "]") "")) ws+
+                   (group-n 2 (+ (not (any "\n" space)))) ws+
+                   (group-n 3 (+ (not (any "\n" space))))))
+     (1 font-lock-keyword-face t)
+     (2 font-lock-type-face t noerror)
+     (3 font-lock-variable-name-face t noerror)
+     (4 font-lock-type-face t noerror))))
 
 (provide 'ruin-lua)

@@ -5,6 +5,7 @@
 ;(package-require 'slamhound)
 (package-require 'package-lint)
 (package-require 'flycheck-package)
+(package-require 'fennel-mode)
 (require 'smartparens-config)
 (require 'cl)
 (require 'janet-mode)
@@ -13,7 +14,7 @@
       '(scheme-mode emacs-lisp-mode lisp-mode
                     clojure-mode common-lisp-mode lisp-interaction-mode
                     cider-repl-mode inferior-emacs-lisp-mode sly-mrepl-mode
-                    janet-mode inferior-lisp-mode))
+                    janet-mode inferior-lisp-mode fennel-mode))
 
 (defun add-lisp-hook (func)
   (add-hooks lisp-modes func))
@@ -68,11 +69,12 @@
   "lc" 'lispy-convolute
   "lC" 'lispy-convolute-left
   "lO" 'lispy-oneline
-  "lM" 'lispy-alt-multiline
+  "lm" 'lispy-alt-multiline
+  "lM" 'lispy-oneline
   "lS" 'lispy-stringify
   "l/" 'lispy-splice
-  "lr" 'lispy-raise
-  "lR" 'lispy-raise-some
+  "lr" 'lispy-raise-some
+  "lR" 'lispy-raise
   "lx" 'hydra-lispy-x/body
   "lp" 'lispy-clone
   )

@@ -38,6 +38,7 @@
         ("*compilation*" :height 0.3 :noselect t :stick t)
         ("*elona-next-repl-errors*" :height 0.3 :stick t)
         ("*elona-next-repl*" :height 0.4 :stick t)
+        ("*elona-next-help*" :height 0.4 :stick t :noselect t)
         ("*quickrun*" :height 0.3 :stick t)
         (projectile-rails-server-mode :height 0.3 :stick t)
         (semantic-symref-results-mode :position right :width 0.3)

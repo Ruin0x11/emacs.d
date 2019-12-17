@@ -343,9 +343,10 @@ Value is t if a query was formerly required."
 
 ;;; dumb-jump
 (package-require 'dumb-jump)
-(dumb-jump-mode)
-(evil-leader/set-key "fj" 'dumb-jump-go
-  "fp" 'dumb-jump-back)
+; (dumb-jump-mode)
+; (evil-leader/set-key
+;   "fj" 'dumb-jump-go
+;   "fp" 'dumb-jump-back)
 
 
 ;;; mpc
