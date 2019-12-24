@@ -34,11 +34,14 @@
 ;(add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
 
 (ignore-errors
+  (setq ansi-color-names-vector
+        ["gray50" "red3" "green3" "yellow3" "blue2" "magenta3" "cyan3" "gray90"])
+  (setq ansi-color-map (ansi-color-make-color-map))
   (require 'ansi-color)
-  (defun colorize-compilation-buffer ()
-    (let ((inhibit-read-only t))
-      (ansi-color-apply-on-region (point-min) (point-max))))
-  (add-hook 'compilation-filter-hook 'colorize-compilation-buffer))
+  (defun my-colorize-compilation-buffer ()
+    (when (eq major-mode 'compilation-mode)
+      (ansi-color-apply-on-region compilation-filter-start (point-max))))
+  (add-hook 'compilation-filter-hook 'my-colorize-compilation-buffer))
 
 (defun ruin/focus-emacs (orig-fn &rest args)
   (when (executable-find "i3-msg")

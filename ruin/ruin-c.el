@@ -276,11 +276,11 @@
 ;; enable next-error/previous-error in helm-ag
 (add-hook 'helm-ag-mode-hook 'grep-mode)
 
-(defvar ruin/clang-format-buffer-on t)
+(defvar ruin/clang-format-buffer-on nil)
 
-; (add-hook 'before-save-hook (lambda ()
-;                               (when (and ruin/clang-format-buffer-on (derived-mode-p 'c++-mode))
-;                                 (clang-format-buffer))))
+;(add-hook 'before-save-hook (lambda ()
+;                              (when (and ruin/clang-format-buffer-on (derived-mode-p 'c++-mode))
+;                                (clang-format-buffer))))
 
 (let ((doxymacs-file "/usr/share/emacs/site-lisp/doxymacs.el"))
   (when (file-exists-p doxymacs-file)

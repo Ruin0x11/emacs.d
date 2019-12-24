@@ -212,7 +212,7 @@
       downdraft-default-goal-time 5
       downdraft-default-goal-word-count 800)
 
-(add-to-list 'markdown-mode-hook 'writeroom-mode)
+; (add-to-list 'markdown-mode-hook 'writeroom-mode)
 
 ;; (add-hook 'compilation-shell-minor-mode-hook
 ;;           #'(lambda ()

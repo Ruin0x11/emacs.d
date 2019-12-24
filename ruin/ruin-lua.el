@@ -16,13 +16,14 @@
 (add-to-list 'auto-mode-alist '("\\.luacompleterc$" . lua-mode))
 (add-to-list 'interpreter-mode-alist '("lua" . lua-mode))
 
+(setq lua-mode-hook '())
 (add-hook 'lua-mode-hook 'highlight-numbers-mode)
 (add-hook 'lua-mode-hook 'yas-minor-mode)
 (add-hook 'lua-mode-hook 'flycheck-mode)
 (add-hook 'lua-mode-hook 'doxymacs-mode)
 (add-hook 'lua-mode-hook 'company-mode)
 (add-hook 'lua-mode-hook 'lua-block-mode)
-(add-hook 'lua-mode-hook 'eldoc-mode)
+;(add-hook 'lua-mode-hook 'eldoc-mode)
 (add-hook 'lua-mode-hook 'smartparens-mode)
 (add-hook 'lua-mode-hook (lambda ()
                            (setq compilation-auto-jump-to-first-error t)
@@ -46,10 +47,36 @@
         (setq-local tags-file-name (string-join (list (projectile-project-root) "TAGS"))))
       (message "TAGS regenerated."))))
 
+(require 'company-etags)
+
 (setq lua-default-application "luajit"
       tags-revert-without-query t
       tags-case-fold-search nil
-      initial-buffer-choice "/home/ruin/build/elona-next/src/scratch.lua")
+      initial-buffer-choice "/home/ruin/build/elona-next/src/scratch.lua"
+      company-etags-everywhere t)
+
+(setq company-etags-modes (append '(comint-mode) company-etags-modes))
+(add-hook 'comint-mode-hook 'company-mode)
+
+;; redefinition for dotted symbols
+(defun company-etags (command &optional arg &rest ignored)
+  "`company-mode' completion backend for etags."
+  (interactive (list 'interactive))
+  (cl-case command
+    (interactive (company-begin-backend 'company-etags))
+    (prefix (and (apply #'derived-mode-p company-etags-modes)
+                 (or (eq t company-etags-everywhere)
+                     (apply #'derived-mode-p company-etags-everywhere)
+                     (not (company-in-string-or-comment)))
+                 (company-etags-buffer-table)
+                 (or (symbol-name (ruin/dotted-symbol-at-point)) 'stop)))
+    (candidates (company-etags--candidates arg))
+    (location (let ((tags-table-list (company-etags-buffer-table)))
+                (when (fboundp 'find-tag-noselect)
+                  (save-excursion
+                    (let ((buffer (find-tag-noselect arg)))
+                      (cons buffer (with-current-buffer buffer (point))))))))
+    (ignore-case company-etags-ignore-case)))
 
 (defun ruin/get-lua-result ()
   "Gets the last line of the current Lua buffer."
@@ -140,6 +167,22 @@ If ARG is set, don't replace the symbol."
   (interactive)
   (xref-find-references (symbol-name (ruin/dotted-symbol-at-point))))
 
+(defvar ruin/lua-scratch-buffer nil)
+
+(defun ruin/set-lua-scratch-buffer ()
+  (interactive)
+  (setq ruin/lua-scratch-buffer (current-buffer))
+  (message "Scratch buffer: %s" (buffer-name ruin/lua-scratch-buffer)))
+
+(defun ruin/send-lua-scratch-buffer ()
+  (interactive)
+  (elona-next-hotload-this-file)
+  (with-current-buffer ruin/lua-scratch-buffer
+    (lua-send-buffer)))
+
+(define-eval-sexp-fu-flash-command ruin/send-lua-scratch-buffer
+    (eval-sexp-fu-flash (elona-next--bounds-of-buffer)))
+
 (progn
   (defun ruin/setup-lua-keybinds (mode)
     (evil-leader/set-key-for-mode mode
@@ -150,6 +193,7 @@ If ARG is set, don't replace the symbol."
       "fJ" 'ruin/xref-find-definitions-period
       "mi" 'elona-next-start-repl
       "mr" 'elona-next-require-this-file
+      "mc" 'elona-next-run-batch-script
       "eb" 'elona-next-hotload-this-file
       "eB" 'elona-next-send-buffer
       "ee" 'elona-next-eval-expression
@@ -157,6 +201,8 @@ If ARG is set, don't replace the symbol."
       "el" 'elona-next-eval-current-line
       "ei" 'elona-next-insert-require
       "eI" 'elona-next-insert-missing-requires
+      "ek" 'ruin/send-lua-scratch-buffer
+      "eK" 'ruin/set-lua-scratch-buffer
       "ey" 'elona-next-copy-require-path
       "dd" 'elona-next-describe-thing-at-point
       "da" 'elona-next-describe-apropos
@@ -167,6 +213,7 @@ If ARG is set, don't replace the symbol."
   (mapc 'ruin/setup-lua-keybinds '(lua-mode fennel-mode)))
 
 (define-key lua-mode-map (kbd "M-:") 'elona-next-eval-expression)
+(define-key lua-mode-map (kbd "C-c C-k") 'ruin/send-lua-scratch-buffer)
 
 (with-eval-after-load 'lsp-mode
   (lsp-register-client
@@ -261,6 +308,7 @@ local keymap that binds `RET' to `xref-quit-and-goto-xref'."
 (add-to-list 'compilation-error-regexp-alist
              '("^[ \t]*\\([^ \t:\\[]+\\):\\([0-9]+\\):" 1 2))
 
+;; extra keywords for ldoc
 (setq lua-font-lock-keywords
   `(;; highlight the hash-bang line "#!/foo/bar/lua" as comment
     ("^#!.*$" . font-lock-comment-face)

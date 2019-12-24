@@ -58,6 +58,8 @@
 (global-company-mode)
 
 (evil-define-key 'insert company-active-map (kbd "TAB") 'company-complete)
+(define-key comint-mode-map (kbd "C-n") 'evil-complete-next)
+(define-key comint-mode-map (kbd "C-p") 'evil-complete-previous)
 
 ; (eval-after-load 'company
 ;   '(push 'company-files company-backends)

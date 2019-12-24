@@ -219,6 +219,8 @@
 
 (defun ruin/normal-theme ()
   (interactive)
+  (set-frame-font "SGI Screen:style=Regular:pixelsize=14" t)
+  (setq monokai-foreground "#BBBBBB")
   (load-theme 'monokai t)
   ;(toggle-frame-fullscreen)
   )
@@ -289,7 +291,7 @@
 
   (cond ((not window-system) (ruin/init-textmode-theme))
         ((memq system-type '(darwin)) (ruin/normal-theme))
-        (t (ruin/classic-theme-windows))))
+        (t (ruin/normal-theme))))
 
 (if (daemonp)
     (add-hook 'after-make-frame-functions
