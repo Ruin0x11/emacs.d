@@ -333,11 +333,10 @@
           (lambda ()
             (setq-local comment-fill "*")))
 
-(with-eval-after-load 'smartparens
-  (add-to-list 'sp--special-self-insert-commands 'c-electric-paren)
-  (add-to-list 'sp--special-self-insert-commands 'c-electric-brace))
-
-
+(if (not (version< emacs-version "27"))
+    (with-eval-after-load 'smartparens
+      (add-to-list 'sp--special-self-insert-commands 'c-electric-paren)
+      (add-to-list 'sp--special-self-insert-commands 'c-electric-brace)))
 
 (setq doxymacs-blank-multiline-comment-template
  '(n > "/**" > n "* " p  > n " */"))

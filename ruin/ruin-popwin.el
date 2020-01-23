@@ -159,12 +159,22 @@
 ;;          (ansi-term "/bin/zsh")))
 ;;    :default-config-keywords '(:position :bottom :height 10 :stick t)))
 
+(defun get-buffers-matching-mode (mode)
+  "Returns a list of buffers where their major-mode is equal to MODE"
+  (let ((buffer-mode-matches '()))
+   (dolist (buf (buffer-list))
+     (with-current-buffer buf
+       (if (eq mode major-mode)
+           (add-to-list 'buffer-mode-matches buf))))
+   buffer-mode-matches))
+
 (defun popwin-term:multi-term ()
   (interactive)
   (popwin:display-buffer-1
-   (or (get-buffer "*terminal*")
+   (or (get-buffer "*terminal<1>*")
        (save-window-excursion
-         (call-interactively 'multi-term)))
+         (call-interactively 'multi-term)
+         (current-buffer)))
    :default-config-keywords '(:position :bottom :height 10 :stick t)))
 
 (defun close-popwin-if-open ()

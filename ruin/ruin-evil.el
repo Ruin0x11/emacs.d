@@ -23,6 +23,8 @@
 (evil-mode 1)
 (evil-commentary-mode t)
 
+(setq-default evil-kill-on-visual-paste nil)
+
 ;;; leader binds
 (evil-leader/set-leader "<SPC>")
 
@@ -47,6 +49,7 @@
   "dk" 'describe-key
   "dd" 'describe-foo-at-point
   "de" 'flycheck-list-errors
+  "di" 'helm-info
 
   "eD" 'toggle-debug-on-error
   "eQ" 'toggle-debug-on-quit
@@ -332,7 +335,7 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
   "h" 'evil-backward-char
   "?" 'evil-search-backward)
 
-(when (not (window-system))
+(when (not (or (window-system) (daemonp)))
   (define-key evil-normal-state-map [(tab)]        'evil-jump-forward)
   (define-key evil-normal-state-map (kbd "TAB")    'evil-jump-forward)
   (define-key evil-normal-state-map (kbd "<tab>")  'evil-jump-forward))

@@ -181,4 +181,6 @@ truncates lines returned by the compilation process."
         (with-current-buffer buffer
           (ewoc-filter jabber-chat-ewoc (lambda (elt) (not (eq (car elt) :muc-notice))))))))
 
+(add-hook 'after-find-file 'recentf-save-list)
+
 (provide 'ruin-general)

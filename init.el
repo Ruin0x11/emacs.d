@@ -50,7 +50,7 @@
 (dolist (source '(("melpa" . "http://melpa.org/packages/")
                   ("elpa" . "http://tromey.com/elpa/")))
   (add-to-list 'package-archives source t))
-;(package-initialize)
+(package-initialize)
 (when (online?)
   (unless package-archive-contents (package-refresh-contents)))
 
@@ -116,9 +116,9 @@
         ruin-flycheck
         ruin-snippet
         ruin-git
-        ;ruin-mail
         ruin-shell
         ruin-popwin
+        ruin-mail
         ruin-misc-modes
                                         ;ruin-x11
                                         ; ruin-home

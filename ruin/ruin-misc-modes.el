@@ -279,6 +279,14 @@
 
 ;;; hsp-mode
 (require 'hsp-mode)
+(evil-leader/set-key
+  "fd" 'xref-find-definitions
+  "fg" 'xref-find-references)
+
+(add-hook 'hsp-mode-hook
+          (lambda ()
+            (eldoc-mode)
+            (setq-local eldoc-documentation-function 'ruin/etags-eldoc-function)))
 
 
 ;;; uim

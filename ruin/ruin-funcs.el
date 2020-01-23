@@ -1038,4 +1038,18 @@ will be killed."
         (delq (current-buffer)
               (remove-if-not 'buffer-file-name (buffer-list)))))
 
+(defun reload-dir-locals-for-current-buffer ()
+  "reload dir locals for the current buffer"
+  (interactive)
+  (let ((enable-local-variables :all))
+    (hack-dir-local-variables-non-file-buffer)))
+
+(defun remove-from-list (lstvar elem)
+  (cl-labels ((dlrgn/remove (lst elem)
+                            (cond ((null lst) nil)
+                                  ((equal elem (car lst)) (cdr lst))
+                                  (t (cons (car lst) (dlrgn/remove (cdr lst) elem))))))
+    (set lstvar (dlrgn/remove (symbol-value lstvar) elem))))
+
+
 (provide 'ruin-funcs)

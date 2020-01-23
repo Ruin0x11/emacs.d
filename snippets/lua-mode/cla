@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: class
+# key: cla
+# --
+local ${1:`(file-name-nondirectory (file-name-sans-extension (buffer-file-name)))`} = class("$1")
+
+function $1:init()
+end
+
+return $1

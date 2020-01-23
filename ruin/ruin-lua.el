@@ -20,7 +20,7 @@
 (add-hook 'lua-mode-hook 'highlight-numbers-mode)
 (add-hook 'lua-mode-hook 'yas-minor-mode)
 (add-hook 'lua-mode-hook 'flycheck-mode)
-(add-hook 'lua-mode-hook 'doxymacs-mode)
+;(add-hook 'lua-mode-hook 'doxymacs-mode)
 (add-hook 'lua-mode-hook 'company-mode)
 (add-hook 'lua-mode-hook 'lua-block-mode)
 ;(add-hook 'lua-mode-hook 'eldoc-mode)
@@ -52,7 +52,7 @@
 (setq lua-default-application "luajit"
       tags-revert-without-query t
       tags-case-fold-search nil
-      initial-buffer-choice "/home/ruin/build/elona-next/src/scratch.lua"
+      ;initial-buffer-choice "/home/ruin/build/elona-next/src/scratch.lua"
       company-etags-everywhere t)
 
 (setq company-etags-modes (append '(comint-mode) company-etags-modes))
@@ -234,48 +234,48 @@ If ARG is set, don't replace the symbol."
 
 (let ((file (if (eq system-type 'windows-nt)
                 "z:/build/elona-next/src/elona-next.el"
-              "/home/ruin/build/elona-next/src/elona-next.el")))
+              (string-join (list (getenv "HOME") "/build/elona-next/src/elona-next.el")))))
   (when (file-exists-p file)
     (load file)
     (elona-next-eval-sexp-fu-setup)))
 
-(let ((file "/home/ruin/build/work/kotaro/kotaro.el"))
+(let ((file (string-join (list (getenv "HOME") "/build/work/kotaro/kotaro.el"))))
   (when (file-exists-p file)
     (load file)))
 
-(require 'xref)
-(defun xref--show-xref-buffer (fetcher alist)
-  (cl-assert (functionp fetcher))
-  (let* ((xrefs
-          (or
-           (assoc-default 'fetched-xrefs alist)
-           (funcall fetcher)))
-         (xref-alist (xref--analyze xrefs)))
-    (with-current-buffer (get-buffer-create xref-buffer-name)
-      (xref--xref-buffer-mode)
-      (xref--show-common-initialize xref-alist fetcher alist)
-      (display-buffer (current-buffer))
-      (next-error)
-      (current-buffer))))
-
-(defun xref--show-defs-buffer-at-bottom (fetcher alist)
-  "Show definitions list in a window at the bottom.
-When there is more than one definition, split the selected window
-and show the list in a small window at the bottom.  And use a
-local keymap that binds `RET' to `xref-quit-and-goto-xref'."
-  (let ((xrefs (funcall fetcher)))
-    (cond
-     ((not (cdr xrefs))
-      (xref-pop-to-location (car xrefs)
-                            (assoc-default 'display-action alist)))
-     (t
-      (with-current-buffer (get-buffer-create xref-buffer-name)
-        (xref--transient-buffer-mode)
-        (xref--show-common-initialize (xref--analyze xrefs) fetcher alist)
-        (display-buffer (current-buffer)
-                       '(display-buffer-in-direction . ((direction . below))))
-        (next-error)
-        (current-buffer))))))
+; (require 'xref)
+; (defun xref--show-xref-buffer (fetcher alist)
+;   (cl-assert (functionp fetcher))
+;   (let* ((xrefs
+;           (or
+;            (assoc-default 'fetched-xrefs alist)
+;            (funcall fetcher)))
+;          (xref-alist (xref--analyze xrefs)))
+;     (with-current-buffer (get-buffer-create xref-buffer-name)
+;       (xref--xref-buffer-mode)
+;       (xref--show-common-initialize xref-alist fetcher alist)
+;       (display-buffer (current-buffer))
+;       (next-error)
+;       (current-buffer))))
+;
+; (defun xref--show-defs-buffer-at-bottom (fetcher alist)
+;   "Show definitions list in a window at the bottom.
+; When there is more than one definition, split the selected window
+; and show the list in a small window at the bottom.  And use a
+; local keymap that binds `RET' to `xref-quit-and-goto-xref'."
+;   (let ((xrefs (funcall fetcher)))
+;     (cond
+;      ((not (cdr xrefs))
+;       (xref-pop-to-location (car xrefs)
+;                             (assoc-default 'display-action alist)))
+;      (t
+;       (with-current-buffer (get-buffer-create xref-buffer-name)
+;         (xref--transient-buffer-mode)
+;         (xref--show-common-initialize (xref--analyze xrefs) fetcher alist)
+;         (display-buffer (current-buffer)
+;                        '(display-buffer-in-direction . ((direction . below))))
+;         (next-error)
+;         (current-buffer))))))
 
 (defun ruin/etags-eldoc-function ()
   (if (and elona-next--eldoc-saved-message

@@ -219,7 +219,8 @@
 
 (defun ruin/normal-theme ()
   (interactive)
-  (set-frame-font "SGI Screen:style=Regular:pixelsize=14" t)
+  (set-frame-font "Gohufont:style=Regular:pixelsize=14" t)
+  (set-frame-parameter (selected-frame) 'internal-border-width 4)
   (setq monokai-foreground "#BBBBBB")
   (load-theme 'monokai t)
   ;(toggle-frame-fullscreen)
@@ -271,6 +272,24 @@
   (transparency 95)
   (toggle-frame-fullscreen))
 
+(defun ruin/smilebasic-theme ()
+  (interactive)
+  (set-frame-font "-Take-SMILEBASIC-normal-normal-normal-*-8-*-*-*-d-0-iso10646-1")
+  (setq smilebasic-fancy-linum t)
+  (load-theme 'smilebasic t)
+  (global-linum-mode t)
+  (setq-default linum-format "%4d)")
+  (setq-default line-spacing 0))
+
+(defun ruin/smilebasic-ex-theme ()
+  (interactive)
+  (set-frame-font "Gohufont:style=Regular:pixelsize=14" t)
+  (setq smilebasic-fancy-linum nil)
+  (load-theme 'smilebasic t)
+  (global-linum-mode t)
+  (setq-default linum-format "%4d")
+  (setq-default line-spacing 0))
+
 (defun ruin/init-spaceline ()
   (spaceline-compile)
   ;; (spaceline-toggle-org-clock-on)
@@ -305,7 +324,8 @@
 
 (package-require 'fill-column-indicator)
 (setq fill-column 80)
-;(fci-mode)
+(setq frame-resize-pixelwise t)
+;fci-mode)
 
 (defun ruin/enable-filling ()
   (interactive)
@@ -313,6 +333,11 @@
   (setq fill-column 80)
   (auto-fill-mode)
   (fci-mode 0))
+
+(defun ruin/center-window-floating ()
+  (interactive)
+  (set-frame-size (selected-frame) 80 70)
+  (set-frame-position (selected-frame) (- (/ (display-pixel-width) 2) (/ (window-pixel-width) 2)) (- (/ (display-pixel-height) 2) (/ (window-pixel-height) 2))))
 
 (add-hook 'rust-mode-hook 'ruin/enable-filling)
 

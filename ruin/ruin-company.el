@@ -49,10 +49,8 @@
   )
 
 (package-require 'company)
-(package-require 'company-lsp)
 (package-require 'company-racer)
 (require 'company)
-(push 'company-lsp company-backends)
 (push 'company-racer company-backends)
 
 (global-company-mode)

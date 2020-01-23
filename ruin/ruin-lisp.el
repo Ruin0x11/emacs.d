@@ -9,6 +9,7 @@
 (require 'smartparens-config)
 (require 'cl)
 (require 'janet-mode)
+(require 'eval-sexp-fu)
 
 (setq lisp-modes
       '(scheme-mode emacs-lisp-mode lisp-mode
@@ -160,6 +161,15 @@
                             (define-key inferior-emacs-lisp-mode-map (kbd "<down>") 'comint-next-input)
                             (define-key inferior-emacs-lisp-mode-map (kbd "<up>") 'comint-previous-input)))
 (add-to-list 'evil-emacs-state-modes 'inferior-emacs-lisp-mode)
+
+(define-eval-sexp-fu-flash-command eval-last-sexp
+  (eval-sexp-fu-flash (when (ignore-errors (elisp--preceding-sexp))
+                        (with-esf-end-of-sexp
+                          (save-excursion
+                            (backward-sexp)
+                            (sp-beginning-of-sexp)
+                            (backward-char)
+                            (bounds-of-thing-at-point 'sexp))))))
 
 ;;; clojure
 (package-require 'cider)
