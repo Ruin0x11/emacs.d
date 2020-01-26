@@ -50,7 +50,8 @@
 (dolist (source '(("melpa" . "http://melpa.org/packages/")
                   ("elpa" . "http://tromey.com/elpa/")))
   (add-to-list 'package-archives source t))
-(package-initialize)
+(when (version< emacs-version "27.0")
+  (package-initialize))
 (when (online?)
   (unless package-archive-contents (package-refresh-contents)))
 
@@ -116,17 +117,20 @@
         ruin-flycheck
         ruin-snippet
         ruin-git
+        ;ruin-mail
         ruin-shell
         ruin-popwin
-        ruin-mail
         ruin-misc-modes
                                         ;ruin-x11
                                         ; ruin-home
         ))
 
-;; load modularized features
-(dolist (file ruin-pkg)
-  (require file))
+(defvar ruin/min-init nil)
+
+(unless ruin/min-init
+  ;; load modularized features
+  (dolist (file ruin-pkg)
+    (require file)))
 
 (load custom-file 'noerror)
 (put 'downcase-region 'disabled nil)

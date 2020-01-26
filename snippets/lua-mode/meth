@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: method
+# key: meth
+# --
+
+function ${`(file-name-nondirectory (file-name-sans-extension (buffer-file-name)))`}:$1($2)$3
+end

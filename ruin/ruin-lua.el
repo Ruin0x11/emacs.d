@@ -208,7 +208,9 @@ If ARG is set, don't replace the symbol."
       "da" 'elona-next-describe-apropos
       "md" 'ruin/start-mobdebug
       "mt" 'ruin/regenerate-ltags
-      "mf" 'kotaro-format-buffer))
+      "mf" 'kotaro-format-buffer
+      "mb" 'elona-next-eval-buffer
+      ))
 
   (mapc 'ruin/setup-lua-keybinds '(lua-mode fennel-mode)))
 

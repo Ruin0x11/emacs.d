@@ -276,6 +276,7 @@
   (interactive)
   (set-frame-font "-Take-SMILEBASIC-normal-normal-normal-*-8-*-*-*-d-0-iso10646-1")
   (setq smilebasic-fancy-linum t)
+  (load (locate-user-emacs-file "site-lisp/smilebasic-theme.el"))
   (load-theme 'smilebasic t)
   (global-linum-mode t)
   (setq-default linum-format "%4d)")
@@ -287,7 +288,7 @@
   (setq smilebasic-fancy-linum nil)
   (load-theme 'smilebasic t)
   (global-linum-mode t)
-  (setq-default linum-format "%4d")
+  (setq-default linum-format "%06d)")
   (setq-default line-spacing 0))
 
 (defun ruin/init-spaceline ()
