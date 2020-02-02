@@ -394,18 +394,21 @@ The following %-sequences are provided:
 (when (memq system-type '(darwin))
   (setq battery-status-function #'ruin/battery-pmset))
 
-(add-hook 'term-mode-hook
-          (lambda ()
-            (setq ansi-term-color-vector
-                  [term
-                   term-color-black
-                   term-color-red
-                   term-color-green
-                   term-color-yellow
-                   term-color-blue
-                   term-color-magenta
-                   term-color-cyan
-                   term-color-white])))
+(defun ruin/set-ansi-colors ()
+    (lambda ()
+      (setq ansi-color-names-vector
+            ["gray50"
+             "red3"
+             "green3"
+             "yellow3"
+             "blue2"
+             "magenta3"
+             "cyan3"
+             "gray70"])
+      (setq ansi-color-map (ansi-color-make-color-map))))
+
+(add-hook 'term-mode-hook 'ruin/set-ansi-colors)
+(add-hook 'compilation-mode-hook 'ruin/set-ansi-colors)
 
 ;; Color the evil tag - colors taken from spaceline
 (setq evil-normal-state-tag   (propertize " <N> " 'face '((:background "DarkGoldenrod2" :foreground "black")))

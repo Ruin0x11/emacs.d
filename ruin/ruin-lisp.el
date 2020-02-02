@@ -119,23 +119,9 @@
      (commentary normal visual motion)
      (additional-motions normal visual motion)
      (additional-insert)
-     (text-objects normal visual motion)
+     ;(text-objects normal visual motion)
      (slurp/barf-cp normal visual motion)
      (additional visual)))
-  (evil-define-key nil evil-inner-text-objects-map
-    "a" #'lispyville-inner-atom
-    "l" #'lispyville-inner-list
-    "x" #'lispyville-inner-sexp
-    "f" #'lispyville-inner-function
-    "c" #'lispyville-inner-comment
-    "S" #'lispyville-inner-string)
-  (evil-define-key nil evil-outer-text-objects-map
-    "a" #'lispyville-a-atom
-    "l" #'lispyville-a-list
-    "x" #'lispyville-a-sexp
-    "f" #'lispyville-a-function
-    "c" #'lispyville-a-comment
-    "S" #'lispyville-a-string)
   (lispyville--define-key '(normal visual motion)
            "[" #'lispyville-previous-opening
            "]" #'lispyville-next-opening

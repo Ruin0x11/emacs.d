@@ -288,6 +288,11 @@
             (eldoc-mode)
             (setq-local eldoc-documentation-function 'ruin/etags-eldoc-function)))
 
+(setq hsp-imenu-generic-expression
+  '(("Function"  "^\\s *#def[c]?func\\s +\\(?:[^( \t\n.]*\\.\\)?\\([^( \t\n]+\\)" 1)
+    ("Label"  "^\\s *\\*\\(?:[^( \t\n.]*\\.\\)?\\([^( \t\n]+\\)" 1)
+    ))
+
 
 ;;; uim
 (make-obsolete
@@ -796,6 +801,12 @@ Value is t if a query was formerly required."
 
 ;;; Docker
 (package-require 'dockerfile-mode)
+
+;;; crystal
+(package-require 'crystal-mode)
+
+;;; string-inflection
+(package-require 'string-inflection)
 
 ;;; Local variables
 ;; Local Variables:

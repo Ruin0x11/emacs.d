@@ -117,7 +117,7 @@
         ruin-flycheck
         ruin-snippet
         ruin-git
-        ;ruin-mail
+        ruin-mail
         ruin-shell
         ruin-popwin
         ruin-misc-modes
