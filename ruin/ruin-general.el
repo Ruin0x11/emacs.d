@@ -112,7 +112,6 @@ truncates lines returned by the compilation process."
              (when (= (point) (point-max))
                (return)))))
 
-
 (add-hook 'compilation-filter-hook 'truncate-compilation-long-lines)
 
 (when (eq system-type 'windows-nt)

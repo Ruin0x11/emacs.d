@@ -161,12 +161,6 @@ This segment overrides the modeline functionality of `org-mode-line-string'."
   :global-override org-mode-line-string
   :face ruin/warning-face)
 
-(spaceline-define-segment org-clock-not
-  "Show when not clocking."
-  (concat "asd" "zxc")
-  :enabled t
-  )
-
 (defun ruin/init-textmode-theme()
   (load-theme 'monokai t)
 
@@ -214,9 +208,12 @@ This segment overrides the modeline functionality of `org-mode-line-string'."
 (defun ruin/growth-theme ()
   (interactive)
   (when (eq system-type 'windows-nt)
-    (set-frame-font "y-outline-ＭＳ ゴシック-normal-normal-normal-mono-20-*-*-*-c-*-iso10646-1"))
-  (load-theme 'consonance t)
-  (transparency 95)
+    (set-frame-font "y-outline-ＭＳ ゴシック-normal-normal-normal-mono-12-*-*-*-c-*-iso10646-1"))
+  (setq undy-foreground "#E2E2DA")
+  ; (load-theme 'undy t)
+  (load-theme 'consonance-two t)
+  ;(load-theme 'consonance t)
+  (transparency 100)
   (toggle-frame-fullscreen))
 
 (defun ruin/init-spaceline ()
@@ -236,7 +233,7 @@ This segment overrides the modeline functionality of `org-mode-line-string'."
 
   (cond ((not window-system) (ruin/init-textmode-theme))
         ((memq system-type '(darwin)) (ruin/normal-theme))
-        (t (ruin/classic-theme-windows))))
+        (t (ruin/growth-theme))))
 
 (if (daemonp)
     (add-hook 'after-make-frame-functions

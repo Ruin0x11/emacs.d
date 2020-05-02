@@ -25,4 +25,13 @@
 (add-hook 'magit-mode-hook
 	  (lambda() (setq yas-dont-activate t)))
 
+(defun ruin/aya-expand ()
+  (interactive)
+  (aya-expand)
+  (evil-insert 0))
+
+(package-require 'auto-yasnippet)
+(global-set-key (kbd "M-y") #'aya-create)
+(global-set-key (kbd "M-w") #'ruin/aya-expand)
+
 (provide 'ruin-snippet)

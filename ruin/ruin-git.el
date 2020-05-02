@@ -66,7 +66,7 @@
 ;; always open symlinks as actual file
 (setq vc-follow-symlinks t
       magit-commit-show-diff t
-      magit_commit-ask-to-stage nil)
+      magit-commit-ask-to-stage nil)
 
 (add-to-list 'evil-insert-state-modes 'git-commit-mode)
 

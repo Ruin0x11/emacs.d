@@ -16,33 +16,23 @@
 (add-to-list 'auto-mode-alist '("\\.luacompleterc$" . lua-mode))
 (add-to-list 'interpreter-mode-alist '("lua" . lua-mode))
 
+(setq lua-mode-hook '())
 (add-hook 'lua-mode-hook 'highlight-numbers-mode)
 (add-hook 'lua-mode-hook 'yas-minor-mode)
 (add-hook 'lua-mode-hook 'flycheck-mode)
-;(add-hook 'lua-mode-hook 'doxymacs-mode)
+; (add-hook 'lua-mode-hook 'doxymacs-mode)
 (add-hook 'lua-mode-hook 'company-mode)
 (add-hook 'lua-mode-hook 'lua-block-mode)
-(add-hook 'lua-mode-hook 'eldoc-mode)
+;(add-hook 'lua-mode-hook 'eldoc-mode)
 (add-hook 'lua-mode-hook 'smartparens-mode)
 (add-hook 'lua-mode-hook (lambda ()
                            (setq compilation-auto-jump-to-first-error t)
-                           (make-variable-buffer-local 'after-save-hook)
-                           ;(add-to-list 'after-save-hook (lambda ()
-                           ;                                (when (projectile-project-p)
-                           ;                                  (let ((default-directory (projectile-project-root)))
-                           ;                                    (shell-command (format "bash -e ltags -nr -e %s **/*.lua"))))))
                            (when (projectile-project-p)
                              (setq-local tags-file-name (string-join (list (projectile-project-root) "TAGS"))))
-                           (setq-local eldoc-documentation-function 'ruin/etags-eldoc-function)
-                           (setq compilation-error-regexp-alist (list (list lua-traceback-line-re 1 2)))
+                           ; (setq-local eldoc-documentation-function 'ruin/etags-eldoc-function)
                            (define-key lua-mode-map (kbd "RET") 'indent-new-comment-line)
-
-                           ;; luacheck for whatever reason cannot
-                           ;; handle forward slashes in its --config
-                           ;; option.
                            (setq flycheck-locate-config-file-functions
                                  '(ruin/flycheck-locate-config-file-ancestor-directories))
-
                            (if-let* ((cmd-buffer (get-buffer "*mobdebug main.lua shell*"))
                                      (proc (get-buffer-process cmd-buffer)))
                                (realgud:attach-cmd-buffer cmd-buffer))))
@@ -50,15 +40,23 @@
                                         ;                               (when (equal major-mode 'lua-mode)
                                         ;                                 (format-all-buffer))))
 
-(when (eq system-type 'windows-nt)
-  (setq initial-buffer-choice '("z:/build/elona-next/src/scratch.lua")))
+(defun ruin/regenerate-ltags ()
+  (interactive)
+  (when (projectile-project-p)
+    (let ((default-directory (projectile-project-root)))
+      (shell-command "ltags -nr -e **/*.lua")
+      (when (projectile-project-p)
+        (setq-local tags-file-name (string-join (list (projectile-project-root) "TAGS"))))
+      (message "TAGS regenerated."))))
 
 (defun ruin/flycheck-locate-config-file-ancestor-directories (file _checker)
   (when-let ((path (flycheck-locate-config-file-ancestor-directories file _checker)))
     (subst-char-in-string ?/ ?\\ path)))
 
-(setq tags-revert-without-query t
-      tags-case-fold-search nil)
+(setq lua-default-application "luajit"
+      tags-revert-without-query t
+      tags-case-fold-search nil
+      initial-buffer-choice "c:/Users/kuzuki/build/microscopia/scratch/how_it_looks.lua")
 
 (defun ruin/get-lua-result ()
   "Gets the last line of the current Lua buffer."
@@ -67,8 +65,7 @@
     (goto-char (point-max))
     (forward-line -1)
     (let ((line (thing-at-point 'line t)))
-      (substring line 2 (- (length line) 1))))
-  )
+      (substring line 2 (- (length line) 1)))))
 
 (defun ruin/run-lua (cmd)
   "Run CMD in the current Lua buffer and return the last line of the result."
@@ -126,46 +123,77 @@ If ARG is set, don't replace the symbol."
 
 (defun ruin/xref-find-definitions ()
   (interactive)
-  (xref-find-definitions (symbol-name (symbol-at-point))))
+  (if-let ((sym (symbol-at-point)))
+      (xref-find-definitions (symbol-name sym))
+    (call-interactively 'xref-find-definitions)))
 
 (defun ruin/xref-find-references ()
   (interactive)
-  (xref-find-references (symbol-name (symbol-at-point))))
+  (if-let ((sym (symbol-at-point)))
+      (xref-find-references (symbol-name sym))
+    (call-interactively 'xref-find-references)))
+
+(defun ruin/dotted-symbol-at-point ()
+  (interactive)
+  (with-syntax-table (copy-syntax-table)
+    (modify-syntax-entry ?. "_")
+    (symbol-at-point)))
 
 (defun ruin/xref-find-definitions-period ()
   (interactive)
-  (with-syntax-table (copy-syntax-table)
-    (modify-syntax-entry ?. "_")
-    (xref-find-definitions (symbol-name (symbol-at-point)))))
+  (xref-find-definitions (symbol-name (ruin/dotted-symbol-at-point))))
 
 (defun ruin/xref-find-references-period ()
   (interactive)
-  (with-syntax-table (copy-syntax-table)
-    (modify-syntax-entry ?. "_")
-    (xref-find-references (symbol-name (symbol-at-point)))))
+  (xref-find-references (symbol-name (ruin/dotted-symbol-at-point))))
 
-(evil-leader/set-key-for-mode 'lua-mode
-  ; "mi" 'ruin/initialize-lua
-  ; "mc" 'ruin/query-lua-data-chara
-  ; "mt" 'ruin/query-lua-data-item
-  ; "mq" 'ruin/query-lua-data
-  ; "mo" 'ruin/edit-console-lua
-  "fd" 'ruin/xref-find-definitions
-  "fD" 'ruin/xref-find-definitions-period
-  "fg" 'ruin/xref-find-references
-  "fG" 'ruin/xref-find-references-period
-  "mi" 'elona-next-start-repl
-  "mr" 'elona-next-require-this-file
-  "eb" 'elona-next-hotload-this-file
-  "eB" 'elona-next-send-buffer
-  "el" 'elona-next-send-current-line
-  "er" 'elona-next-require-this-file
-  "ey" 'elona-next-copy-require-path
-  "ei" 'elona-next-insert-require
-  "md" 'ruin/start-mobdebug
-  ;"ee" 'realgud:cmd-eval
-  ;"er" 'realgud:cmd-eval-region
-  )
+(defvar ruin/lua-scratch-buffer nil)
+
+(defun ruin/set-lua-scratch-buffer ()
+  (interactive)
+  (setq ruin/lua-scratch-buffer (current-buffer))
+  (message "Scratch buffer: %s" (buffer-name ruin/lua-scratch-buffer)))
+
+(defun ruin/send-lua-scratch-buffer ()
+  (interactive)
+  (open-nefia-hotload-this-file)
+  (with-current-buffer ruin/lua-scratch-buffer
+    (open-nefia--send-to-repl (buffer-string))))
+
+(define-eval-sexp-fu-flash-command ruin/send-lua-scratch-buffer
+    (eval-sexp-fu-flash (open-nefia--bounds-of-buffer)))
+
+(progn
+  (defun ruin/setup-lua-keybinds (mode)
+    (evil-leader/set-key-for-mode mode
+      "fg" 'ruin/xref-find-references
+      "fG" 'ruin/xref-find-references-period
+      "fd" 'open-nefia-jump-to-definition
+      "fj" 'ruin/xref-find-definitions
+      "fJ" 'ruin/xref-find-definitions-period
+      "mi" 'open-nefia-start-repl
+      "mr" 'open-nefia-require-this-file
+      "mc" 'open-nefia-run-headlessly
+      "eb" 'open-nefia-hotload-this-file
+      "eB" 'open-nefia-send-buffer
+      "ee" 'open-nefia-eval-expression
+      "er" 'open-nefia-require-this-file
+      "el" 'open-nefia-eval-current-line
+      "ei" 'open-nefia-insert-require
+      "eI" 'open-nefia-insert-missing-requires
+      "ek" 'ruin/send-lua-scratch-buffer
+      "eK" 'ruin/set-lua-scratch-buffer
+      "ey" 'open-nefia-copy-require-path
+      "dd" 'open-nefia-describe-thing-at-point
+      "da" 'open-nefia-describe-apropos
+      "md" 'ruin/start-mobdebug
+      "mt" 'ruin/regenerate-ltags
+      "mf" 'kotaro-format-buffer))
+
+  (mapc 'ruin/setup-lua-keybinds '(lua-mode fennel-mode)))
+
+(define-key lua-mode-map (kbd "M-:") 'open-nefia-eval-expression)
+(define-key lua-mode-map (kbd "C-c C-k") 'ruin/send-lua-scratch-buffer)
 
 (with-eval-after-load 'lsp-mode
   (lsp-register-client
@@ -185,11 +213,15 @@ If ARG is set, don't replace the symbol."
 (setq tempo-interactive t)
 
 (let ((file (if (eq system-type 'windows-nt)
-                "z:/build/elona-next/src/elona-next.el"
-              "/home/ruin/build/elona-next/src/elona-next.el")))
+                "c:/Users/kuzuki/build/elona-next/editor/emacs/open-nefia.el"
+              "/home/ruin/build/open-nefia/src/open-nefia.el")))
   (when (file-exists-p file)
     (load file)
-    (elona-next-eval-sexp-fu-setup)))
+    (open-nefia-eval-sexp-fu-setup)))
+
+(let ((file "/home/ruin/build/work/kotaro/kotaro.el"))
+  (when (file-exists-p file)
+    (load file)))
 
 (require 'xref)
 (defun xref--show-xref-buffer (fetcher alist)
@@ -226,25 +258,126 @@ local keymap that binds `RET' to `xref-quit-and-goto-xref'."
         (current-buffer))))))
 
 (defun ruin/etags-eldoc-function ()
-  (let* ((sym (prin1-to-string (symbol-at-point)))
-         (defs (etags--xref-find-definitions sym)))
-    (when defs
-      (let* ((def (car defs))
-             (raw (substring-no-properties (xref-item-summary def))))
-        (with-temp-buffer
-          (insert raw)
-          (delay-mode-hooks (lua-mode))
-          (font-lock-default-function 'lua-mode)
-          (font-lock-default-fontify-region (point-min)
-                                            (point-max)
-                                            nil)
-          (buffer-string))))))
+  (if (and open-nefia--eldoc-saved-message
+           (equal open-nefia--eldoc-saved-point (point)))
+      open-nefia--eldoc-saved-message
+
+    (setq open-nefia--eldoc-saved-message nil
+          open-nefia--eldoc-saved-point nil)
+    (open-nefia-eldoc-function)
+    (let* ((sym-dotted (ruin/dotted-symbol-at-point))
+           (sym (symbol-at-point))
+           (defs (or (and sym-dotted (etags--xref-find-definitions (prin1-to-string sym-dotted)))
+                     (and sym (etags--xref-find-definitions (prin1-to-string sym))))))
+      (when defs
+        (let* ((def (car defs))
+               (raw (substring-no-properties (xref-item-summary def))))
+          (with-temp-buffer
+            (insert raw)
+            (delay-mode-hooks (lua-mode))
+            (font-lock-default-function 'lua-mode)
+            (font-lock-default-fontify-region (point-min)
+                                              (point-max)
+                                              nil)
+            (buffer-string)))))))
+
+(advice-add 'open-nefia--command-jump-to :after
+            (lambda (&rest args)
+              (pulse-momentary-highlight-one-line (point))))
+
+(add-to-list 'compilation-error-regexp-alist
+             '("^[ \t]*\\([^ \t:\\[]+\\):\\([0-9]+\\):" 1 2))
+
+(setq lua-font-lock-keywords
+  `(;; highlight the hash-bang line "#!/foo/bar/lua" as comment
+    ("^#!.*$" . font-lock-comment-face)
+
+    ;; Builtin constants
+    (,(lua-rx (symbol "true" "false" "nil"))
+     . font-lock-constant-face)
+
+    ;; Keywords
+    (,(lua-rx lua-keyword)
+     . font-lock-keyword-face)
+
+    ;; Labels used by the "goto" statement
+    ;; Highlights the following syntax:  ::label::
+    (,(lua-rx "::" ws lua-name ws "::")
+      . font-lock-constant-face)
+
+    ;; Hightlights the name of the label in the "goto" statement like
+    ;; "goto label"
+    (,(lua-rx (symbol (seq "goto" ws+ (group-n 1 lua-name))))
+      (1 font-lock-constant-face))
+
+    ;; Highlight Lua builtin functions and variables
+    (,lua--builtins
+     (1 font-lock-builtin-face) (2 font-lock-builtin-face nil noerror))
+
+    ("^[ \t]*\\_<for\\_>"
+     (,(lua-make-delimited-matcher (lua-rx lua-name) ","
+                                   (lua-rx (or (symbol "in") lua-assignment-op)))
+      nil nil
+      (1 font-lock-variable-name-face nil noerror)
+      (2 font-lock-warning-face t noerror)
+      (3 font-lock-warning-face t noerror)))
+
+    ;; Handle local variable/function names
+    ;;  local blalba, xyzzy =
+    ;;        ^^^^^^  ^^^^^
+    ;;
+    ;;  local function foobar(x,y,z)
+    ;;                 ^^^^^^
+    ;;  local foobar = function(x,y,z)
+    ;;        ^^^^^^
+    ("^[ \t]*\\_<local\\_>"
+     (0 font-lock-keyword-face)
+
+     ;; (* nonl) at the end is to consume trailing characters or otherwise they
+     ;; delimited matcher would attempt to parse them afterwards and wrongly
+     ;; highlight parentheses as incorrect variable name characters.
+     (,(lua-rx point ws lua-funcheader (* nonl))
+      nil nil
+      (1 font-lock-function-name-face nil noerror))
+
+     (,(lua-make-delimited-matcher (lua-rx lua-name) ","
+                                   (lua-rx lua-assignment-op))
+      nil nil
+      (1 font-lock-variable-name-face nil noerror)
+      (2 font-lock-warning-face t noerror)
+      (3 font-lock-warning-face t noerror)))
+
+    (,(lua-rx (or bol ";") ws lua-funcheader)
+     (1 font-lock-function-name-face))
+
+    (,(lua-rx (or (group-n 1
+                           "@" (symbol "author" "copyright" "field" "release"
+                                       "return" "see" "usage" "description"))
+                  (seq (group-n 1 "@" (symbol "param" "class" "name" "table" "field" "function")) ws+
+                       (group-n 2 (+ (not (any "\n" space)))))))
+     (1 font-lock-keyword-face t)
+     (2 font-lock-variable-name-face t noerror))
+
+    (,(lua-rx (seq (group-n 1 "@" (symbol "treturn")) (group-n 3 (or (seq "[" (+ alnum) "]") "")) ws+
+                   (group-n 2 (+ (not (any "\n" space))))))
+     (1 font-lock-keyword-face t)
+     (2 font-lock-type-face t noerror)
+     (3 font-lock-type-face t noerror))
+
+    (,(lua-rx (seq (group-n 1 "@" (symbol "tparam")) (group-n 4 (or (seq "[" (+ alnum) "]") "")) ws+
+                   (group-n 2 (+ (not (any "\n" space)))) ws+
+                   (group-n 3 (+ (not (any "\n" space))))))
+     (1 font-lock-keyword-face t)
+     (2 font-lock-type-face t noerror)
+     (3 font-lock-variable-name-face t noerror)
+     (4 font-lock-type-face t noerror))))
+
 
 ;(add-to-list 'compilation-error-regexp-alist
 ;             '("\\(.+\\):\\([1-9][0-9]+\\) in " 1 2))
+(setq compilation-error-regexp-alist (list (list lua-traceback-line-re 1 2)))
 (add-to-list 'compilation-error-regexp-alist
              '(" in function <\\(.+\\):\\([1-9][0-9]+\\)>" 1 2))
-(setq compilation-error-regexp-alist (list (list lua-traceback-line-re 1 2)))
 ;
 ; ;; nunit-console.exe on windows uses this format
 ; (add-to-list 'compilation-error-regexp-alist

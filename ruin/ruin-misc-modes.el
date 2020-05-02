@@ -185,31 +185,32 @@
 (package-require 'markdown-mode)
 (eval-after-load "markdown-mode" #'(lambda ()
                                      (define-key markdown-mode-map (kbd "<C-return>") 'markdown-follow-thing-at-point)))
-(add-hook 'markdown-mode-hook #'flyspell-mode)
-
-(package-require 'mmm-mode)
-(require 'mmm-mode)
-(setq mmm-global-mode 'maybe)
-
-(mmm-add-classes
- '((markdown-lisp
-    :submode lisp-mode
-    :front "^```lisp[\n\r]+"
-    :back "^```$")))
-(mmm-add-mode-ext-class 'markdown-mode nil 'markdown-lisp)
 (setq writeroom-maximize-window nil)
+;(add-hook 'markdown-mode-hook #'flyspell-mode)
 
-(defun my-mmm-markdown-auto-class (lang &optional submode)
-  "Define a mmm-mode class for LANG in `markdown-mode' using SUBMODE.
- If SUBMODE is not provided, use `LANG-mode' by default."
-  (let ((class (intern (concat "markdown-" lang)))
-        (submode (or submode (intern (concat lang "-mode"))))
-        (front (concat "^```" lang "[\n\r]+"))
-        (back "^```"))
-    (mmm-add-classes (list (list class :submode submode :front front :back back)))
-    (mmm-add-mode-ext-class 'markdown-mode nil class)))
-
-(setq mmm-parse-when-idle 't)
+;(package-require 'mmm-mode)
+;(require 'mmm-mode)
+;(setq mmm-global-mode 'maybe)
+;
+;(mmm-add-classes
+; '((markdown-lisp
+;    :submode lisp-mode
+;    :front "^```lisp[\n\r]+"
+;    :back "^```$")))
+;(mmm-add-mode-ext-class 'markdown-mode nil 'markdown-lisp)
+;(setq writeroom-maximize-window nil)
+;
+;(defun my-mmm-markdown-auto-class (lang &optional submode)
+;  "Define a mmm-mode class for LANG in `markdown-mode' using SUBMODE.
+; If SUBMODE is not provided, use `LANG-mode' by default."
+;  (let ((class (intern (concat "markdown-" lang)))
+;        (submode (or submode (intern (concat lang "-mode"))))
+;        (front (concat "^```" lang "[\n\r]+"))
+;        (back "^```"))
+;    (mmm-add-classes (list (list class :submode submode :front front :back back)))
+;    (mmm-add-mode-ext-class 'markdown-mode nil class)))
+;
+;(setq mmm-parse-when-idle 't)
 
 ;; (add-hook 'compilation-shell-minor-mode-hook
 ;;           #'(lambda ()

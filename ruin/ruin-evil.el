@@ -131,6 +131,7 @@
   "by"  'ruin/yank-path-of-buffer-file
   "b!"  'shell-command-on-file
   "bB"  'browse-url-of-file
+  "bx"  'explorer
   "b="  'my-diff-buffer-with-file
   "bi"  'indent-buffer
   "ba"  'helm-do-ag-buffers

@@ -27,6 +27,9 @@
                       (local-set-key (kbd "C-d") 'comint-esd-or-maybe-eof))))
 
 (ignore-errors
+  (setq ansi-color-names-vector
+        ["gray50" "red3" "green3" "yellow3" "blue2" "magenta3" "cyan3" "gray90"])
+  (setq ansi-color-map (ansi-color-make-color-map))
   (require 'ansi-color)
   (defun my-colorize-compilation-buffer ()
     (when (eq major-mode 'compilation-mode)
