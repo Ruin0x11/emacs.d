@@ -14,7 +14,7 @@
 (package-require 'impatient-mode)
 
 (require 'web-mode)
-(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.html?\\'" . html-mode))
 (add-to-list 'auto-mode-alist '("\\.jsx?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.js\\'" . web-mode))
@@ -58,9 +58,11 @@
 (add-hook 'hsp-mode-hook 'rainbow-mode)
 
 (dolist (hook
-         '(css-mode-hook web-mode-hook sass-mode-hook less-css-mode-hook ssass-mode-hook))
+         '(css-mode-hook web-mode-hook sass-mode-hook less-css-mode-hook ssass-mode-hook html-mode-hook))
   (add-hook hook 'rainbow-mode)
-  (add-hook hook 'company-mode-on))
+  (add-hook hook 'company-mode-on)
+  (add-hook hook 'smartparens-mode)
+  (add-hook hook 'flycheck-mode))
 
 (add-hook 'less-css-mode-hook 'electric-pair-mode)
 

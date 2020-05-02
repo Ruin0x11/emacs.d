@@ -3,6 +3,8 @@
 (when (file-exists-p "/usr/share/emacs/site-lisp/notmuch.el")
   (require 'notmuch))
 
+(require 'smtpmail)
+
 (setq
  ;; setup the mail address and use name
  mail-user-agent 'message-user-agent
@@ -13,6 +15,7 @@
  message-send-mail-function 'message-smtpmail-send-it
  smtpmail-smtp-user "ipickering2@gmail.com"
  smtpmail-stream-type 'ssl
+ smtpmail-mail-address "ipickering2@gmail.com"
  smtpmail-smtp-service 465
 
  ;; report problems with the smtp server
@@ -69,6 +72,44 @@
 (evil-leader/set-key
   "amm" 'ruin/notmuch-search-unread
   "ami" 'ruin/notmuch-search-inbox
-  "ams" 'notmuch-mua-mail)
+  "amc" 'notmuch-mua-mail
+  "amu" 'notmuch-exec-offlineimap)
+
+(add-to-list 'evil-normal-state-modes 'notmuch-search-mode)
+(evil-define-key 'normal notmuch-search-mode-map
+  "j" 'notmuch-search-next-thread
+  "k" 'notmuch-search-previous-thread
+  (kbd "RET") 'notmuch-search-show-thread
+  "t" 'notmuch-tag-jump
+  "a" 'notmuch-search-tag-all
+  "gg" 'notmuch-search-first-thread
+  "G" 'notmuch-search-last-thread
+  "m" 'notmuch-mua-new-mail
+  (kbd "C-d") 'notmuch-search-scroll-up
+  (kbd "C-u") 'notmuch-search-scroll-down
+  "r" 'notmuch-search-refresh-view
+  "q" 'notmuch-bury-or-kill-this-buffer)
+
+(defun ruin/notmuch-show-browse-urls ()
+  "Offer to browse any URLs in the current message."
+  (interactive)
+  (let ((urls (notmuch-show--gather-urls)))
+    (if urls
+	(browse-url (completing-read "Browse URL: " (cdr urls)))
+      (message "No URLs found."))))
+
+(add-to-list 'evil-normal-state-modes 'notmuch-show-mode)
+(evil-define-key 'normal notmuch-show-mode-map
+  "t" 'notmuch-tag-jump
+  "m" 'notmuch-mua-new-mail
+  "]" 'notmuch-show-next-thread-show
+  "[" 'notmuch-show-previous-thread-show
+  "U" 'ruin/notmuch-show-browse-urls
+  (kbd "RET") 'notmuch-show-toggle-message
+  "q" 'notmuch-bury-or-kill-this-buffer)
+
+(add-to-list 'evil-normal-state-modes 'notmuch-message-mode)
+(evil-define-key 'normal notmuch-message-mode-map
+  (kbd "M-q") 'fill-paragraph)
 
 (provide 'ruin-mail)

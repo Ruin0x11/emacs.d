@@ -1,13 +1,17 @@
 # -*- mode: snippet -*-
-# name: UiElement
-# key: uie
+# name: UiWidget
+# key: uiw
 # --
 local Draw = require("api.Draw")
-local IUiElement = require("api.gui.IUiElement")
+local IUiWidget = require("api.gui.IUiWidget")
 
-local ${1:`(file-name-nondirectory (file-name-sans-extension (buffer-file-name)))`} = class.class("$1", IUiElement)
+local ${1:`(file-name-nondirectory (file-name-sans-extension (buffer-file-name)))`} = class.class("$1", IUiWidget)
 $0
 function $1:init()
+end
+
+function $1:default_widget_position(x, y, width, height)
+   return x, y
 end
 
 function $1:relayout(x, y, width, height)

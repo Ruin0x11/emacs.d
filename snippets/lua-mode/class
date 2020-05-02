@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: class
+# key: class
+# --
+local ${4:`(file-name-nondirectory (file-name-sans-extension (buffer-file-name)))`} = class.class("$4")
+
+function $4:init($2)
+   $3
+end
+
+return $4

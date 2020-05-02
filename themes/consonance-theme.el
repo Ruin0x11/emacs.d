@@ -42,7 +42,7 @@
    `(cperl-hash-face ((,class (:foreground "coral1"))))
 
    `(cursor ((,class (:background "orange"))))
-   `(default ((,class (:background "#322A22" :foreground "gray90"))))
+   `(default ((,class (:background "#2d2d2d" :foreground "gray80"))))
 
    ;; `(diff-added ((,class (nil))))
    ;; `(diff-changed ((,class (nil))))
@@ -51,7 +51,7 @@
    `(diff-function ((,class (:inherit diff-header))))
    `(diff-header ((,class (:background "grey45"))))
    `(diff-hunk-header ((,class (:inherit diff-header))))
-   `(diff-index ((,class (:inherit diff-file-heade0r))))
+   `(diff-index ((,class (:inherit diff-file-header))))
    `(diff-indicator-added ((,class (:foreground "white" :background "darkolivegreen"))))
    `(diff-indicator-changed ((,class (:foreground "white" :background "dodgerblue4"))))
    `(diff-indicator-removed ((,class (:foreground "white" :background "indianred4"))))
@@ -85,6 +85,7 @@
    `(font-lock-string-face ((,class (:foreground "#69D200"))))
    `(font-lock-type-face ((,class (:foreground "Cadetblue2"))))
    `(font-lock-variable-name-face ((,class (:foreground "#ff7f00"))))
+   `(highlight-numbers-number ((,class (:foreground "#00a0ff"))))
 
    `(fringe ((,class (:background "grey30"))))
    `(highlight ((,class (:background "E1AD32"))))

@@ -23,6 +23,9 @@
 (evil-mode 1)
 (evil-commentary-mode t)
 
+(add-hook 'after-find-file
+          (lambda () (evil-commentary-mode t)))
+
 (setq-default evil-kill-on-visual-paste nil)
 
 ;;; leader binds
@@ -227,20 +230,20 @@ then it takes a second \\[keyboard-quit] to abort the minibuffer."
      (define-key evil-normal-state-map "&" 'evil-ex-repeat-substitute-with-flags)
      ;(define-key evil-normal-state-map (kbd "M-.") 'xref-find-definitions)
 
-     (define-key evil-normal-state-map "u"
-       (lambda (arg)
-         (interactive "P")
-         (if arg
-             (save-excursion
-               (call-interactively 'undo-tree-undo))
-           (call-interactively 'undo-tree-undo))))
-     (define-key evil-normal-state-map (kbd "C-r")
-       (lambda (arg)
-         (interactive "P")
-         (if arg
-             (save-excursion
-               (call-interactively 'undo-tree-redo))
-           (call-interactively 'undo-tree-redo))))
+     ; (define-key evil-normal-state-map "u"
+     ;   (lambda (arg)
+     ;     (interactive "P")
+     ;     (if arg
+     ;         (save-excursion
+     ;           (call-interactively 'undo-tree-undo))
+     ;       (call-interactively 'undo-tree-undo))))
+     ; (define-key evil-normal-state-map (kbd "C-r")
+     ;   (lambda (arg)
+     ;     (interactive "P")
+     ;     (if arg
+     ;         (save-excursion
+     ;           (call-interactively 'undo-tree-redo))
+     ;       (call-interactively 'undo-tree-redo))))
 
      ;; trade ctrl-h and others for faster window switching
      (ruin/window-movement-for-map evil-normal-state-map)

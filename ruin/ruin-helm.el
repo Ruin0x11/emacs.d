@@ -117,16 +117,19 @@ pattern) under the current directory."
   "?c" 'helm-info-calc
   "?o" 'helm-info-org)
 
+(define-key ivy-mode-map (kbd "M-k") 'ivy-kill-ring-save)
+
 (require 'pulse)
 
 (advice-add 'dumb-jump-result-follow :after
             (lambda (&rest args)
               (pulse-momentary-highlight-one-line (point))))
 
-(setq browse-url-text-browser "links")
+(setq browse-url-text-browser "links"
+      browse-url-firefox-program "firefox-developer-edition")
 
 (case system-type
-  (gnu/linux (setq browse-url-browser-function 'browse-url-surf))
+  (gnu/linux (setq browse-url-browser-function 'browse-url-firefox))
   (darwin (progn
             (setq browse-url-browser-function 'browse-url-generic)
             (setq browse-url-generic-program "open"))))
@@ -229,8 +232,5 @@ surf."
                      :buffer "*helm sync source*"))
          (full-path (expand-file-name (file-name-as-directory quick-launch-dir))))
     (ruin/async-shell-command-no-output (concat full-path link))))
-
-
-
 
 (provide 'ruin-helm)

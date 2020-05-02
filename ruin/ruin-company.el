@@ -52,8 +52,11 @@
 (package-require 'company-racer)
 (require 'company)
 (push 'company-racer company-backends)
+(push 'company-etags company-backends)
+(push 'company-elisp company-backends)
+(push 'company-capf company-backends)
 
-(global-company-mode)
+(global-company-mode t)
 
 (evil-define-key 'insert company-active-map (kbd "TAB") 'company-complete)
 (define-key comint-mode-map (kbd "C-n") 'evil-complete-next)

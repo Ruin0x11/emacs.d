@@ -25,6 +25,8 @@
 (add-lisp-hook 'smartparens-mode)
 (add-lisp-hook 'lispyville-mode)
 
+(smartparens-global-mode)
+
 ; (with-eval-after-load 'elisp-mode
 ;   (defadvice elisp-get-fnsym-args-string (after add-docstring activate compile)
 ;     "Add a 1st line of docstring to ElDoc's function information."
@@ -157,6 +159,9 @@
                             (backward-char)
                             (bounds-of-thing-at-point 'sexp))))))
 
+(define-eval-sexp-fu-flash-command eval-defun
+  (eval-sexp-fu-flash (bounds-of-thing-at-point 'defun)))
+
 ;;; clojure
 (package-require 'cider)
 (package-require 'cider-eval-sexp-fu)
@@ -286,66 +291,67 @@
 (autoload 'cider--make-result-overlay "cider-overlays")
 
 ;;; clisp
-(package-require 'sly)
-(package-require 'sly-quicklisp)
-(require 'sly-quicklisp)
+(comment
+ (package-require 'sly)
+ (package-require 'sly-quicklisp)
+ (require 'sly-quicklisp)
 
-(setq inferior-lisp-program "sbcl --control-stack-size 100000")
+ (setq inferior-lisp-program "sbcl --control-stack-size 100000")
 
-(add-to-list 'evil-emacs-state-modes 'sly-mrepl-mode)
-(add-to-list 'evil-emacs-state-modes 'sly-db-mode)
-(add-to-list 'evil-emacs-state-modes 'sly-apropos-mode)
-(add-to-list 'evil-emacs-state-modes 'sly-xref-mode)
-(add-to-list 'evil-emacs-state-modes 'sly-stickers--replay-mode)
+ (add-to-list 'evil-emacs-state-modes 'sly-mrepl-mode)
+ (add-to-list 'evil-emacs-state-modes 'sly-db-mode)
+ (add-to-list 'evil-emacs-state-modes 'sly-apropos-mode)
+ (add-to-list 'evil-emacs-state-modes 'sly-xref-mode)
+ (add-to-list 'evil-emacs-state-modes 'sly-stickers--replay-mode)
 
-(add-hook 'sly-mrepl-mode-hook 'company-mode)
-(add-hook 'sly-mrepl-mode-hook (lambda () (yas-minor-mode 0)))
+ (add-hook 'sly-mrepl-mode-hook 'company-mode)
+ (add-hook 'sly-mrepl-mode-hook (lambda () (yas-minor-mode 0)))
 
-(defun ruin/sly-last-expression ()
-  (buffer-substring-no-properties
-   (save-excursion
-     (forward-char 1)
-     (backward-sexp) (point))
-   (+ 1 (point))))
+ (defun ruin/sly-last-expression ()
+   (buffer-substring-no-properties
+    (save-excursion
+      (forward-char 1)
+      (backward-sexp) (point))
+    (+ 1 (point))))
 
-(defun ruin/sly-eval-last-expression ()
-  "Evaluate the expression preceding point."
-  (interactive)
-  (sly-interactive-eval (ruin/sly-last-expression)))
+ (defun ruin/sly-eval-last-expression ()
+   "Evaluate the expression preceding point."
+   (interactive)
+   (sly-interactive-eval (ruin/sly-last-expression)))
 
-(defun ruin/sly-describe ()
-  (interactive)
-  (let ((current-prefix-arg '-))
-    (call-interactively 'sly-describe-symbol)))
+ (defun ruin/sly-describe ()
+   (interactive)
+   (let ((current-prefix-arg '-))
+     (call-interactively 'sly-describe-symbol)))
 
-(dolist (mode '(lisp-mode sly-mrepl-mode))
-  (evil-leader/set-key-for-mode mode
-    "dd" 'sly-describe-symbol
-    "df" 'ruin/sly-describe
-    "da" 'sly-apropos
-    "dh" 'sly-hyperspec-lookup
-    "ee" 'sly-interactive-eval
-    "es" 'ruin/sly-eval-last-expression
-    ;; "ed" 'sly-eval-defun
-    "ed" 'sly-compile-defun
-    "eb" 'sly-compile-and-load-file
-    "ekk"  'sly-stickers-dwim
-    "fd" 'sly-edit-definition
-    "fD" 'sly-edit-definition-other-window
+ (dolist (mode '(lisp-mode sly-mrepl-mode))
+   (evil-leader/set-key-for-mode mode
+     "dd" 'sly-describe-symbol
+     "df" 'ruin/sly-describe
+     "da" 'sly-apropos
+     "dh" 'sly-hyperspec-lookup
+     "ee" 'sly-interactive-eval
+     "es" 'ruin/sly-eval-last-expression
+     ;; "ed" 'sly-eval-defun
+     "ed" 'sly-compile-defun
+     "eb" 'sly-compile-and-load-file
+     "ekk"  'sly-stickers-dwim
+     "fd" 'sly-edit-definition
+     "fD" 'sly-edit-definition-other-window
 
-    "my" 'sly-mrepl-sync))
+     "my" 'sly-mrepl-sync))
 
-(define-key sly-mode-map (kbd "M-.") 'sly-edit-definition)
-(define-key sly-mode-map (kbd "M-?") 'sly-edit-uses)
-(define-key sly-mode-map (kbd "C-t") 'sly-pop-find-definition-stack)
-(define-key evil-normal-state-map (kbd "M-.") nil)
-(define-key evil-insert-state-map (kbd "DEL") 'backward-delete-char-untabify)
+ (define-key sly-mode-map (kbd "M-.") 'sly-edit-definition)
+ (define-key sly-mode-map (kbd "M-?") 'sly-edit-uses)
+ (define-key sly-mode-map (kbd "C-t") 'sly-pop-find-definition-stack)
+ (define-key evil-normal-state-map (kbd "M-.") nil)
+ (define-key evil-insert-state-map (kbd "DEL") 'backward-delete-char-untabify)
 
-(add-hook 'sly-mrepl-mode-hook (lambda ()
-                                 (define-key sly-mrepl-mode-map "\C-c\M-o" 'comint-clear-buffer)))
+ (add-hook 'sly-mrepl-mode-hook (lambda ()
+                                  (define-key sly-mrepl-mode-map "\C-c\M-o" 'comint-clear-buffer)))
 
-(sp-with-modes '(sly-mrepl-mode)
-  (sp-local-pair "'" nil :actions nil))
+ (sp-with-modes '(sly-mrepl-mode)
+   (sp-local-pair "'" nil :actions nil)))
 
 ;; (defun dood (r)
 ;;   (endless/eval-overlay r (point)))

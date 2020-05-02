@@ -243,7 +243,7 @@ buffer is not visiting a file."
 
 
 ;;https://news.ycombinator.com/item?id=11488417
-(defconst trc-comment-keywords "\\<\\(FIXME\\|TODO\\|BUG\\|HACK\\|NOTE\\|WARNING\\|ERROR\\|IMPLEMENT\\|TEMP\\|EVENT\\|BUILTIN\\|RETURN\\)")
+(defconst trc-comment-keywords "\\<\\(FIXME\\|TODO\\|BUG\\|HACK\\|NOTE\\|WARNING\\|ERROR\\|IMPLEMENT\\|TEMP\\)")
 
 (defun add-comment-keywords () ;; Install the word coloring
   (font-lock-add-keywords nil

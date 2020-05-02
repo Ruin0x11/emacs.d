@@ -2,6 +2,8 @@
 (package-require 'highlight-numbers)
 (package-require 'format-all)
 (package-require 'realgud)
+(package-require 'fennel-mode)
+(require 'fennel-mode)
 ; (require 'doxymacs)
 ;(require 'doxymacs-luadoc)
 ;(load "~/build/work/realgud-mobdebug/realgud-mobdebug.el")
@@ -29,7 +31,7 @@
                            (setq compilation-auto-jump-to-first-error t)
                            (when (projectile-project-p)
                              (setq-local tags-file-name (string-join (list (projectile-project-root) "TAGS"))))
-                           (setq-local eldoc-documentation-function 'elona-next-eldoc-function)
+                           (setq-local eldoc-documentation-function 'open-nefia-eldoc-function)
                            (define-key lua-mode-map (kbd "RET") 'indent-new-comment-line)
                            (if-let* ((cmd-buffer (get-buffer "*mobdebug main.lua shell*"))
                                      (proc (get-buffer-process cmd-buffer)))
@@ -52,7 +54,7 @@
 (setq lua-default-application "luajit"
       tags-revert-without-query t
       tags-case-fold-search nil
-      ;initial-buffer-choice "/home/ruin/build/elona-next/src/scratch.lua"
+      ;initial-buffer-choice "/home/ruin/build/open-nefia/src/scratch.lua"
       company-etags-everywhere t)
 
 (setq company-etags-modes (append '(comint-mode) company-etags-modes))
@@ -176,46 +178,60 @@ If ARG is set, don't replace the symbol."
 
 (defun ruin/send-lua-scratch-buffer ()
   (interactive)
-  (elona-next-hotload-this-file)
+  (open-nefia-hotload-this-file)
   (with-current-buffer ruin/lua-scratch-buffer
     (lua-send-buffer)))
 
 (define-eval-sexp-fu-flash-command ruin/send-lua-scratch-buffer
-    (eval-sexp-fu-flash (elona-next--bounds-of-buffer)))
+    (eval-sexp-fu-flash (open-nefia--bounds-of-buffer)))
 
 (progn
   (defun ruin/setup-lua-keybinds (mode)
     (evil-leader/set-key-for-mode mode
       "fg" 'ruin/xref-find-references
       "fG" 'ruin/xref-find-references-period
-      "fd" 'elona-next-jump-to-definition
+      "fd" 'open-nefia-jump-to-definition
       "fj" 'ruin/xref-find-definitions
       "fJ" 'ruin/xref-find-definitions-period
-      "mi" 'elona-next-start-repl
-      "mr" 'elona-next-require-this-file
-      "mc" 'elona-next-run-batch-script
-      "eb" 'elona-next-hotload-this-file
-      "eB" 'elona-next-send-buffer
-      "ee" 'elona-next-eval-expression
-      "er" 'elona-next-require-this-file
-      "el" 'elona-next-eval-current-line
-      "ei" 'elona-next-insert-require
-      "eI" 'elona-next-insert-missing-requires
+      "mi" 'open-nefia-start-repl
+      "mr" 'open-nefia-require-this-file
+      "mc" 'open-nefia-run-batch-script
+      "eb" 'open-nefia-hotload-this-file
+      "eB" 'open-nefia-send-buffer
+      "ee" 'open-nefia-eval-expression
+      "er" 'open-nefia-require-this-file
+      "el" 'open-nefia-eval-current-line
+      "ed" 'open-nefia-eval-block
+      "ei" 'open-nefia-insert-require
+      "et" 'open-nefia-insert-template
+      "ea" 'open-nefia-insert-id
+      "eI" 'open-nefia-insert-missing-requires
       "ek" 'ruin/send-lua-scratch-buffer
       "eK" 'ruin/set-lua-scratch-buffer
-      "ey" 'elona-next-copy-require-path
-      "dd" 'elona-next-describe-thing-at-point
-      "da" 'elona-next-describe-apropos
+      "ey" 'open-nefia-copy-require-path
+      "dd" 'open-nefia-describe-thing-at-point
+      "da" 'open-nefia-describe-apropos
       "md" 'ruin/start-mobdebug
       "mt" 'ruin/regenerate-ltags
       "mf" 'kotaro-format-buffer
-      "mb" 'elona-next-eval-buffer
-      ))
+      "mb" 'open-nefia-eval-buffer))
 
   (mapc 'ruin/setup-lua-keybinds '(lua-mode fennel-mode)))
 
-(define-key lua-mode-map (kbd "M-:") 'elona-next-eval-expression)
+(defun ruin/lisp-eval-buffer ()
+  (interactive)
+  (lisp-eval-string (buffer-string)))
+
+(evil-leader/set-key-for-mode 'fennel-mode
+  "ed" 'lisp-eval-defun
+  "ee" 'lisp-eval-last-sexp
+  ; "eb" 'ruin/lisp-eval-buffer
+  "mi" 'fennel-repl)
+
+(define-key lua-mode-map (kbd "M-:") 'open-nefia-eval-expression)
 (define-key lua-mode-map (kbd "C-c C-k") 'ruin/send-lua-scratch-buffer)
+(define-key fennel-mode-map (kbd "M-:") 'open-nefia-eval-expression)
+(define-key fennel-mode-map (kbd "C-c C-k") 'ruin/send-lua-scratch-buffer)
 
 (with-eval-after-load 'lsp-mode
   (lsp-register-client
@@ -235,11 +251,11 @@ If ARG is set, don't replace the symbol."
 (setq tempo-interactive t)
 
 (let ((file (if (eq system-type 'windows-nt)
-                "z:/build/elona-next/src/elona-next.el"
-              (string-join (list (getenv "HOME") "/build/elona-next/src/elona-next.el")))))
+                "z:/build/elona-next/src/open-nefia.el"
+              (string-join (list (getenv "HOME") "/build/elona-next/editor/emacs/open-nefia.el")))))
   (when (file-exists-p file)
     (load file)
-    (elona-next-eval-sexp-fu-setup)))
+    (open-nefia-eval-sexp-fu-setup)))
 
 (let ((file (string-join (list (getenv "HOME") "/build/work/kotaro/kotaro.el"))))
   (when (file-exists-p file)
@@ -280,13 +296,13 @@ If ARG is set, don't replace the symbol."
 ;         (current-buffer))))))
 
 (defun ruin/etags-eldoc-function ()
-  (if (and elona-next--eldoc-saved-message
-           (equal elona-next--eldoc-saved-point (point)))
-      elona-next--eldoc-saved-message
+  (if (and open-nefia--eldoc-saved-message
+           (equal open-nefia--eldoc-saved-point (point)))
+      open-nefia--eldoc-saved-message
 
-    (setq elona-next--eldoc-saved-message nil
-          elona-next--eldoc-saved-point nil)
-    (elona-next-eldoc-function)
+    (setq open-nefia--eldoc-saved-message nil
+          open-nefia--eldoc-saved-point nil)
+    (open-nefia-eldoc-function)
     (let* ((sym-dotted (ruin/dotted-symbol-at-point))
            (sym (symbol-at-point))
            (defs (or (and sym-dotted (etags--xref-find-definitions (prin1-to-string sym-dotted)))
@@ -303,7 +319,7 @@ If ARG is set, don't replace the symbol."
                                               nil)
             (buffer-string)))))))
 
-(advice-add 'elona-next--command-jump-to :after
+(advice-add 'open-nefia--command-jump-to :after
             (lambda (&rest args)
               (pulse-momentary-highlight-one-line (point))))
 
@@ -394,5 +410,36 @@ If ARG is set, don't replace the symbol."
      (2 font-lock-type-face t noerror)
      (3 font-lock-variable-name-face t noerror)
      (4 font-lock-type-face t noerror))))
+
+(add-hook 'fennel-mode-hook 'company-mode)
+(add-hook 'fennel-mode-hook 'highlight-numbers-mode)
+(add-hook 'fennel-mode-hook
+          (lambda ()
+            (setq-local lisp-indent-function 'fennel-indent-function)))
+
+(push "defhandler" fennel-keywords)
+(push "definst" fennel-keywords)
+(push "deflocale" fennel-keywords)
+(push "require*" fennel-keywords)
+
+(put 'defhandler 'fennel-indent-function 'defun)
+(put 'definst 'fennel-indent-function 'defun)
+
+(setq fennel-local-fn-pattern
+  (rx (syntax open-parenthesis)
+      (or "fn" "lambda" "λ" "local" "definst" "defhandler") (1+ space)
+      (group (1+ (or (syntax word) (syntax symbol) "-" "_")))))
+
+(setq fennel-font-lock-keywords
+  `((,fennel-local-fn-pattern 1 font-lock-variable-name-face)
+    (,(rx (syntax open-parenthesis)
+          (or "fn" "lambda" "λ" "local" "definst" "defhandler") (1+ space)
+          (group (and (not (any "["))
+                      (1+ (or (syntax word) (syntax symbol))))))
+     1 font-lock-variable-name-face)
+    (,(regexp-opt fennel-keywords 'symbols) . font-lock-keyword-face)
+    (,(regexp-opt fennel-builtins 'symbols) . font-lock-builtin-face)
+    (,(rx (not (any alphanumeric)) (group ":" (1+ word))) 0 font-lock-builtin-face)
+    (,(rx (group letter (0+ word) "." (1+ word))) 0 font-lock-type-face)))
 
 (provide 'ruin-lua)

@@ -283,6 +283,33 @@
   "fd" 'xref-find-definitions
   "fg" 'xref-find-references)
 
+(evil-define-key 'normal hsp-mode-map (kbd "M-.") 'xref-find-definitions)
+(evil-define-key 'normal hsp-mode-map (kbd "M-?") 'xref-find-references)
+
+(defun ruin/hsp-etags-eldoc-function ()
+  (if (and elona-next--eldoc-saved-message
+           (equal elona-next--eldoc-saved-point (point)))
+      elona-next--eldoc-saved-message
+
+    (setq elona-next--eldoc-saved-message nil
+          elona-next--eldoc-saved-point nil)
+    (elona-next-eldoc-function)
+    (let* ((sym-dotted (ruin/dotted-symbol-at-point))
+           (sym (symbol-at-point))
+           (defs (or (and sym-dotted (etags--xref-find-definitions (prin1-to-string sym-dotted)))
+                     (and sym (etags--xref-find-definitions (prin1-to-string sym))))))
+      (when defs
+        (let* ((def (car defs))
+               (raw (substring-no-properties (xref-item-summary def))))
+          (with-temp-buffer
+            (insert raw)
+            (delay-mode-hooks (hsp-mode))
+            (font-lock-default-function 'hsp-mode)
+            (font-lock-default-fontify-region (point-min)
+                                              (point-max)
+                                              nil)
+            (buffer-string)))))))
+
 (add-hook 'hsp-mode-hook
           (lambda ()
             (eldoc-mode)
@@ -807,6 +834,9 @@ Value is t if a query was formerly required."
 
 ;;; string-inflection
 (package-require 'string-inflection)
+
+;;; csv-mode
+(package-require 'csv-mode)
 
 ;;; Local variables
 ;; Local Variables:

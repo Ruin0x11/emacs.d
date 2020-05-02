@@ -90,7 +90,9 @@
  "C-h" 'evil-window-left
  "C-j" 'evil-window-down
  "C-k" 'evil-window-up
- "C-l" 'evil-window-right
- )
+ "C-l" 'evil-window-right)
+
+(package-require 'fill-column-indicator)
+(add-hook 'git-commit-mode 'fci-mode)
 
 (provide 'ruin-git)

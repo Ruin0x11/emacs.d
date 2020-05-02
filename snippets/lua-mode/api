@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: api
+# key: api
+# --
+local ${1:`(file-name-nondirectory (file-name-sans-extension (buffer-file-name)))`} = {}
+
+function $1.$2($3)$4
+end
+
+return $1

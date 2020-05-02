@@ -219,12 +219,10 @@
 
 (defun ruin/normal-theme ()
   (interactive)
-  (set-frame-font "Gohufont:style=Regular:pixelsize=14" t)
+  (set-frame-font "-gohu-gohufont-medium-r-normal--11-*-100-100-c-60-iso10646-1" t)
   (set-frame-parameter (selected-frame) 'internal-border-width 4)
   (setq monokai-foreground "#BBBBBB")
-  (load-theme 'monokai t)
-  ;(toggle-frame-fullscreen)
-  )
+  (load-theme 'monokai t))
 
 (defun font-exists-p (font)
   "check if font exists"
@@ -293,21 +291,22 @@
 
 (defun ruin/init-spaceline ()
   (spaceline-compile)
-  ;; (spaceline-toggle-org-clock-on)
-  ;; (spaceline-toggle-org-clock-not-on)
   (spaceline-emacs-theme)
   (spaceline-helm-mode)
   (spaceline-toggle-projectile-root-on)
   (spaceline-toggle-which-function-off)
   (setq flycheck-color-mode-line-face-to-color 'powerline-active1))
 
+(defun ruin/set-cjk-fallback-font (font size)
+  (when (display-graphic-p)
+    (dolist (charset '(kana han symbol cjk-misc bopomofo))
+      (set-fontset-font (frame-parameter nil 'font) charset
+                        (font-spec :family font :size size)))))
+
 (defun ruin/init-theme ()
   (interactive)
-  (setup-cjk-alignment)
+  ;(setup-cjk-alignment)
   (display-battery-mode)
-
-  ; (when (window-system)
-  ;   (ruin/init-spaceline))
 
   (cond ((not window-system) (ruin/init-textmode-theme))
         ((memq system-type '(darwin)) (ruin/normal-theme))
@@ -317,16 +316,15 @@
     (add-hook 'after-make-frame-functions
               (lambda (frame)
                 (select-frame frame)
-                (ruin/init-theme)
-                ))
+                (ruin/init-theme)))
   (ruin/init-theme))
 
-(setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
+(add-hook 'after-setting-font-hook
+          (lambda ()
+            (ruin/set-cjk-fallback-font "Kochi Gothic" 11)))
 
-(package-require 'fill-column-indicator)
-(setq fill-column 80)
-(setq frame-resize-pixelwise t)
-;fci-mode)
+(setq fill-column 80
+      frame-resize-pixelwise t)
 
 (defun ruin/enable-filling ()
   (interactive)
@@ -395,17 +393,16 @@ The following %-sequences are provided:
   (setq battery-status-function #'ruin/battery-pmset))
 
 (defun ruin/set-ansi-colors ()
-    (lambda ()
-      (setq ansi-color-names-vector
-            ["gray50"
-             "red3"
-             "green3"
-             "yellow3"
-             "blue2"
-             "magenta3"
-             "cyan3"
-             "gray70"])
-      (setq ansi-color-map (ansi-color-make-color-map))))
+  (setq ansi-color-names-vector
+        ["gray50"
+         "red3"
+         "green3"
+         "yellow3"
+         "blue2"
+         "magenta3"
+         "cyan3"
+         "gray70"])
+  (setq ansi-color-map (ansi-color-make-color-map)))
 
 (add-hook 'term-mode-hook 'ruin/set-ansi-colors)
 (add-hook 'compilation-mode-hook 'ruin/set-ansi-colors)

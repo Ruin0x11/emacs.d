@@ -117,9 +117,9 @@
         ruin-flycheck
         ruin-snippet
         ruin-git
-        ruin-mail
         ruin-shell
         ruin-popwin
+        ruin-mail
         ruin-misc-modes
                                         ;ruin-x11
                                         ; ruin-home

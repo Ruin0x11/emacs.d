@@ -9,9 +9,8 @@ local IUiLayer = require("api.gui.IUiLayer")
 local IInput = require("api.gui.IInput")
 local InputHandler = require("api.gui.InputHandler")
 local UiWindow = require("api.gui.UiWindow")
-local UiList = require("api.gui.UiList")
 
-local ${4:`(file-name-nondirectory (file-name-sans-extension (buffer-file-name)))`} = class("$4", IUiLayer)
+local ${4:`(file-name-nondirectory (file-name-sans-extension (buffer-file-name)))`} = class.class("$4", IUiLayer)
 
 $4:delegate("input", IInput)
 
@@ -19,27 +18,34 @@ function $4:init()
    self.width = $1
    self.height = $2
 
-   self.win = UiWindow:new("chara_make.select_race.title", self.x, self.y, self.width, self.height)
-   self.list = UiList:new(self.x, self.y, {})
+   self.win = UiWindow:new()
    self.input = InputHandler:new()
+end
+
+function $4:make_keymap()
+   return {
+      cancel = function() self.canceled = true end,
+      escape = function() self.canceled = true end,
+   }
 end
 
 function $4:relayout()
    self.x, self.y, self.width, self.height = Ui.params_centered(self.width, self.height)
    self.y = self.y$3
 
-   self.win:draw()
-   self.list:draw()
+   self.win:relayout(self.x, self.y, self.width, self.height)
 end
 
 function $4:draw()
    self.win:draw()
-   self.list:draw()
 end
 
 function $4:update()
    self.win:update()
-   self.list:update()
+
+   if self.canceled then
+      return nil, "canceled"
+   end
 end
 
 return $4
